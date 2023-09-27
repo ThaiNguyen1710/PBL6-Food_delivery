@@ -4,7 +4,7 @@ export const baseURL="http://localhost:5001/food-delivery-app-1449c/us-central1/
 
 export const validateUserJWTToken = async (token) =>{
     try{
-        const res = await axios.get(`${baseURL}/api/user/jwtVerfication`,{
+        const res = await axios.get(`${baseURL}/api/users/jwtVerification`,{
             headers: {Authorization: "Bearer "+token}
         })
         return res.data.data;

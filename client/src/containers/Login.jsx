@@ -31,8 +31,9 @@ const Login = () => {
                 cred.getIdToken().then((token)=>{
                     validateUserJWTToken(token).then (data =>{
                         console.log(data)
-                        navigate("/", {replace: true})
+                        
                     })
+                    navigate("/", {replace: true})
                 })
                }
             })
