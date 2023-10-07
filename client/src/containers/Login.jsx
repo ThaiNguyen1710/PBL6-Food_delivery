@@ -19,6 +19,7 @@ import { validateUserJWTToken } from "../api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetail } from "../context/actions/userActions";
+import { alertDanger, alertInfo } from "../context/actions/alertActions";
 
 const Login = () => {
   const [userEmail, setUserEmail] = useState("");
@@ -58,7 +59,7 @@ const Login = () => {
 
   const signUpWithEmailPass = async () => {
     if (userEmail === "" || password === "" || confirm_password === "") {
-      //alert
+      dispatch(alertInfo("Require fields should not be empty"));
     } else {
       if (password === confirm_password) {
         setUserEmail("");
@@ -81,7 +82,7 @@ const Login = () => {
           });
         });
       } else {
-        //alert
+        dispatch(alertDanger("Password wrong!"));
       }
     }
   };
@@ -102,6 +103,8 @@ const Login = () => {
           });
         }
       );
+    } else {
+      dispatch(alertDanger("Password wrong!"));
     }
   };
 
