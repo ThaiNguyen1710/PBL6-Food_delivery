@@ -80,7 +80,7 @@ const Header = () => {
                 <motion.img
                   onMouseEnter={() => setIsMenu(true)}
                   className="w-full h-full object-cover"
-                  src={user?.picture ? user?.picture :<img src={avatar} className="w-16 " alt="" /> }
+                  src={user?.picture ? user?.picture :avatar }
                   whileHover={{ scale: 1.15 }}
                   referrerPolicy="no-referrer"
                 ></motion.img>
