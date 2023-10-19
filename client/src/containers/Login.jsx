@@ -44,7 +44,8 @@ const Login = () => {
     }
   }, [user]);
 
-  const loginWithFacebook = async () => {
+  
+  const loginWithPhone= async () => {
     await signInWithPopup(firebaseAuth, provider1).then((userCred) => {
       firebaseAuth.onAuthStateChanged((cred) => {
         if (cred) {
@@ -245,7 +246,7 @@ const Login = () => {
         <motion.div
           {...buttonClick}
           className=" flex justify-start items-center bg-cardOverlay w-[80%] backdrop-blur-md cursor-pointer px-4 py-2 mx-auto rounded-3xl gap-10"
-          onClick={loginWithFacebook}
+          onClick={loginWithPhone}
         >
           <FcIphone className="text-3xl" />
           <p className="  flex text-center capitalize text-base text-headingColor font-medium  ">
