@@ -1,6 +1,6 @@
 const alertReducer = (state = null, action) => {
   switch (action.type) {
-    case "SET_SUCCES":
+    case "SET_SUCCESS":
       return action.alert;
 
     case "SET_WARNING":

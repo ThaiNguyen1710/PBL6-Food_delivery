@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import {motion} from 'framer-motion'
-import { fadeInOut } from '../animations'
+import { buttonClick, fadeInOut } from '../animations'
 
 const LoginInput = ({
   placeHolder, 
   icon, 
+  icon2,
   inputState, 
   inputStateFunc, 
   type, 
@@ -28,6 +29,10 @@ const LoginInput = ({
             onFocus={()=> setIsFocus(true)}
             onBlur={()=> setIsFocus(false)}
         />
+        <motion.div className='flex justify-center items-center text-xl cursor-pointer text-gray-600' {...buttonClick}>
+        {icon2}
+        </motion.div>
+        
     </motion.div>
   )
 }

@@ -4,7 +4,8 @@ import { LoginInput } from "../components";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle, FcIphone } from "react-icons/fc";
 import { motion } from "framer-motion";
-import { buttonClick, fadeInOut } from "../animations";
+import { buttonClick } from "../animations";
+import {BsFillEyeSlashFill} from 'react-icons/bs'
 
 import {
   getAuth,
@@ -13,6 +14,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   FacebookAuthProvider,
+ 
 } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { validateUserJWTToken } from "../api";
@@ -27,6 +29,9 @@ const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [password, setPassword] = useState("");
   const [confirm_password, setConfirm_password] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+
 
   const firebaseAuth = getAuth(app);
   const provider = new GoogleAuthProvider();
@@ -44,8 +49,7 @@ const Login = () => {
     }
   }, [user]);
 
-  
-  const loginWithPhone= async () => {
+  const loginWithPhone = async () => {
     await signInWithPopup(firebaseAuth, provider1).then((userCred) => {
       firebaseAuth.onAuthStateChanged((cred) => {
         if (cred) {
@@ -75,56 +79,89 @@ const Login = () => {
     });
   };
 
+  const toggleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   const signUpWithEmailPass = async () => {
     if (userEmail === "" || password === "" || confirm_password === "") {
       dispatch(alertInfo("Require fields should not be empty"));
-    } else {
-      if (password === confirm_password) {
-        setUserEmail("");
-        setPassword("");
-        setConfirm_password("");
-        await createUserWithEmailAndPassword(
+    } else if (
+      !/^[A-Za-z0-9](\.?[A-Za-z0-9]){0,}@gmail\.com$/.test(userEmail)
+    ) {
+      // Kiểm tra email có đúng định dạng "...@gmail.com" hay không
+      dispatch(alertDanger("Email không đúng định dạng. Vui lòng nhập lại."));
+    } else if (
+      password.length < 8 ||
+      !/^(?=.*[a-zA-Z])(?=.*\d)/.test(password)
+    ) {
+      // Kiểm tra độ dài và yêu cầu chữ cái và số cho mật khẩu
+      dispatch(
+        alertDanger(
+          "Mật khẩu phải có ít nhất 8 ký tự và phải chứa ít nhất một chữ cái và một chữ số."
+        )
+      );
+    } else if (password === confirm_password) {
+      setUserEmail("");
+      setPassword("");
+      setConfirm_password("");
+      try {
+        const userCred = await createUserWithEmailAndPassword(
           firebaseAuth,
           userEmail,
           password
-        ).then((userCred) => {
-          firebaseAuth.onAuthStateChanged((cred) => {
-            if (cred) {
-              cred.getIdToken().then((token) => {
-                validateUserJWTToken(token).then((data) => {
-                  dispatch(setUserDetail(data));
-                });
-                navigate("/", { replace: true });
-              });
-            }
-          });
-        });
-      } else {
-        dispatch(alertDanger("Password wrong!"));
+        );
+        if (userCred) {
+          const token = await userCred.user.getIdToken();
+          const data = await validateUserJWTToken(token);
+          dispatch(setUserDetail(data));
+          navigate("/", { replace: true });
+        }
+      } catch (error) {
+        if (error.code === "auth/user-not-found") {
+          // Xử lý trường hợp địa chỉ email chưa được đăng ký
+          dispatch(alertDanger("Địa chỉ email chưa được đăng ký. Vui lòng kiểm tra lại."));
+        } else {
+          // Xử lý các lỗi khác
+          dispatch(alertDanger("Lỗi: " + error.message));
+        }
       }
+    } else {
+      dispatch(alertDanger("Không khớp mật khẩu!"));
     }
   };
+  
 
   const signInWithEmailPass = async () => {
     if (userEmail !== "" && password !== "") {
-      await signInWithEmailAndPassword(firebaseAuth, userEmail, password).then(
-        (userCred) => {
-          firebaseAuth.onAuthStateChanged((cred) => {
-            if (cred) {
-              cred.getIdToken().then((token) => {
-                validateUserJWTToken(token).then((data) => {
-                  dispatch(setUserDetail(data));
-                });
-                navigate("/", { replace: true });
-              });
-            }
-          });
+      try {
+        const userCred = await signInWithEmailAndPassword(firebaseAuth, userEmail, password);
+        
+        if (userCred) {
+          const token = await userCred.user.getIdToken();
+          const data = await validateUserJWTToken(token);
+          dispatch(setUserDetail(data));
+          navigate("/", { replace: true });
         }
-      );
+      } catch (error) {
+        if (error.code === "auth/user-not-found") {
+          // Xử lý trường hợp địa chỉ email chưa được đăng ký
+          dispatch(alertDanger("Địa chỉ email chưa được đăng ký. Vui lòng kiểm tra lại."));
+        } else {
+          // Xử lý các lỗi khác
+          dispatch(alertDanger("Tài khoản chưa đăng ký"));
+        }
+      }
     } else {
       dispatch(alertDanger("Password wrong!"));
     }
   };
+
+  const forgotPass =async()=>{if (userEmail === "") {
+    
+  }
+    
+  }
 
   return (
     <div className="w-screen h-screen relative overflow-auto  bg-lighttextGray gap-4">
@@ -144,12 +181,12 @@ const Login = () => {
         </div>
       </div>
       {/* container box */}
-      <div className="  mt-3 flex flex-col items-center bg-cardOverlay w-[80%] md:w-508 h-510 z-10 backdrop-blur-md p-4 px-4 py-1 mx-auto  gap-4">
+      <div className="  mt-3 flex flex-col  bg-cardOverlay w-[80%] md:w-508 h-510 z-10 backdrop-blur-md p-4 px-4 py-1 mx-auto  gap-2.5">
         {/* Welcome text  */}
-        <p className="flex text-xl font-semibold text-headingColor">
+        <p className="text-xl text-center font-semibold text-headingColor">
           Chào Mừng!{" "}
         </p>
-        <p className="text-xl  text-textColor -mt-4">
+        <p className="text-xl  text-textColor -mt-4 text-center">
           {!isSignUp ? "Đăng nhập " : "Đăng ký "} bằng cách sau{" "}
         </p>
 
@@ -166,22 +203,27 @@ const Login = () => {
 
           <LoginInput
             placeHolder={"Mật khẩu"}
-            icon={<FaLock className="text-xl text-textColor" />}
+            icon={<FaLock className="text-xl text-textColor" /> }
             inputState={password}
             inputStateFunc={setPassword}
-            type="password"
+            type={showPassword ? "text" : "password" }
             isSignUp={isSignUp}
+            icon2={<BsFillEyeSlashFill onClick={toggleShowPassword}/>}
           />
+            
+  
           {isSignUp && (
             <LoginInput
               placeHolder={"Xác nhận mật khẩu"}
               icon={<FaLock className="text-xl text-textColor" />}
               inputState={confirm_password}
               inputStateFunc={setConfirm_password}
-              type="password"
+              type={showPassword ? "text" : "password"}
               isSignUp={isSignUp}
+              icon2={<BsFillEyeSlashFill onClick={toggleShowPassword} />}
             />
           )}
+      
 
           {!isSignUp ? (
             <p className="font-medium">
@@ -226,6 +268,13 @@ const Login = () => {
             </motion.button>
           )}
         </div>
+        <div className="text-right font-medium items-center ">
+            <motion.button
+            {...buttonClick}
+            className="text-red-500 cursor-pointer underline hover:text-red-700 "
+            onClick={forgotPass}
+            >Quên mật khẩu?</motion.button>
+        </div>
 
         <div className=" flex items-center justify-between gap-16">
           <div className="w-24 h-[1px] rounded-md bg-gray-500 "></div>
@@ -235,13 +284,15 @@ const Login = () => {
 
         <motion.div
           {...buttonClick}
-          className="flex justify-start items-center bg-cardOverlay w-[80%] backdrop-blur-md cursor-pointer px-4 py-2 mx-auto rounded-3xl gap-16"
+          className="flex justify-start items-center bg-cardOverlay w-[80%] backdrop-blur-md cursor-pointer px-4 py-2 mx-auto rounded-3xl gap-10 "
           onClick={loginWithGoogle}
         >
           <FcGoogle className="text-3xl " />
-          <p className="flex text-center capitalize text-base text-headingColor font-medium">
-            Đăng Nhập Bằng Gmail
-          </p>
+          <div className="justify-center flex items-center ">
+            <p className="flex text-center capitalize text-base text-headingColor font-medium">
+              Đăng Nhập Bằng Gmail
+            </p>
+          </div>
         </motion.div>
         <motion.div
           {...buttonClick}
@@ -249,44 +300,44 @@ const Login = () => {
           onClick={loginWithPhone}
         >
           <FcIphone className="text-3xl" />
-          <p className="  flex text-center capitalize text-base text-headingColor font-medium  ">
-            Đăng Nhập Bằng Số Điện Thoại
-          </p>
+          <div className="justify-center flex items-center ">
+            <p className="  flex text-center capitalize text-base text-headingColor font-medium  ">
+              Đăng Nhập Bằng Số Điện Thoại
+            </p>
+          </div>
         </motion.div>
       </div>
       <div className=" mt-1 flex flex-col items-center w-[80%] md:w-508 h-auto z-20 backdrop-blur-md p-4 px-4 py-2 mx-auto  gap-1">
-      <p className="flex text-xl font-medium text-headingColor">
-          THEO DÕI CHÚNG TÔI TRÊN {" "}
+        <p className="flex text-xl font-medium text-headingColor">
+          THEO DÕI CHÚNG TÔI TRÊN{" "}
         </p>
         <div className="relative cursor-pointer flex gap-16">
-            <motion.div
-              className="w-14 h-14 rounded-full flex justify-center items-center "
-              whileHover={{ scale: 1.15 }}
-              referrerPolicy="no-referrer"
-              onClick={() =>
-                (window.location.href = "https://www.facebook.com/thaii17")
-              }
-            >
-              <img src={faceLogo} alt="" className="w-full h-full" />
-            </motion.div>
+          <motion.div
+            className="w-14 h-14 rounded-full flex justify-center items-center "
+            whileHover={{ scale: 1.15 }}
+            referrerPolicy="no-referrer"
+            onClick={() =>
+              (window.location.href = "https://www.facebook.com/thaii17")
+            }
+          >
+            <img src={faceLogo} alt="" className="w-full h-full" />
+          </motion.div>
 
-            <motion.div
-              className="w-14 h-14 rounded-full flex justify-center items-center"
-              whileHover={{ scale: 1.15 }}
-              referrerPolicy="no-referrer"
-              onClick={() =>
-                (window.location.href = "https://www.instagram.com/thaii1710/")
-              }
-            >
-              <img src={igLogo} alt="" className="w-full h-full" />
-              
-            </motion.div>
-            
-          </div>
-          <p className="flex text-xl font-medium text-textColor gap-12">Facebook
-              <p>Instagram</p>
-          </p>
-          
+          <motion.div
+            className="w-14 h-14 rounded-full flex justify-center items-center"
+            whileHover={{ scale: 1.15 }}
+            referrerPolicy="no-referrer"
+            onClick={() =>
+              (window.location.href = "https://www.instagram.com/thaii1710/")
+            }
+          >
+            <img src={igLogo} alt="" className="w-full h-full" />
+          </motion.div>
+        </div>
+        <div className="flex text-xl font-medium text-textColor gap-12">
+          Facebook
+          <p>Instagram</p>
+        </div>
       </div>
     </div>
   );
