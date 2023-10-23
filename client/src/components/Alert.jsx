@@ -10,7 +10,7 @@ const Alert = ({type, message}) => {
   if (type === "success"){
     return (
     <motion.div {...fadeInOut}
-    className='fixed z-50 top-32 right-12 px-4 py-2 rounded-md backdrop-blur-sm bg-emerald-300 shadow-md flex items-center gap-4'
+    className='fixed z-50 top-32 right-10 px-4 py-1.5 rounded-md backdrop-blur-sm bg-emerald-300 shadow-md flex items-center gap-4'
     >
       <FaCheckCircle className='text-xl font-bold text-emerald-700'/>
       <p className='text-xl font-medium text-emerald-700'>{message}</p>

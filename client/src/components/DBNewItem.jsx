@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { statuses } from "../utils/styles";
 import Spinner from "./Spinner";
 import { FcOpenedFolder } from "react-icons/fc";
+import { FaDongSign } from "react-icons/fa6";
 import {
   deleteObject,
   getDownloadURL,
@@ -18,6 +19,8 @@ import {
 import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
 import { MdDelete } from "react-icons/md";
+import { addNewProduct, getAllProducts } from "../api";
+import { setAllProducts } from "../context/actions/productAction";
 
 const DBNewItem = () => {
   const [itemName, setItemName] = useState("");
@@ -82,7 +85,23 @@ const DBNewItem = () => {
       product_price: price,
       product_image: imageDownloadURL,
     };
-    console.log(data);
+    addNewProduct(data).then((res) => {
+      console.log(res)
+      dispatch(alertSuccess("New item added"));
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
+      setImageDownloadURL(null)
+      setItemName ("");
+      setPrice("");
+      setCategory(null)
+      
+    });
+    getAllProducts().then((data) => {
+      
+      dispatch(setAllProducts(data));
+      
+    });
   };
   return (
     <div className="flex items-center justify-center flex-col pt-6 px-24 w-full gap-3 ">
@@ -118,7 +137,9 @@ const DBNewItem = () => {
           stateFunc={setPrice}
         />
         <div className="relative">
-          <span className="text-textColor absolute right-14 -top-2.5">đ</span>
+          <span className="text-textColor absolute right-14 -top-2.5 text-xl">
+            <FaDongSign className="text-red-400"/>
+          </span>
         </div>
       </div>
       <div className="w-[60%] bg-card backdrop-blur-md h-300 rounded-md border-2 border-dotted border-gray-300 cursor-pointer">

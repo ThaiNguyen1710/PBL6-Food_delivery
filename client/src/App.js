@@ -30,7 +30,7 @@ const App = () => {
       }
       setInterval(() => {
         setIsLoading(false);
-      }, 2000);
+      }, 3000);
     });
   }, []);
 
@@ -49,7 +49,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
       </Routes>
-      {alert?.type && <Alert type={alert?.type}>{alert?.message}</Alert>}
+      {alert?.type && <Alert type={alert?.type} message={alert?.message}/>}
     </div>
   );
 };
