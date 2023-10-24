@@ -43,7 +43,7 @@ router.get("/all", async (req, res) => {
 //delete a product
 
 router.delete("/delete/:productId", async (req, res) => {
-  const productId = res.params.productId;
+  const productId = req.params.productId;
   try {
     await db
       .collection("products")

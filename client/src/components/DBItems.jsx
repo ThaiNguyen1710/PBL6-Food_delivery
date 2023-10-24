@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import DataTable from "./DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { FaDongSign } from "react-icons/fa6";
@@ -7,8 +7,15 @@ import { setAllProducts } from "../context/actions/productAction";
 import { alertNULL, alertSuccess } from "../context/actions/alertActions";
 
 const DBItems = () => {
+    useEffect(()=>{
+      if(!products){
+        getAllProducts().then(data=>{
+          dispatch(setAllProducts(data))
+        })
+      }
+    },[])
   const products = useSelector((state) => state.products);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   return (
     <div className="flex justify-center items-center gap-4 pt-6 w-full">
       <DataTable
@@ -44,31 +51,29 @@ const DBItems = () => {
           },
         ]}
         data={products}
-        title={"List of products"}
+        title="List of products"
         actions={[
           {
             icon: "edit",
             tooltip: "Edit Data",
-            onclick: (event, rowData) => {
+            onClick: (event, rowData) => {
               alert("You want to edit" + rowData.productId);
             },
           },
           {
             icon: "delete",
             tooltip: "Delete Data",
-            onclick: (event, rowData) => {
+            onClick: (event, rowData) => {
               if (window.confirm("Are you sure?")) {
-                deleteAProduct(rowData.productId).then(res=>{
-                  dispatch(alertSuccess("Product Deleted "))
-                  setInterval(()=>{
-                    dispatch(alertNULL)
-                  },3000)
+                deleteAProduct(rowData.productId).then((res) => {
+                  dispatch(alertSuccess("Product Deleted "));
+                  setInterval(() => {
+                    dispatch(alertNULL());
+                  }, 3000);
                   getAllProducts().then((data) => {
-      
                     dispatch(setAllProducts(data));
-                    
                   });
-                })
+                });
               }
             },
           },

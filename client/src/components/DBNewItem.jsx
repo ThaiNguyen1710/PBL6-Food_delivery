@@ -79,29 +79,38 @@ const DBNewItem = () => {
   };
 
   const saveNewData = () => {
-    const data = {
-      product_name: itemName,
-      product_category: category,
-      product_price: price,
-      product_image: imageDownloadURL,
-    };
-    addNewProduct(data).then((res) => {
-      console.log(res)
-      dispatch(alertSuccess("New item added"));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-      setImageDownloadURL(null)
-      setItemName ("");
-      setPrice("");
-      setCategory(null)
-      
-    });
-    getAllProducts().then((data) => {
-      
-      dispatch(setAllProducts(data));
-      
-    });
+    if(!itemName || !category || !price ||!imageDownloadURL ){
+      dispatch(alertDanger("Hãy nhập đầy đủ!"))
+      setTimeout(()=>{
+        dispatch(alertNULL())
+      },3000)
+    } else{
+      const data = {
+        product_name: itemName,
+        product_category: category,
+        product_price: price,
+        product_image: imageDownloadURL,
+      };
+  
+      addNewProduct(data).then((res) => {
+        console.log(res)
+        dispatch(alertSuccess("New item added"));
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+        setImageDownloadURL(null)
+        setItemName ("");
+        setPrice("");
+        setCategory(null)
+        
+      });
+      getAllProducts().then((data) => {
+        
+        dispatch(setAllProducts(data));
+        
+      });
+    }
+    
   };
   return (
     <div className="flex items-center justify-center flex-col pt-6 px-24 w-full gap-3 ">

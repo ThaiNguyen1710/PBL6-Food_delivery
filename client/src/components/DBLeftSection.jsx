@@ -101,10 +101,10 @@ const DBLeftSection = () => {
               <img src={igLogo} alt="" className="w-full h-full" />
             </motion.div>
           </div>
-          <p className="flex text-xl font-medium text-textColor gap-10">
+          <span className="flex text-xl font-medium text-textColor gap-10">
             Facebook
             <p>Instagram</p>
-          </p>
+          </span>
         </div>
       </div>
     </div>

@@ -8,7 +8,7 @@ const DataTable = ({ columns, data, title, actions }) => {
   return <ThemeProvider  theme={defaultMaterialTheme}>
     <MaterialTable  
         columns={columns}
-        data={data}
+        data={Array.isArray(data) ? data : []} 
         title={title}
         actions={actions}
         
