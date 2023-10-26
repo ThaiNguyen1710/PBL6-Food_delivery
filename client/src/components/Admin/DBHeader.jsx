@@ -3,12 +3,12 @@ import React from "react";
 import { BsFillBellFill, BsToggles2 } from "react-icons/bs";
 import { MdLogout, MdSearch } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-import { buttonClick } from "../animations";
-import { avatar } from "../assets";
-import { getAuth, signOut } from "firebase/auth";
-import { app } from "../config/firebase.config";
+import { buttonClick } from "../../animations";
+import { avatar } from "../../assets";
+import { getAuth } from "firebase/auth";
+import { app } from "../../config/firebase.config";
 import { useNavigate } from "react-router-dom";
-import { setUserNull } from "../context/actions/userActions";
+import { setUserNull } from "../../context/actions/userActions";
 
 const DBHeader = () => {
   const user = useSelector((state) => state.user);

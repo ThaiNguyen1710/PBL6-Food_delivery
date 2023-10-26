@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers } from "../api";
-import { setAllUserDetail } from "../context/actions/allUsersAction";
+import { getAllUsers } from "../../api";
+import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import DataTable from "./DataTable";
-import { avatar } from "../assets";
+import { avatar } from "../../assets";
 const DBUsers = () => {
   const allUsers = useSelector((state) => state.allUsers);
   const dispatch = useDispatch();
@@ -38,6 +38,18 @@ const DBUsers = () => {
           {
             title: "Email",
             field: "email",
+          },
+          {
+            title: "Phone",
+            field: "",
+          },
+          {
+            title: "Address",
+            field: "",
+          },
+          {
+            title: "Type",
+            field: "",
           },
           {
             title: "Verified",

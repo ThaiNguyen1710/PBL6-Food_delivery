@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { faceLogo, igLogo, logo } from "../assets";
-import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
+import { faceLogo, igLogo, logo } from "../../assets";
+import { isActiveStyles, isNotActiveStyles } from "../../utils/styles";
 import { motion } from "framer-motion";
 
 const DBLeftSection = () => {

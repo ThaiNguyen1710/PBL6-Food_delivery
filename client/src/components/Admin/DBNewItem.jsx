@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { statuses } from "../utils/styles";
-import Spinner from "./Spinner";
+import { statuses } from "../../utils/styles";
+import Spinner from "../Spinner";
 import { FcOpenedFolder } from "react-icons/fc";
 import { FaDongSign } from "react-icons/fa6";
 import {
@@ -9,18 +9,18 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { storage } from "../config/firebase.config";
+import { storage } from "../../config/firebase.config";
 import { useDispatch, useSelector } from "react-redux";
 import {
   alertDanger,
   alertNULL,
   alertSuccess,
-} from "../context/actions/alertActions";
+} from "../../context/actions/alertActions";
 import { motion } from "framer-motion";
-import { buttonClick } from "../animations";
+import { buttonClick } from "../../animations";
 import { MdDelete } from "react-icons/md";
-import { addNewProduct, getAllProducts } from "../api";
-import { setAllProducts } from "../context/actions/productAction";
+import { addNewProduct, getAllProducts } from "../../api";
+import { setAllProducts } from "../../context/actions/productAction";
 
 const DBNewItem = () => {
   const [itemName, setItemName] = useState("");
@@ -29,6 +29,7 @@ const DBNewItem = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(null);
   const [imageDownloadURL, setImageDownloadURL] = useState(null);
+  const [information, setInformation] = useState("");
 
   const alert = useSelector((state) => state.alert);
   const dispatch = useDispatch();
@@ -79,38 +80,36 @@ const DBNewItem = () => {
   };
 
   const saveNewData = () => {
-    if(!itemName || !category || !price ||!imageDownloadURL ){
-      dispatch(alertDanger("Hãy nhập đầy đủ!"))
-      setTimeout(()=>{
-        dispatch(alertNULL())
-      },3000)
-    } else{
+    if (!itemName || !category || !price || !imageDownloadURL) {
+      dispatch(alertDanger("Hãy nhập đầy đủ!"));
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
+    } else {
       const data = {
         product_name: itemName,
         product_category: category,
         product_price: price,
         product_image: imageDownloadURL,
+        product_information: information,
       };
-  
+
       addNewProduct(data).then((res) => {
-        console.log(res)
+        console.log(res);
         dispatch(alertSuccess("New item added"));
         setTimeout(() => {
           dispatch(alertNULL());
         }, 3000);
-        setImageDownloadURL(null)
-        setItemName ("");
+        setImageDownloadURL(null);
+        setItemName("");
         setPrice("");
-        setCategory(null)
-        
+        setCategory(null);
+        setInformation("");
       });
       getAllProducts().then((data) => {
-        
         dispatch(setAllProducts(data));
-        
       });
     }
-    
   };
   return (
     <div className="flex items-center justify-center flex-col pt-6 px-24 w-full gap-3 ">
@@ -147,9 +146,15 @@ const DBNewItem = () => {
         />
         <div className="relative">
           <span className="text-textColor absolute right-14 -top-2.5 text-xl">
-            <FaDongSign className="text-red-400"/>
+            <FaDongSign className="text-red-400" />
           </span>
         </div>
+        <InputValueField
+          type="text"
+          placeholder={"Information item"}
+          stateValue={information}
+          stateFunc={setInformation}
+        />
       </div>
       <div className="w-[60%] bg-card backdrop-blur-md h-300 rounded-md border-2 border-dotted border-gray-300 cursor-pointer">
         {isLoading ? (

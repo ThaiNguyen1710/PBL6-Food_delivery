@@ -2,9 +2,9 @@ import React, { useEffect } from "react";
 import DataTable from "./DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { FaDongSign } from "react-icons/fa6";
-import { deleteAProduct, getAllProducts } from "../api";
-import { setAllProducts } from "../context/actions/productAction";
-import { alertNULL, alertSuccess } from "../context/actions/alertActions";
+import { deleteAProduct, getAllProducts } from "../../api";
+import { setAllProducts } from "../../context/actions/productAction";
+import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 
 const DBItems = () => {
     useEffect(()=>{
@@ -38,6 +38,10 @@ const DBItems = () => {
           {
             title: "Category",
             field: "product_category",
+          },
+          {
+            title: "Description",
+            field: "product_information",
           },
           {
             title: "Price",

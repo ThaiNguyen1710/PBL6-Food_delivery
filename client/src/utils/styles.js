@@ -5,11 +5,14 @@ export const isNotActiveStyles =
   "text-xl font-semibold text-textColor hover:text-red-700 px-4 py-2 duration-100 transition-all ease-in-out";
 
   export const statuses =[
-    {id:1, title: "Drinks", category:"drinks"},
-    {id:2, title: "Deserts", category:"deserts"},
-    {id:3, title: "Fruits", category:"fruits"},
-    {id:4, title: "Rice", category:"rice"},
-    {id:5, title: "Curry", category:"curry"},
-    {id:6, title: "Chinese", category:"chinese"},
-    {id:7, title: "Bread", category:"bread"},
+    {id:1, title: "Đồ Ăn Nhanh", category:"Đồ Ăn Nhanh"},
+    {id:2, title: "Cơm", category:"Cơm"},
+    {id:3, title: "Bún", category:"Bún"},
+    {id:4, title: "Trà Sữa", category:"Trà Sữa"},
+    {id:5, title: "Gà ", category:"Gà "},
+    {id:6, title: "Kem ", category:"Kem "},
+    {id:7, title: "Lẩu", category:"Lẩu"},
+    {id:8, title: "Bánh Ngọt", category:"Bánh Ngọt"},
+    {id:9, title: "Đồ Uống ", category:"Đồ Uống "},
+    
   ]

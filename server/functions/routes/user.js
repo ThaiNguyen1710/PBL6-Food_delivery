@@ -46,11 +46,15 @@ const listAllUsers = async (nextpagetoken) => {
 listAllUsers();
 
 router.get("/all", async (req, res) => {
-  listAllUsers();
+  // Loại bỏ các tài khoản trùng lặp dựa trên trường 'uid'
+  const uniqueUsers = data.filter((user, index, self) =>
+    index === self.findIndex((u) => u.uid === user.uid)
+  );
+
   try {
     return res
       .status(200)
-      .send({ success: true, data: data, dataCount: data.length });
+      .send({ success: true, data: uniqueUsers, dataCount: uniqueUsers.length });
   } catch (err) {
     return res.send({
       success: false,
