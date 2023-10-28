@@ -16,3 +16,6 @@ export {default as DBUsers} from "./Admin/DBUsers"
 export {default as DataTable} from "./Admin/DataTable"
 
 export {default as Spinner} from "./Spinner"
+
+//clinent
+export {default as Home} from "./Client/Home"

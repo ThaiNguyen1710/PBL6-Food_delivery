@@ -27,11 +27,11 @@ const Header = () => {
   return (
     <header className="fixed backdrop-blur-md z-50 inset-x-0 top-0 flex justify-between items-center px-12 md:px-20 py-6 ">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
-        <img src={logo} className="w-16 " alt="" />
-        <p className=" font-semibold text-5xl text-green-700">6Food</p>
+        <img src={logo} className="w-12 " alt="" />
+        <p className=" font-semibold text-3xl text-green-700">6Food</p>
       </NavLink>
 
-      <nav className="flex justify-center items-center gap-8">
+      <nav className="flex justify-center items-center gap-4">
         <ul className="hidden md:flex justify-center items-center ">
           <NavLink
             className={({ isActive }) =>

@@ -1,12 +1,15 @@
 import React from "react";
-import { Header } from "../components";
-import { motion } from "framer-motion";
+import { Header, Home } from "../components";
+
 
 
 const Main = () => {
   return (
-    <main className="w-screen min-h-screen flex justify-center items-center absolute bottom-0 flex-col bg-primary">
+    <main className="w-full min-h-screen flex justify-center items-center flex-col bg-primary">
       <Header />
+      <div className="w-full h-full  items-start justify-start px-6 md:px-24 2xl:px-96 gap-12 pb-24 ">
+        <Home/>
+      </div>
     </main>
   );
 };

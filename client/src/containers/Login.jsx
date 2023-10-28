@@ -16,6 +16,7 @@ import {
   signInWithEmailAndPassword,
   FacebookAuthProvider,
   sendPasswordResetEmail,
+  updatePassword,
 } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { validateUserJWTToken } from "../api";
@@ -27,6 +28,7 @@ import {
   alertDanger,
   alertInfo,
   alertNULL,
+  alertWarning,
 } from "../context/actions/alertActions";
 
 const Login = () => {
@@ -187,14 +189,14 @@ const Login = () => {
           }, 3000);
         } else {
           // Xử lý các lỗi khác
-          dispatch(alertDanger("Tài khoản chưa đăng ký"));
+          dispatch(alertDanger("Mật khẩu sai!"));
           setTimeout(() => {
             dispatch(alertNULL());
           }, 3000);
         }
       }
     } else {
-      dispatch(alertDanger("Password wrong!"));
+      dispatch(alertWarning("Nhập đủ thông tin!"));
       setTimeout(() => {
         dispatch(alertNULL());
       }, 3000);
@@ -234,9 +236,8 @@ const Login = () => {
       // dispatch(alertDanger("Please enter your email address."));
       try {
         // Send a password reset email
-        await sendPasswordResetEmail(firebaseAuth, forgotEmail);
-
-        dispatch(alertInfo("Password reset email sent successfully."));
+        await updatePassword(firebaseAuth, userEmail);
+        dispatch(alertInfo("Email đặt lại mật khẩu đã được gửi thành công."));
         setForgotEmail("");
         setNewPassword("");
         setIsForgot(false);
@@ -300,8 +301,8 @@ const Login = () => {
               <LoginInput
                 placeHolder={"Email cần thay đổi"}
                 icon={<FaEnvelope className="text-xl text-textColor" />}
-                inputState={forgotEmail}
-                inputStateFunc={setForgotEmail}
+                inputState={userEmail}
+                inputStateFunc={setUserEmail}
                 type="email"
                 isSignUp={false}
               />
