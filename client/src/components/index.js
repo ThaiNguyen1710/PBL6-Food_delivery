@@ -17,5 +17,8 @@ export {default as DataTable} from "./Admin/DataTable"
 
 export {default as Spinner} from "./Spinner"
 
-//clinent
-export {default as Home} from "./Client/Home"
+//client
+export {default as Home} from "./ClientUI/Home"
+export {default as HomeSlider} from "./ClientUI/HomeSlider"
+export {default as Slider} from "./ClientUI/Slider"
+export {default as SliderCard} from "./ClientUI/SliderCard"

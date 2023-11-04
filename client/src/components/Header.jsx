@@ -31,7 +31,7 @@ const Header = () => {
         <p className=" font-semibold text-3xl text-green-700">6Food</p>
       </NavLink>
 
-      <nav className="flex justify-center items-center gap-4">
+      <nav className="flex justify-center items-center  gap-4">
         <ul className="hidden md:flex justify-center items-center ">
           <NavLink
             className={({ isActive }) =>
@@ -66,17 +66,17 @@ const Header = () => {
             About Us
           </NavLink>
         </ul>
-        <motion {...buttonClick} className="relative cursor-pointer">
+        <motion.div {...buttonClick} className="relative cursor-pointer">
           <MdShoppingCart className="text-3xl items-center justify-center" />
           <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-5 -right-1 ">
             <p className="text-primary text-base font-semibold">2</p>
           </div>
-        </motion>
+        </motion.div>
 
         {user ? (
           <>
             <div className="relative cursor-pointer">
-              <div className="rounded-full  shadow-md overflow-hidden w-12 h-12 cursor-pointer  flex items-center justify-center">
+              <div className="rounded-full  shadow-md overflow-hidden w-12 h-12 cursor-pointer  flex items-center justify-end">
                 <motion.img
                   onMouseEnter={() => setIsMenu(true)}
                   className="w-full h-full object-cover"
@@ -88,7 +88,7 @@ const Header = () => {
                   <motion.div
                     {...slideTop}
                     onMouseLeave={() => setIsMenu(false)}
-                    className="px-4 py-6 bg-cardOverlay absolute top-12 right-3 rounded-md backdrop-blur-md shadow-sm flex flex-col gap-4"
+                    className="px-4 py-6 bg-cardOverlay absolute top-12 -right-28 rounded-md backdrop-blur-md shadow-sm flex flex-col gap-4"
                   >
                     <Link
                       className="hover:text-red-400 text-xl text-textColor"
