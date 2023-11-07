@@ -11,7 +11,7 @@ const Home = () => {
       <div className=" flex flex-col items-start justify-start gap-6">
         <div className="px-4 py-1 flex items-center justify-center gap-2 rounded-full bg-orange-200">
           <div className="text-lg font-semibold text-orange-500">
-            Free Delivery
+            Giao Hàng Tận Nơi
           </div>
           <div className="w-10 h-10 flex  bg-slate-100 rounded-full items-center justify-center">
             <img
@@ -32,7 +32,7 @@ const Home = () => {
           {...buttonClick}
           className="bg-gradient-to-bl from-orange-400 to-orange-600 px-4 py-2 rounded-xl text-black text-base font-semibold "
         >
-          Order Now
+          Đặt Hàng Ngay
         </motion.button>
       </div>
       <div className="py-2  flex-1 flex items-center justify-center relative">

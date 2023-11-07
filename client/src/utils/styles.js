@@ -8,12 +8,15 @@ export const statuses = [
   { id: 1, title: "Đồ Ăn Nhanh", category: "Đồ Ăn Nhanh" },
   { id: 2, title: "Cơm", category: "Cơm" },
   { id: 3, title: "Bún", category: "Bún" },
-  { id: 4, title: "Trà Sữa", category: "Trà Sữa" },
-  { id: 5, title: "Gà ", category: "Gà " },
-  { id: 6, title: "Kem ", category: "Kem " },
-  { id: 7, title: "Lẩu", category: "Lẩu" },
-  { id: 8, title: "Bánh Ngọt", category: "Bánh Ngọt" },
-  { id: 9, title: "Đồ Uống ", category: "Đồ Uống " },
+  { id: 4, title: "Đồ Uống ", category: "Đồ Uống " },
+  { id: 5, title: "Trà Sữa", category: "Trà Sữa" },
+  { id: 6, title: "Gà ", category: "Gà " },
+  { id: 7, title: "Kem ", category: "Kem " },
+  { id: 8, title: "Lẩu", category: "Lẩu" },
+  { id: 9, title: "Bánh Ngọt", category: "Bánh Ngọt" },
+ 
+  
+  
 ];
 
 export const randomData = [

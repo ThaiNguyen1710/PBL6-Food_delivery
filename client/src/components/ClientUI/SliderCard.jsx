@@ -19,6 +19,9 @@ const SliderCard = ({ data, index }) => {
           {data.product_price}
           <FaDongSign className="text-red-500" />{" "}
         </p>
+        <p className="text-sm font-normal text-textColor text-center">
+          {data.product_information}
+        </p>
         <motion.div
             {...buttonClick}
             className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center absolute -top-4 right-2 cursor-pointer"

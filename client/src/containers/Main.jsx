@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Header, Home, HomeSlider } from "../components";
+import { FilterSection, Header, Home, HomeSlider } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../api";
 import { setAllProducts } from "../context/actions/productAction";
@@ -23,6 +23,7 @@ const Main = () => {
       <div className="w-full flex flex-col items-start justify-center mt-32 px-6 md:px-24 2xl:px-40 gap-2 pb-24 ">
         <Home/>
         <HomeSlider/>
+        <FilterSection/>
       </div>
     </main>
   );

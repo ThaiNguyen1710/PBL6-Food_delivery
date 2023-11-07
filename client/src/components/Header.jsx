@@ -39,7 +39,7 @@ const Header = () => {
             }
             to={"/"}
           >
-            Home
+            Trang chủ
           </NavLink>
           <NavLink
             className={({ isActive }) =>
@@ -47,23 +47,23 @@ const Header = () => {
             }
             to={"/menu"}
           >
-            Menu
+            Khám Phá
           </NavLink>
-          <NavLink
+          {/* <NavLink
             className={({ isActive }) =>
               isActive ? isActiveStyles : isNotActiveStyles
             }
             to={"/services"}
           >
             Services
-          </NavLink>
+          </NavLink> */}
           <NavLink
             className={({ isActive }) =>
               isActive ? isActiveStyles : isNotActiveStyles
             }
             to={"/aboutus"}
           >
-            About Us
+            Liên Hệ
           </NavLink>
         </ul>
         <motion.div {...buttonClick} className="relative cursor-pointer">
