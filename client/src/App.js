@@ -5,11 +5,12 @@ import { getAuth } from "firebase/auth";
 import { app } from "./config/firebase.config";
 
 import { useDispatch, useSelector } from "react-redux";
-import { validateUserJWTToken } from "./api";
+import { getAllCartItems, validateUserJWTToken } from "./api";
 import { setUserDetail } from "./context/actions/userActions";
 import { motion } from "framer-motion";
 import { fadeInOut } from "./animations";
 import { Alert, MainLoader } from "./components";
+import { setCartItems } from "./context/actions/cartAction";
 
 const App = () => {
   const firebaseAuth = getAuth(app);
@@ -24,6 +25,12 @@ const App = () => {
       if (cred) {
         cred.getIdToken().then((token) => {
           validateUserJWTToken(token).then((data) => {
+            if (data) {
+              getAllCartItems(data.user_id).then((items) => {
+                console.log(items);
+                dispatch(setCartItems(items));
+              });
+            }
             dispatch(setUserDetail(data));
           });
         });
@@ -49,7 +56,7 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
       </Routes>
-      {alert?.type && <Alert type={alert?.type} message={alert?.message}/>}
+      {alert?.type && <Alert type={alert?.type} message={alert?.message} />}
     </div>
   );
 };

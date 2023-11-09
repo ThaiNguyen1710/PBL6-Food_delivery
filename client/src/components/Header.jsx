@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { logo, avatar} from "../assets";
+import { logo, avatar } from "../assets";
 import { isActiveStyles, isNotActiveStyles } from "../utils/styles";
 import { motion } from "framer-motion";
 import { buttonClick, slideTop } from "../animations";
@@ -9,20 +9,26 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAuth } from "firebase/auth";
 import { app } from "../config/firebase.config";
 import { setUserNull } from "../context/actions/userActions";
+import { setCartOn } from "../context/actions/displayCartAction";
 
 const Header = () => {
   const user = useSelector((state) => state.user);
+  const cart = useSelector((state) => state.cart);
+
   const [isMenu, setIsMenu] = useState(false);
-  const firebaseAuth = getAuth(app)
+  const firebaseAuth = getAuth(app);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const signOut = ()=>{
-    firebaseAuth.signOut().then(()=>{
-      dispatch(setUserNull())
-      navigate("/login", { relative:true})
-    }).catch((err)=> console.log(err))
-  }
+  const signOut = () => {
+    firebaseAuth
+      .signOut()
+      .then(() => {
+        dispatch(setUserNull());
+        navigate("/login", { relative: true });
+      })
+      .catch((err) => console.log(err));
+  };
 
   return (
     <header className="fixed backdrop-blur-md z-50 inset-x-0 top-0 flex justify-between items-center px-12 md:px-20 py-6 ">
@@ -66,11 +72,19 @@ const Header = () => {
             Liên Hệ
           </NavLink>
         </ul>
-        <motion.div {...buttonClick} className="relative cursor-pointer">
+        <motion.div
+          {...buttonClick}
+          onClick={() => dispatch(setCartOn())}
+          className="relative cursor-pointer"
+        >
           <MdShoppingCart className="text-3xl items-center justify-center" />
-          <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-5 -right-1 ">
-            <p className="text-primary text-base font-semibold">2</p>
-          </div>
+          {cart?.length > 0 && (
+            <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-5 -right-1 ">
+              <p className="text-primary text-base font-semibold">
+                {cart?.length}
+              </p>
+            </div>
+          )}
         </motion.div>
 
         {user ? (
@@ -80,7 +94,7 @@ const Header = () => {
                 <motion.img
                   onMouseEnter={() => setIsMenu(true)}
                   className="w-full h-full object-cover"
-                  src={user?.picture ? user?.picture :avatar }
+                  src={user?.picture ? user?.picture : avatar}
                   whileHover={{ scale: 1.15 }}
                   referrerPolicy="no-referrer"
                 ></motion.img>

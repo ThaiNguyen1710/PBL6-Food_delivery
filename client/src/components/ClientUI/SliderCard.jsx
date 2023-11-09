@@ -5,7 +5,8 @@ import { buttonClick } from "../../animations";
 import { BsFillBasket2Fill } from "react-icons/bs";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewItemToCart, getAllCartItems } from "../../api";
-import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
+import {  alertNULL, alertSuccess } from "../../context/actions/alertActions";
+import { setCartItems } from "../../context/actions/cartAction";
 
 const SliderCard = ({ data, index }) => {
   const user = useSelector((state) => state.user);
@@ -14,12 +15,13 @@ const SliderCard = ({ data, index }) => {
   const sendToCart = () => {
     addNewItemToCart(user?.user_id, data).then((res) => {
       dispatch(alertSuccess("Added to the cart"));
-      getAllCartItems(user?.user_id).then((items) => {
-        console.log(items);
-      });
       setInterval(() => {
         dispatch(alertNULL());
       }, 3000);
+      getAllCartItems(user?.user_id).then((items) => {
+        dispatch(setCartItems(items))
+      });
+    
     });
   };
   return (

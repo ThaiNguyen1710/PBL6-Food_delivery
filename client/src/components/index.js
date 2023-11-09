@@ -2,6 +2,7 @@ export {default as LoginInput} from "./LoginInput"
 export {default as MainLoader} from "./MainLoader"
 export {default as Alert} from "./Alert"
 export {default as Header} from "./Header"
+export {default as Cart} from "./Cart"
 
 
 export {default as DBLeftSection} from "./Admin/DBLeftSection"
