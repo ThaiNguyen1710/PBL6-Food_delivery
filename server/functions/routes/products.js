@@ -5,6 +5,7 @@ const db = admin.firestore();
 router.post("/create", async (req, res) => {
   try {
     const id = Date.now();
+
     const data = {
       productId: id,
       product_name: req.body.product_name,
@@ -56,6 +57,43 @@ router.delete("/delete/:productId", async (req, res) => {
       });
   } catch (err) {
     return res.send({ success: false, msg: `Error:${err}` });
+  }
+});
+
+router.put("/update/:productId", async (req, res) => {
+  const productId = req.params.productId;
+
+  try {
+    // Kiểm tra xem sản phẩm có tồn tại không
+    const productDoc = await db
+      .collection("products")
+      .doc(`/${productId}/`)
+      .get();
+
+    if (!productDoc.exists) {
+      return res.status(404).send({ success: false, msg: "Product not found" });
+    }
+
+    // Thực hiện cập nhật thông tin sản phẩm
+    const updatedData = {
+      product_name: req.body.product_name || productDoc.data().product_name,
+      product_category:
+        req.body.product_category || productDoc.data().product_category,
+      product_price: req.body.product_price || productDoc.data().product_price,
+      product_image: req.body.product_image || productDoc.data().product_image,
+      product_information:
+        req.body.product_information || productDoc.data().product_information,
+    };
+
+    await db.collection("products").doc(`/${productId}/`).update(updatedData);
+
+    return res
+      .status(200)
+      .send({ success: true, msg: "Product updated successfully" });
+  } catch (err) {
+    return res
+      .status(500)
+      .send({ success: false, msg: `Error: ${err.message}` });
   }
 });
 
@@ -177,4 +215,33 @@ router.get("/getCartItems/:user_id", async (req, res) => {
       return res.send({ success: false, msg: `Error:${err}` });
     }
   })();
+});
+
+router.delete("/clearCart/:user_id", async (req, res) => {
+  const userId = req.params.user_id;
+  try {
+    // Lấy tất cả các mục trong giỏ hàng của người dùng
+    const cartItems = await db
+      .collection("cartItems")
+      .doc(`/${userId}/`)
+      .collection("items")
+      .get();
+
+    // Xóa từng mục trong giỏ hàng
+    const deletePromises = cartItems.docs.map((doc) => {
+      return db
+        .collection("cartItems")
+        .doc(`/${userId}/`)
+        .collection("items")
+        .doc(doc.id)
+        .delete();
+    });
+
+    // Chờ tất cả các promises hoàn thành
+    await Promise.all(deletePromises);
+
+    return res.status(200).send({ success: true, msg: "Cart cleared successfully" });
+  } catch (err) {
+    return res.send({ success: false, msg: `Error:${err}` });
+  }
 });

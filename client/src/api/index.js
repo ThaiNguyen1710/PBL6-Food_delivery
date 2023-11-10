@@ -47,6 +47,16 @@ export const deleteAProduct = async (productId) => {
   }
 };
 
+// Sửa sản phẩm
+export const editProduct = async (productId, data) => {
+  try {
+    const res = await axios.put(`${baseURL}/api/products/update/${productId}`, data);
+    return res.data.data;
+  } catch (err) {
+    return null;
+  }
+};
+
 export const getAllUsers = async () => {
   try {
     const res = await axios.get(`${baseURL}/api/users/all`);
@@ -91,6 +101,16 @@ export const incrementItemQuantity = async (user_id, productId, type) => {
       null,
       { params: { productId: productId, type: type } }
     );
+    return res.data.data;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const clearAllCart = async (user_id) => {
+  try {
+    const res = await axios.delete(`${baseURL}/api/products/clearCart/${user_id}`);
+    
     return res.data.data;
   } catch (error) {
     return null;

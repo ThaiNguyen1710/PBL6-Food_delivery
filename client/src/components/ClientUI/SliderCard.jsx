@@ -15,7 +15,7 @@ const SliderCard = ({ data, index }) => {
   const sendToCart = () => {
     addNewItemToCart(user?.user_id, data).then((res) => {
       dispatch(alertSuccess("Added to the cart"));
-      setInterval(() => {
+      setTimeout(() => {
         dispatch(alertNULL());
       }, 3000);
       getAllCartItems(user?.user_id).then((items) => {
@@ -36,7 +36,7 @@ const SliderCard = ({ data, index }) => {
           {data.product_name}
         </p>
         <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
-          {data.product_price}
+          {parseFloat(data.product_price).toLocaleString('vi-VN')}
           <FaDongSign className="text-red-500" />{" "}
         </p>
         <p className="text-sm font-normal text-textColor text-center">

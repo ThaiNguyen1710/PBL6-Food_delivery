@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Cart, FilterSection, Header, Home, HomeSlider } from "../components";
+import { Cart, FilterSection, Footer, Header, Home, HomeSlider } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllProducts } from "../api";
 import { setAllProducts } from "../context/actions/productAction";
@@ -23,8 +23,11 @@ const Main = () => {
         <Home />
         <HomeSlider />
         <FilterSection />
+       
       </div>
       {isCart && <Cart/>}
+      <Footer />
+      
     </main>
   );
 };

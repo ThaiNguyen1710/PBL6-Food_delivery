@@ -3,6 +3,7 @@ export {default as MainLoader} from "./MainLoader"
 export {default as Alert} from "./Alert"
 export {default as Header} from "./Header"
 export {default as Cart} from "./Cart"
+export {default as Footer} from "./Footer"
 
 
 export {default as DBLeftSection} from "./Admin/DBLeftSection"
@@ -15,6 +16,7 @@ export {default as DBItems} from "./Admin/DBItems"
 export {default as DBNewItem} from "./Admin/DBNewItem"
 export {default as DBUsers} from "./Admin/DBUsers"
 export {default as DataTable} from "./Admin/DataTable"
+
 
 export {default as Spinner} from "./Spinner"
 

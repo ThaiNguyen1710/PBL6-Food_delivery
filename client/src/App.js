@@ -27,7 +27,7 @@ const App = () => {
           validateUserJWTToken(token).then((data) => {
             if (data) {
               getAllCartItems(data.user_id).then((items) => {
-                console.log(items);
+                
                 dispatch(setCartItems(items));
               });
             }

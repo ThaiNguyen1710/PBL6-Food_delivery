@@ -26,7 +26,7 @@ export const randomData = [
       "https://firebasestorage.googleapis.com/v0/b/food-delivery-app-1449c.appspot.com/o/Images%2F1698247468492_%24(imageFile.name)?alt=media&token=83ac1651-345c-45a5-8742-4869dce74efd",
     product_name: "Kem Vani",
     product_category: "Kem ",
-    product_price: "25000",
+    product_price: "25.000",
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ export const randomData = [
       "https://firebasestorage.googleapis.com/v0/b/food-delivery-app-1449c.appspot.com/o/Images%2F1698286437761_%24(imageFile.name)?alt=media&token=55520eb2-a0f2-4568-9100-a93832027dae",
     product_name: "Cơm Sườn",
     product_category: "Cơm ",
-    product_price: "26000",
+    product_price: "26.000",
   },
   {
     id: 3,
@@ -42,7 +42,7 @@ export const randomData = [
       "https://firebasestorage.googleapis.com/v0/b/food-delivery-app-1449c.appspot.com/o/Images%2F1698286465068_%24(imageFile.name)?alt=media&token=687a6ce7-1c29-44e7-b702-77962279128f",
     product_name: "Lẩu Thái",
     product_category: "Lẩu ",
-    product_price: "50000",
+    product_price: "50.000",
   },
   {
     id: 4,
@@ -50,7 +50,7 @@ export const randomData = [
       "https://firebasestorage.googleapis.com/v0/b/food-delivery-app-1449c.appspot.com/o/Images%2F1698286514053_%24(imageFile.name)?alt=media&token=0cf94470-7627-40be-8f4e-f8ac0ea87d41",
     product_name: "Cocktail",
     product_category: "Đồ Uống  ",
-    product_price: "40000",
+    product_price: "40.000",
   },
   // {
   //   id: 5,
@@ -66,7 +66,7 @@ export const randomData = [
       "https://firebasestorage.googleapis.com/v0/b/food-delivery-app-1449c.appspot.com/o/Images%2F1698287049621_%24(imageFile.name)?alt=media&token=d40bd299-ccdc-480a-87f0-23dbd44e0759",
     product_name: "Bún Thịt Nướng",
     product_category: "Bún",
-    product_price: "25000",
+    product_price: "25.000",
   },
   {
     id: 7,
@@ -74,7 +74,7 @@ export const randomData = [
       "https://firebasestorage.googleapis.com/v0/b/food-delivery-app-1449c.appspot.com/o/Images%2F1698287077005_%24(imageFile.name)?alt=media&token=03a38187-faff-4e99-9ca8-24c8ab1f4472",
     product_name: "Hamburger",
     product_category: "Đồ Ăn Nhanh ",
-    product_price: "40000",
+    product_price: "40.000",
   },
   // {
   //   id: 8,
