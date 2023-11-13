@@ -116,3 +116,14 @@ export const clearAllCart = async (user_id) => {
     return null;
   }
 };
+
+export const handleCheckOut = async()=>{
+ 
+    axios
+      .post(`${baseURL}/api/products/create-checkout-session`)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => console.log(err));
+  
+}

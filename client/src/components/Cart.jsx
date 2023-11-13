@@ -7,19 +7,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCartOff } from "../context/actions/displayCartAction";
 import { useState } from "react";
 import { FaDongSign } from "react-icons/fa6";
+import { alertNULL, alertSuccess } from "../context/actions/alertActions";
 import {
-
-  alertNULL,
-  alertSuccess,
-} from "../context/actions/alertActions";
-import { clearAllCart, getAllCartItems, incrementItemQuantity } from "../api";
+  baseURL,
+  clearAllCart,
+  getAllCartItems,
+  incrementItemQuantity,
+} from "../api";
 import { setCartItems } from "../context/actions/cartAction";
+import axios from "axios";
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
   const [total, setTotal] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
-  const user = useSelector((state) => state.user);;
+  const user = useSelector((state) => state.user);
+  
 
   useEffect(() => {
     let total = 0;
@@ -29,7 +32,7 @@ const Cart = () => {
         total = total + data.product_price * data.quantity;
         setTotal(total.toLocaleString("vi-VN"));
       });
-      
+
       cart.map((data) => {
         totalQuantity = totalQuantity + data.quantity;
         setTotalQuantity(totalQuantity);
@@ -38,19 +41,32 @@ const Cart = () => {
   });
 
   const clearAllItems = () => {
-    clearAllCart(user?.user_id).then(
-      (data) => {
-        dispatch(alertSuccess("Clear all success"));
-        getAllCartItems(user?.user_id).then((items) => {
-          dispatch(setCartItems(items));
-          let totalQuantity= 0;
-          setTotalQuantity(totalQuantity)
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
-        });
-      }
-    );
+    clearAllCart(user?.user_id).then((data) => {
+      dispatch(alertSuccess("Clear all success"));
+      getAllCartItems(user?.user_id).then((items) => {
+        dispatch(setCartItems(items));
+        let totalQuantity = 0;
+        setTotalQuantity(totalQuantity);
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+      });
+    });
+  };
+  const handleCheckOut = () => {
+    const data ={
+      user:user,
+      cart: cart,
+      total :total,
+    }
+    axios
+      .post(`${baseURL}/api/products/create-checkout-session`, {data})
+      .then((res) => {
+        if (res.data.url) {
+          window.location.href = res.data.url;
+        }
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -95,19 +111,24 @@ const Cart = () => {
                   {total}
                   <FaDongSign className="text-primary" />
                 </p>
-                
               </div>
-              <motion.div className="w-[80%] h-12 rounded-full bg-orange-400 shadow-md items-center justify-center flex cursor-pointer"
+              <motion.button
+                className="w-[80%] h-12 rounded-full bg-orange-400 shadow-md items-center justify-center flex cursor-pointer"
                 {...buttonClick}
+                onClick={handleCheckOut}
               >
-                <p className="text-2xl font-semibold text-primary">Thanh Toán</p>
-              </motion.div>
+                <p className="text-2xl font-semibold text-primary">
+                  Thanh Toán
+                </p>
+              </motion.button>
             </div>
           </>
         ) : (
           <>
-          
-            <h1 className="text-4xl text-orange-400 font-semibold px-32"> Empty Cart</h1>
+            <h1 className="text-4xl text-orange-400 font-semibold px-32">
+              {" "}
+              Empty Cart
+            </h1>
           </>
         )}
       </div>

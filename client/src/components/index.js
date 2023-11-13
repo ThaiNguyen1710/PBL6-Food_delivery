@@ -26,3 +26,5 @@ export {default as HomeSlider} from "./ClientUI/HomeSlider"
 export {default as Slider} from "./ClientUI/Slider"
 export {default as SliderCard} from "./ClientUI/SliderCard"
 export {default as FilterSection} from "./ClientUI/FilterSection"
+
+export {default as CheckOutSuccess} from "./CheckOutSuccess"

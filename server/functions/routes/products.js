@@ -1,6 +1,10 @@
 const router = require("express").Router();
+const express = require("express");
 const admin = require("firebase-admin");
 const db = admin.firestore();
+
+db.settings({ ignoreUndefinedProperties: true });
+const stripe = require("stripe")(process.env.STRIPE_KEY);
 
 router.post("/create", async (req, res) => {
   try {
@@ -21,8 +25,6 @@ router.post("/create", async (req, res) => {
     return res.send({ success: false, msg: `Error:${err}` });
   }
 });
-
-module.exports = router;
 
 router.get("/all", async (req, res) => {
   (async () => {
@@ -240,8 +242,91 @@ router.delete("/clearCart/:user_id", async (req, res) => {
     // Chờ tất cả các promises hoàn thành
     await Promise.all(deletePromises);
 
-    return res.status(200).send({ success: true, msg: "Cart cleared successfully" });
+    return res
+      .status(200)
+      .send({ success: true, msg: "Cart cleared successfully" });
   } catch (err) {
     return res.send({ success: false, msg: `Error:${err}` });
   }
 });
+
+router.post("/create-checkout-session", async (req, res) => {
+  const line_items = req.body.data.cart.map((item) => {
+    return {
+      price_data: {
+        currency: "vnd",
+        product_data: {
+          name: item.product_name,
+          images: [item.product_image],
+          metadata: {
+            id: item.productId,
+          },
+        },
+        unit_amount: item.product_price,
+      },
+      quantity: item.quantity,
+    };
+  });
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    shipping_address_collection: { allowed_countries: ["VN"] },
+    shipping_options: [
+      {
+        shipping_rate_data: {
+          type: "fixed_amount",
+          fixed_amount: {
+            amount: 0,
+            currency: "vnd",
+          },
+          display_name: "Free shipping",
+          delivery_estimate: {
+            minimum: { unit: "hour", value: 1 },
+            maximum: { unit: "hour", value: 2 },
+          },
+        },
+      },
+    ],
+    phone_number_collection: {
+      enabled: true,
+    },
+    line_items,
+    mode: "payment",
+    success_url: `${process.env.CLIENT_URL}/checkout-success`,
+    cancel_url: `${process.env.CLIENT_URL}/`,
+  });
+  res.send({ url: session.url });
+});
+
+// endpointSecret= process.env.WEBHOOK_SECRET
+let endpointSecret;
+router.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    const sig = req.headers["stripe-signature"];
+
+    let eventType;
+    let data;
+    if (endpointSecret) {
+      try {
+        event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+      } catch (err) {
+        res.status(400).send(`Webhook Error: ${err.message}`);
+        return;
+      }
+      data = event.data.object;
+      eventType = event.type;
+    } else {
+      data = req.body.data.object;
+      eventType = req.body.type;
+    }
+    if (eventType === "checkout.session.completed") {
+      console.log(data);
+    }
+
+    // Return a 200 res to acknowledge receipt of the event
+    res.send();
+  }
+);
+
+module.exports = router;
