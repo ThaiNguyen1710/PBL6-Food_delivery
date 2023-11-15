@@ -78,9 +78,14 @@ const Login = () => {
         if (cred) {
           cred.getIdToken().then((token) => {
             validateUserJWTToken(token).then((data) => {
-              dispatch(setUserDetail(data));
+              if (data.user_id === process.env.REACT_APP_ADMIN) {
+                dispatch(setUserDetail(data));
+                navigate("/dashboard/home", { replace: true });
+              } else {
+                dispatch(setUserDetail(data));
+                navigate("/", { replace: true });
+              }
             });
-            navigate("/", { replace: true });
           });
         }
       });
@@ -231,8 +236,7 @@ const Login = () => {
       setTimeout(() => {
         dispatch(alertNULL());
       }, 3000);
-    }
-    else if (newPassword === confirm_newPassword) {
+    } else if (newPassword === confirm_newPassword) {
       // dispatch(alertDanger("Please enter your email address."));
       try {
         // Send a password reset email
@@ -266,7 +270,6 @@ const Login = () => {
         dispatch(alertNULL());
       }, 3000);
     }
-   
   };
 
   return (
@@ -291,7 +294,7 @@ const Login = () => {
               Nhập theo yêu cầu!
             </p>
             <motion.button
-            {...buttonClick}
+              {...buttonClick}
               onClick={() => setIsForgot(false)}
               className="flex justify-center items-center  w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
             >

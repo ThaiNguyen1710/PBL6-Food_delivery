@@ -30,6 +30,7 @@ const Header = () => {
       .catch((err) => console.log(err));
   };
 
+
   return (
     <header className="fixed backdrop-blur-md z-50 inset-x-0 top-0 flex justify-between items-center px-12 md:px-20 py-6 ">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
@@ -104,12 +105,14 @@ const Header = () => {
                     onMouseLeave={() => setIsMenu(false)}
                     className="px-4 py-6 bg-cardOverlay absolute top-12 -right-28 rounded-md backdrop-blur-md shadow-sm flex flex-col gap-4"
                   >
-                    <Link
+                    {user?.user_id === process.env.REACT_APP_ADMIN &&(
+                      <Link
                       className="hover:text-red-400 text-xl text-textColor"
                       to={"/dashboard/home"}
                     >
                       Dashboard
                     </Link>
+                    )}
                     <Link
                       className="hover:text-red-400 text-xl text-textColor"
                       to={"/profile"}

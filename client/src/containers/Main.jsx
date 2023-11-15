@@ -16,6 +16,7 @@ const Main = () => {
       });
     }
   });
+  
   return (
     <main className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
       <Header />

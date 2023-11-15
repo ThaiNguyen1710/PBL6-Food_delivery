@@ -65,6 +65,26 @@ const DBLeftSection = () => {
         >
           Users
         </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
+              : isNotActiveStyles
+          }
+          to={"/dashboard/store"}
+        >
+          Store
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
+              : isNotActiveStyles
+          }
+          to={"/dashboard/shipper"}
+        >
+          Shipper
+        </NavLink>
       </ul>
 
       <div className="w-full h-full justify-center items-center flex  mt-auto">

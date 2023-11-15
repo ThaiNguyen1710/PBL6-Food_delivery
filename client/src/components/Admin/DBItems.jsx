@@ -106,6 +106,10 @@ const DBItems = () => {
             field: "product_information",
           },
           {
+            title: "Store",
+            field: "",
+          },
+          {
             title: "Price",
             field: "product_price",
             render: (rowData) => (

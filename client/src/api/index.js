@@ -50,7 +50,10 @@ export const deleteAProduct = async (productId) => {
 // Sửa sản phẩm
 export const editProduct = async (productId, data) => {
   try {
-    const res = await axios.put(`${baseURL}/api/products/update/${productId}`, data);
+    const res = await axios.put(
+      `${baseURL}/api/products/update/${productId}`,
+      data
+    );
     return res.data.data;
   } catch (err) {
     return null;
@@ -94,7 +97,6 @@ export const getAllCartItems = async (user_id) => {
 //cart increment
 
 export const incrementItemQuantity = async (user_id, productId, type) => {
-  
   try {
     const res = await axios.post(
       `${baseURL}/api/products/updateCart/${user_id}`,
@@ -109,21 +111,43 @@ export const incrementItemQuantity = async (user_id, productId, type) => {
 
 export const clearAllCart = async (user_id) => {
   try {
-    const res = await axios.delete(`${baseURL}/api/products/clearCart/${user_id}`);
-    
+    const res = await axios.delete(
+      `${baseURL}/api/products/clearCart/${user_id}`
+    );
+
     return res.data.data;
   } catch (error) {
     return null;
   }
 };
 
-export const handleCheckOut = async()=>{
- 
-    axios
-      .post(`${baseURL}/api/products/create-checkout-session`)
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => console.log(err));
-  
-}
+export const handleCheckOut = async () => {
+  axios
+    .post(`${baseURL}/api/products/create-checkout-session`)
+    .then((res) => {
+      console.log(res);
+    })
+    .catch((err) => console.log(err));
+};
+//get all orders
+export const getAllOrders = async () => {
+  try {
+    const res = await axios.get(`${baseURL}/api/products/orders`);
+    return res.data.data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const updatedOrderSts = async (order_id, sts) => {
+  try {
+    const res = await axios.post(
+      `${baseURL}/api/products/updateOrder/${order_id}`,
+      null,
+      { params: { sts: sts } }
+    );
+    return res.data.data;
+  } catch (err) {
+    return null;
+  }
+};
