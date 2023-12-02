@@ -30,5 +30,7 @@ export {default as Slider} from "./ClientUI/Slider"
 export {default as SliderCard} from "./ClientUI/SliderCard"
 export {default as FilterSection} from "./ClientUI/FilterSection"
 export {default as UserOrder} from "./ClientUI/UserOrder"
+export {default as Profile} from "./ClientUI/Profile"
+export {default as ProductInfor} from "./ClientUI/ProductInfor"
 
 export {default as CheckOutSuccess} from "./CheckOutSuccess"

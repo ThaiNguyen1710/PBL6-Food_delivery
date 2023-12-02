@@ -14,9 +14,6 @@ export const statuses = [
   { id: 7, title: "Kem ", category: "Kem " },
   { id: 8, title: "Lẩu", category: "Lẩu" },
   { id: 9, title: "Bánh Ngọt", category: "Bánh Ngọt" },
- 
-  
-  
 ];
 
 export const randomData = [

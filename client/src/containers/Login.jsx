@@ -19,7 +19,7 @@ import {
   updatePassword,
 } from "firebase/auth";
 import { app } from "../config/firebase.config";
-import { validateUserJWTToken } from "../api";
+import { loginUser, validateUserJWTToken } from "../api";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -91,6 +91,25 @@ const Login = () => {
       });
     });
   };
+  const signInWithEmailPass = async () => {
+    if (userEmail !== "" && password !== "") {
+      try {
+        const res = await loginUser(userEmail, password);
+
+        if (res && res.data) {
+          const  token = res.data.token;
+          localStorage.setItem("token", token);
+          console.log(token)
+          dispatch(setUserDetail(res.data));
+          navigate("/", { replace: true });
+        } else {
+          console.log("Đăng nhập không thành công.");
+        }
+      } catch (error) {
+        console.error("Lỗi khi đăng nhập:", error);
+      }
+    }
+  };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -137,7 +156,7 @@ const Login = () => {
           const token = await userCred.user.getIdToken();
           const data = await validateUserJWTToken(token);
           dispatch(setUserDetail(data));
-          navigate("/", { replace: true });
+          navigate("/profile", { replace: true });
         }
       } catch (error) {
         if (error.code === "auth/user-not-found") {
@@ -166,47 +185,47 @@ const Login = () => {
     }
   };
 
-  const signInWithEmailPass = async () => {
-    if (userEmail !== "" && password !== "") {
-      try {
-        const userCred = await signInWithEmailAndPassword(
-          firebaseAuth,
-          userEmail,
-          password
-        );
+  // const signInWithEmailPass = async () => {
+  //   if (userEmail !== "" && password !== "") {
+  //     try {
+  //       const userCred = await signInWithEmailAndPassword(
+  //         firebaseAuth,
+  //         userEmail,
+  //         password
+  //       );
 
-        if (userCred) {
-          const token = await userCred.user.getIdToken();
-          const data = await validateUserJWTToken(token);
-          dispatch(setUserDetail(data));
-          navigate("/", { replace: true });
-        }
-      } catch (error) {
-        if (error.code === "auth/user-not-found") {
-          // Xử lý trường hợp địa chỉ email chưa được đăng ký
-          dispatch(
-            alertDanger(
-              "Địa chỉ email chưa được đăng ký. Vui lòng kiểm tra lại."
-            )
-          );
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
-        } else {
-          // Xử lý các lỗi khác
-          dispatch(alertDanger("Mật khẩu sai!"));
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
-        }
-      }
-    } else {
-      dispatch(alertWarning("Nhập đủ thông tin!"));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    }
-  };
+  //       if (userCred) {
+  //         const token = await userCred.user.getIdToken();
+  //         const data = await validateUserJWTToken(token);
+  //         dispatch(setUserDetail(data));
+  //         navigate("/", { replace: true });
+  //       }
+  //     } catch (error) {
+  //       if (error.code === "auth/user-not-found") {
+  //         // Xử lý trường hợp địa chỉ email chưa được đăng ký
+  //         dispatch(
+  //           alertDanger(
+  //             "Địa chỉ email chưa được đăng ký. Vui lòng kiểm tra lại."
+  //           )
+  //         );
+  //         setTimeout(() => {
+  //           dispatch(alertNULL());
+  //         }, 3000);
+  //       } else {
+  //         // Xử lý các lỗi khác
+  //         dispatch(alertDanger("Mật khẩu sai!"));
+  //         setTimeout(() => {
+  //           dispatch(alertNULL());
+  //         }, 3000);
+  //       }
+  //     }
+  //   } else {
+  //     dispatch(alertWarning("Nhập đủ thông tin!"));
+  //     setTimeout(() => {
+  //       dispatch(alertNULL());
+  //     }, 3000);
+  //   }
+  // };
 
   const forgotPass = async () => {
     setIsForgot(true);

@@ -6,3 +6,6 @@ export {default as igLogo } from "./images/igLogo.png"
 export {default as delivery} from './images/delivery.png'
 export {default as heroBg} from './images/heroBg.png'
 export {default as Bill} from './images/mobile-payment.gif'
+export {default as confirmOrders} from './images/confirm-order.png'
+export {default as budget} from './images/budget.png'
+export {default as totalUser} from './images/totalUser.png'

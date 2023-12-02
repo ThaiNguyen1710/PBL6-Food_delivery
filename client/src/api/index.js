@@ -1,5 +1,6 @@
 import axios from "axios";
-
+export const baseURL1 =
+  "https://pbl-6-nine.vercel.app";
 export const baseURL =
   "http://localhost:5001/food-delivery-app-1449c/us-central1/app";
 
@@ -8,12 +9,61 @@ export const validateUserJWTToken = async (token) => {
     const res = await axios.get(`${baseURL}/api/users/jwtVerification`, {
       headers: { Authorization: "Bearer " + token },
     });
+    console.log(res)
     return res.data.data;
   } catch (err) {
     return null;
   }
 };
-
+export const loginUser = async (email, password) => {
+  try {
+    const response = await axios.post(`${baseURL1}/pbl6/user/login`, { email, password });
+    
+    return response; 
+  } catch (error) {
+    console.error('Lỗi khi đăng nhập:', error);
+    // Xử lý lỗi khi gửi yêu cầu đăng nhập
+    throw error; // Ném lỗi để có thể xử lý ở phía nơi gọi hàm
+  }
+};
+export const validateUserJWTToken1 = async (token) => {
+  try {
+    const res = await axios.get(`${baseURL1}/pbl6/auth`, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
+export const addNewUser = async (data) => {
+  try {
+    const res = await axios.post(`${baseURL}/api/users/create`, {
+      ...data,
+    });
+    console.log(res.data.data)
+    return res.data.data;
+  } catch (err) {
+    return null;
+  }
+};
+export const getAllUsers = async () => {
+  try {
+    const res = await axios.get(`${baseURL1}/pbl6/user`);
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
+export const editUser = async (userId, data) => {
+  try {
+    const res = await axios.put(`${baseURL1}/pbl6/user/${userId}`, data);
+    return res.data; // Assuming the updated user data is directly available in res.data
+  } catch (err) {
+    console.error("Error in editUser function:", err);
+    return null;
+  }
+};
 //add new Products
 export const addNewProduct = async (data) => {
   try {
@@ -60,14 +110,7 @@ export const editProduct = async (productId, data) => {
   }
 };
 
-export const getAllUsers = async () => {
-  try {
-    const res = await axios.get(`${baseURL}/api/users/all`);
-    return res.data.data;
-  } catch (err) {
-    return null;
-  }
-};
+
 
 //add an item to cart
 export const addNewItemToCart = async (user_id, data) => {

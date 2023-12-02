@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../../api";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import DataTable from "./DataTable";
 import { avatar } from "../../assets";
+
 const DBUsers = () => {
   const allUsers = useSelector((state) => state.allUsers);
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -33,7 +35,7 @@ const DBUsers = () => {
           },
           {
             title: "Name",
-            field: "displayName",
+            field: "name",
           },
           {
             title: "Email",
@@ -41,15 +43,16 @@ const DBUsers = () => {
           },
           {
             title: "Phone",
-            field: "",
+            field: "phone",
           },
           {
             title: "Address",
-            field: "",
+            field: "address",
           },
           {
             title: "Type",
-            field: "",
+            field: "type",
+           
           },
           {
             title: "Verified",
@@ -57,15 +60,15 @@ const DBUsers = () => {
             render: (rowData) => (
               <p
                 className={`px-2 py-1 w-32 text-center text-primary rounded-md ${
-                  rowData.emailVerified ? "bg-emerald-500" : "bg-red-500"
+                  rowData.emailVerified ? "bg-red-500" : "bg-emerald-500"
                 }`}
               >
-                {rowData.emailVerified?"Verified":"Not Verified"}
+                {rowData.emailVerified ? " Not Verified" : "Verified"}
               </p>
             ),
           },
         ]}
-        data={allUsers}
+        data = {allUsers}
         title="List of Users"
         // actions={[
         //   {
