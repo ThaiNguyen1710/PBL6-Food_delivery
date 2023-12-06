@@ -43,24 +43,23 @@ const StoreInformation = () => {
     }
   }, []);
   if (!user || !allUsers) {
-    return null; 
+    return null;
   }
   const saveNewData = async () => {
     try {
       const userId = user.user.userId;
 
- 
       const newData = {
         name: userName || user.user.name,
         store: storeName || user.user.store,
         address: userAddress !== undefined ? userAddress : user.user.address,
         openAt: openAt !== undefined ? openAt : user.user.openAt,
         closeAt: closeAt !== undefined ? closeAt : user.user.closeAt,
-        
       };
 
       const updatedUserData = await editUser(userId, newData);
-      
+      console.log(updatedUserData);
+
       if (updatedUserData && updatedUserData.data) {
         dispatch(setUserDetail(updatedUserData.data));
         dispatch(alertSuccess("User information updated successfully"));
@@ -74,17 +73,18 @@ const StoreInformation = () => {
         dispatch(alertNULL());
       }, 3000);
     }
-    setUserName("")
-    setStoreName("")
-    setUserAddress("")
-    setOpenAt("")
-    setCloseAt("")
+    setUserName("");
+    setStoreName("");
+    setUserAddress("");
+    setOpenAt("");
+    setCloseAt("");
   };
 
   const loggedInUserId = user.user.userId;
   const loggedInUser = loggedInUserId
     ? allUsers.find((user) => user.id === loggedInUserId)
     : null;
+  console.log(loggedInUser?.openAt);
 
   return (
     <div className="flex items-center justify-center flex-col pt-6 px-24 w-full gap-3 ">
@@ -126,20 +126,34 @@ const StoreInformation = () => {
           Thời gian mở cửa
         </p>
         <div className="flex w-full gap-12 ">
+          <div className="flex">
+            <InputValueField
+              type="text"
+              placeholder={loggedInUser ? loggedInUser.openAt : ""}
+            />
+            <InputValueField
+              type="time"
+              placeholder={loggedInUser ? loggedInUser.openAt : ""}
+              stateValue={openAt}
+              stateFunc={setOpenAt}
+            />
+          </div>
+          <div className="flex">
           <InputValueField
-            type="time"
-            placeholder={loggedInUser ? loggedInUser.openAt : ""}
-            stateValue={openAt}
-            stateFunc={setOpenAt}
+            type="text"
+            placeholder={loggedInUser ? loggedInUser.closeAt : ""}
           />
-          <InputValueField
+            <InputValueField
             type="time"
             placeholder={loggedInUser ? loggedInUser.closeAt : ""}
             stateValue={closeAt}
             stateFunc={setCloseAt}
           />
+          </div>
+    </div>
+         
         </div>
-      </div>
+       
 
       <motion.button
         onClick={saveNewData}

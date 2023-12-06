@@ -96,7 +96,7 @@ const DBItems = () => {
       <DataTable
         columns={[
           {
-            title: "Image",
+            title: <p className="font-semibold text-xl">Image</p>,
             field: "image",
             render: (rowData) => (
               <img
@@ -107,23 +107,35 @@ const DBItems = () => {
             ),
           },
           {
-            title: "Name",
+            title: <p className="font-semibold text-xl">Name</p>,
             field: "name",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.name}</p>
+            ),
           },
           {
-            title: "Category",
+            title: <p className="font-semibold text-xl">Category</p>,
             field: "category.name",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.category.name}</p>
+            ),
           },
           {
-            title: "Description",
+            title: <p className="font-semibold text-xl">Description</p>,
             field: "description",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.description}</p>
+            ),
           },
           {
-            title: "Store",
-            field: "user.name",
+            title: <p className="font-semibold text-xl">Store</p>,
+            field: "user.store",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.user.store}</p>
+            ),
           },
           {
-            title: "Price",
+            title: <p className="font-semibold text-xl">Price</p>,
             field: "price",
             render: (rowData) => (
               <p className="text-textColor text-2xl flex font-semibold items-center justify-start gap-2">
@@ -133,12 +145,14 @@ const DBItems = () => {
             ),
           },
           {
-            title: "Rating",
+            title: <p className="font-semibold text-xl">Rating</p>,
             field: "ratings",
           },
         ]}
         data={products}
-        title="List of products"
+        title={
+          <p className="font-semibold text-red-400 text-3xl">List of Products</p>
+        }
         actions={[
           {
             icon: "edit",

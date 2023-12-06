@@ -58,8 +58,8 @@ const SliderCard = ({ data, index }) => {
         className="w-40 h-40 object-contain"
         onClick={navigateToProduct}
       />
-      <div className="relative pt-12">
-        <p className="text-xl text-headingColor font-semibold">{data.name}</p>
+      <div className="relative pt-8">
+        <p className="text-xl text-center text-headingColor font-semibold">{data.name}</p>
         <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
           {parseFloat(data.price).toLocaleString("vi-VN")}
           <FaDongSign className="text-red-500" />{" "}
@@ -67,14 +67,21 @@ const SliderCard = ({ data, index }) => {
         <p className="text-sm font-normal text-textColor text-center">
           {data.description}
         </p>
+        <div className="flex gap-2">
+          <p className="text-sm font-semibold text-black">Store: </p>
         <p className="text-sm font-normal text-textColor text-center">
-          Store: {data.user.name}
+        {" "} {data.user.store}
+        </p>
+        </div>
+        
+        <p className="text-sm font-normal text-textColor text-center">
+           {data.user.address}
         </p>
 
         <motion.div
           {...buttonClick}
           onClick={sendToCart}
-          className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center absolute -top-4 right-2 cursor-pointer"
+          className="w-8 h-8 rounded-full bg-red-500 flex items-center justify-center absolute -top-2 right-2 cursor-pointer"
         >
           <BsFillBasket2Fill className="text-2xl text-primary" />
         </motion.div>
