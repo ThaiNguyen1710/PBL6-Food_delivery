@@ -16,7 +16,8 @@ import { buttonClick } from "../../animations";
 import { MdDelete } from "react-icons/md";
 import { PostCreate, addNewCategory, getAllCategory } from "../../api";
 
-const DBNewItem = () => {
+
+const StoreAddItem = () => {
   const [itemName, setItemName] = useState("");
   // const [category, setCategory] = useState(null);
   const [idCategory, setIdCategory] = useState("");
@@ -342,4 +343,4 @@ export const InputValueField = ({
   );
 };
 
-export default DBNewItem;
+export default StoreAddItem;

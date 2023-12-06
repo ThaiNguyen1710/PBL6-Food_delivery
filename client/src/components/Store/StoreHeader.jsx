@@ -10,7 +10,7 @@ import { app } from "../../config/firebase.config";
 import { useNavigate } from "react-router-dom";
 import { setUserDetail, setUserNull } from "../../context/actions/userActions";
 
-const DBHeader = () => {
+const StoreHeader = () => {
   const user = useSelector((state) => state.user);
   // const firebaseAuth = getAuth(app)
   const dispatch = useDispatch();
@@ -28,7 +28,7 @@ const DBHeader = () => {
   return (
     <div className="w-full flex items-center justify-between gap-3 ">
       <p className="text-2xl text-headingColor ">
-        Admin Dashboard
+        Store Dashboard
         {user.user.name && (
           <span className="block text-base text-lighttextGray">
             Chào {user.user.name} !
@@ -73,4 +73,4 @@ const DBHeader = () => {
   );
 };
 
-export default DBHeader;
+export default StoreHeader;

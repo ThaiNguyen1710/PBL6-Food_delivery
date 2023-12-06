@@ -20,6 +20,7 @@ const CheckOutSuccess = () => {
 
 
                 <FaArrowLeft  className="text-3xl text-textColor "/>
+                <FaArrowLeft  className="text-3xl text-textColor "/>
                 Get back to home
             </NavLink>
         </motion.div>

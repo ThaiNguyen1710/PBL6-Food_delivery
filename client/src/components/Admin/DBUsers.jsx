@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsers } from "../../api";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import DataTable from "./DataTable";
 import { avatar } from "../../assets";
-
 const DBUsers = () => {
   const allUsers = useSelector((state) => state.allUsers);
-  
   const dispatch = useDispatch();
+  
 
   useEffect(() => {
     if (!allUsers) {
@@ -23,7 +22,7 @@ const DBUsers = () => {
       <DataTable
         columns={[
           {
-            title: "Image",
+            title: <p className="font-semibold text-xl">Image</p>,
             field: "photoURL",
             render: (rowData) => (
               <img
@@ -34,42 +33,50 @@ const DBUsers = () => {
             ),
           },
           {
-            title: "Name",
+            title: <p className="font-semibold text-xl">Name</p>,
             field: "name",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.name}</p>
+            ),
           },
           {
-            title: "Email",
+            title: <p className="font-semibold text-xl">Email</p>,
             field: "email",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.email}</p>
+            ),
           },
           {
-            title: "Phone",
+            title: <p className="font-semibold text-xl">Phone</p>,
             field: "phone",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.phone}</p>
+            ),
           },
           {
-            title: "Address",
+            title: <p className="font-semibold text-xl">Address</p>,
             field: "address",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.address}</p>
+            ),
           },
+         
           {
-            title: "Type",
-            field: "type",
-           
-          },
-          {
-            title: "Verified",
+            title: <p className="font-semibold text-xl">Verified</p>,
             field: "emailVerified",
             render: (rowData) => (
               <p
                 className={`px-2 py-1 w-32 text-center text-primary rounded-md ${
-                  rowData.emailVerified ? "bg-red-500" : "bg-emerald-500"
+                  rowData.emailVerified ? "bg-red-500": "bg-emerald-500" 
                 }`}
               >
-                {rowData.emailVerified ? " Not Verified" : "Verified"}
+                {rowData.emailVerified?"Not Verified":" Verified"}
               </p>
             ),
           },
         ]}
-        data = {allUsers}
-        title="List of Users"
+        data={allUsers}
+        title={<p className="font-semibold text-red-400 text-3xl">List of Users</p>}
         // actions={[
         //   {
         //     icon: "edit",

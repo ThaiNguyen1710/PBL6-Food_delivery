@@ -1,15 +1,19 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { faceLogo, igLogo,logo2 } from "../../assets";
-import { gradientStyle, isActiveStyles, isNotActiveStyles } from "../../utils/styles";
-import { motion } from "framer-motion";
 
-const DBLeftSection = () => {
+
+import { motion } from "framer-motion";
+import { faceLogo, igLogo, logo2 } from "../../assets";
+import { gradientStyle, isActiveStyles, isNotActiveStyles } from "../../utils/styles";
+
+const ShopLeftSection = () => {
   return (
     <div className="h-full py-2 flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-300 gap-3 overflow-auto">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={logo2} className="w-20 " alt="" />
-        <p className=" font-semibold text-5xl "style={gradientStyle}>6Food</p>
+        <p className=" font-semibold text-5xl " style={gradientStyle}>
+          6Food
+        </p>
       </NavLink>
 
       <hr />
@@ -21,7 +25,7 @@ const DBLeftSection = () => {
               ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
               : isNotActiveStyles
           }
-          to={"/dashboard/home"}
+          to={"/my-store/home"}
         >
           Home
         </NavLink>
@@ -31,9 +35,9 @@ const DBLeftSection = () => {
               ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
               : isNotActiveStyles
           }
-          to={"/dashboard/orders"}
+          to={"/my-store/information"}
         >
-          Orders
+          Information
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -41,9 +45,9 @@ const DBLeftSection = () => {
               ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
               : isNotActiveStyles
           }
-          to={"/dashboard/items"}
+          to={"/my-store/item"}
         >
-          Items
+        Item
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -51,40 +55,11 @@ const DBLeftSection = () => {
               ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
               : isNotActiveStyles
           }
-          to={"/dashboard/newItem"}
+          to={"/my-store/add-item"}
         >
           Add New Item
         </NavLink>
-        <NavLink
-          className={({ isActive }) =>
-            isActive
-              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
-              : isNotActiveStyles
-          }
-          to={"/dashboard/users"}
-        >
-          Users
-        </NavLink>
-        <NavLink
-          className={({ isActive }) =>
-            isActive
-              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
-              : isNotActiveStyles
-          }
-          to={"/dashboard/store"}
-        >
-          Store
-        </NavLink>
-        <NavLink
-          className={({ isActive }) =>
-            isActive
-              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
-              : isNotActiveStyles
-          }
-          to={"/dashboard/shipper"}
-        >
-          Shipper
-        </NavLink>
+        
       </ul>
 
       <div className="w-full h-full justify-center items-center flex  mt-auto">
@@ -131,4 +106,4 @@ const DBLeftSection = () => {
   );
 };
 
-export default DBLeftSection;
+export default ShopLeftSection;

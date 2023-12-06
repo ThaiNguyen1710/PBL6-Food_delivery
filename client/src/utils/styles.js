@@ -1,21 +1,38 @@
+import { getAllCategory } from "../api";
+
 export const isActiveStyles =
   "text-2xl text-red-700 font-semibold hover:text-red-700 px-4 py-2 duration-100 transition-all ease-in-out";
 
 export const isNotActiveStyles =
   "text-xl font-semibold text-textColor hover:text-red-700 px-4 py-2 duration-100 transition-all ease-in-out";
 
-export const statuses = [
-  { id: 1, title: "Đồ Ăn Nhanh", category: "Đồ Ăn Nhanh" },
-  { id: 2, title: "Cơm", category: "Cơm" },
-  { id: 3, title: "Bún", category: "Bún" },
-  { id: 4, title: "Đồ Uống ", category: "Đồ Uống " },
-  { id: 5, title: "Trà Sữa", category: "Trà Sữa" },
-  { id: 6, title: "Gà ", category: "Gà " },
-  { id: 7, title: "Kem ", category: "Kem " },
-  { id: 8, title: "Lẩu", category: "Lẩu" },
-  { id: 9, title: "Bánh Ngọt", category: "Bánh Ngọt" },
-];
+// export const statuses = [
+//   // { id:"655b5adbf25e95d6494625b8", title: "food", category: "food" },
+//   // { id: "655b5ae4f25e95d6494625ba", title: "meat", category: "meat" },
+//   // { id: 3, title: "Bún", category: "Bún" },
+//   // { id: 4, title: "Đồ Uống ", category: "Đồ Uống " },
+//   // { id: 5, title: "Trà Sữa", category: "Trà Sữa" },
+//   // { id: 6, title: "Gà ", category: "Gà " },
+//   // { id: 7, title: "Kem ", category: "Kem " },
+//   // { id: 8, title: "Lẩu", category: "Lẩu" },
+//   // { id: 9, title: "Bánh Ngọt", category: "Bánh Ngọt" },
 
+// ];
+ export const gradientStyle = {
+  backgroundImage: 'linear-gradient(45deg, #FFB400FF, #FF0085FF)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+};
+export const statuses = async () => {
+  try {
+    let res = await getAllCategory();
+    if (res && res.data) {
+      return res.data;
+    }
+  } catch (error) {
+    console.error("Error fetching data: ", error);
+  }
+};
 export const randomData = [
   {
     id: 1,
@@ -31,7 +48,7 @@ export const randomData = [
       "https://firebasestorage.googleapis.com/v0/b/food-delivery-app-1449c.appspot.com/o/Images%2F1698286437761_%24(imageFile.name)?alt=media&token=55520eb2-a0f2-4568-9100-a93832027dae",
     product_name: "Cơm Sườn",
     product_category: "Cơm ",
-    product_price: "26.000",
+    product_price: "24.000",
   },
   {
     id: 3,

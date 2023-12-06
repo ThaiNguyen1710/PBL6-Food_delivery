@@ -11,7 +11,6 @@ const DataTable = ({ columns, data, title, actions }) => {
         data={Array.isArray(data) ? data : []} 
         title={title}
         actions={actions}
-        
     />
   </ThemeProvider>;
 };

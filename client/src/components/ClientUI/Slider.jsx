@@ -10,7 +10,7 @@ const Slider = () => {
   const products = useSelector((state) => state.products);
   const [fruits, setFruits] = useState(null);
   useEffect(() => {
-    setFruits(products?.filter((data) => data.product_category === "Cơm"));
+    setFruits(products?.filter((data) => data.category.name === "Kem"));
     
   }, [products]);
   return (

@@ -3,22 +3,23 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllOrders, getAllProducts, getAllUsers } from "../../api";
 import { setAllProducts } from "../../context/actions/productAction";
 import { CChart } from "@coreui/react-chartjs";
-import { budget, confirmOrders, store, totalUser } from "../../assets";
+import { budget, confirmOrders, totalUser } from "../../assets";
 import { FaDongSign } from "react-icons/fa6";
 import { setOrders } from "../../context/actions/orderAction";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 
-const DBHome = () => {
+const StoreHome = () => {
   const products = useSelector((state) => state.products);
   const orders = useSelector((state) => state.orders);
   const users = useSelector((state) => state.allUsers);
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const category = products
     ? [
         ...new Set(
           products
-            .filter((item) => item && item.category && item.category.name) // Lọc các phần tử không null hoặc không undefined
+            .filter((item) => item.user.id === user.user.userId) 
             .map((item) => item.category.name)
             .filter((name) => name !== "length") // Loại bỏ các phần tử có giá trị 'length'
         ),
@@ -32,14 +33,17 @@ const DBHome = () => {
       return currentStatus === status ? count + 1 : count;
     }, 0);
   };
+  const productStore = products
+    ? products.filter((item) => item.user.id === user.user.userId)
+    : [];
 
   const preparingCount = countStatus("preparing");
   const cancelledCount = countStatus("cancelled");
   const deliveredCount = countStatus("delivered");
   const categoryCounts = {};
-  if (products) {
-    products.forEach((product) => {
-      const category = product.category.name;
+  if (productStore) {
+    productStore.forEach((productStore) => {
+      const category = productStore.category.name;
 
       if (categoryCounts[category]) {
         categoryCounts[category] += 1;
@@ -48,9 +52,6 @@ const DBHome = () => {
       }
     });
   }
-  const isStore = users
-  ? users.filter((store) => store?.isStore === true)
-  : [];
 
   useEffect(() => {
     if (!products) {
@@ -72,7 +73,7 @@ const DBHome = () => {
 
   return (
     <div className="flex items-start justify-center flex-col pt-12 w-full  gap-8 h-full">
-      <div className="items-start justify-start  gap-16 flex pt-12">
+      <div className="items-start justify-start  gap-32 flex pt-12">
         <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
           <img
             alt=""
@@ -120,25 +121,10 @@ const DBHome = () => {
           />
           <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
-              Total Users
+              Total Product
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
-              {users?.length}
-            </p>
-          </div>
-        </div>
-        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
-          <img
-            alt=""
-            src={store}
-            className="w-20 h-20 object-contain items-center justify-center "
-          />
-          <div className="relative ">
-            <p className="text-xl text-headingColor font-semibold">
-              Total Stores
-            </p>
-            <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
-              {isStore?.length}
+              {productStore?.length}
             </p>
           </div>
         </div>
@@ -189,4 +175,4 @@ const DBHome = () => {
   );
 };
 
-export default DBHome;
+export default StoreHome;

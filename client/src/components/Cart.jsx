@@ -7,10 +7,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCartOff } from "../context/actions/displayCartAction";
 import { useState } from "react";
 import { FaDongSign } from "react-icons/fa6";
-import { alertNULL, alertSuccess } from "../context/actions/alertActions";
+import {
+  alertDanger,
+  alertNULL,
+  alertSuccess,
+} from "../context/actions/alertActions";
 import {
   baseURL,
   clearAllCart,
+  decrementItemQuantity,
   getAllCartItems,
   incrementItemQuantity,
 } from "../api";
@@ -22,14 +27,13 @@ const Cart = () => {
   const [total, setTotal] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const user = useSelector((state) => state.user);
-  
 
   useEffect(() => {
     let total = 0;
     let totalQuantity = 0;
-    if (Cart) {
+    if (cart && cart.length > 0) {
       cart.map((data) => {
-        total = total + data.product_price * data.quantity;
+        total = total + data.product.price * data.quantity;
         setTotal(total.toLocaleString("vi-VN"));
       });
 
@@ -41,9 +45,9 @@ const Cart = () => {
   });
 
   const clearAllItems = () => {
-    clearAllCart(user?.user_id).then((data) => {
+    clearAllCart(user?.user?.userId).then((data) => {
       dispatch(alertSuccess("Clear all success"));
-      getAllCartItems(user?.user_id).then((items) => {
+      getAllCartItems().then((items) => {
         dispatch(setCartItems(items));
         let totalQuantity = 0;
         setTotalQuantity(totalQuantity);
@@ -54,13 +58,13 @@ const Cart = () => {
     });
   };
   const handleCheckOut = () => {
-    const data ={
-      user:user,
+    const data = {
+      user: user,
       cart: cart,
-      total :total,
-    }
+      total: total,
+    };
     axios
-      .post(`${baseURL}/api/products/create-checkout-session`, {data})
+      .post(`${baseURL}/api/products/create-checkout-session`, { data })
       .then((res) => {
         if (res.data.url) {
           window.location.href = res.data.url;
@@ -142,27 +146,41 @@ export const CartItemCard = ({ index, data }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    const itemTotal = (data.product_price * data.quantity).toLocaleString(
+    const itemTotal = (data.product.price * data.quantity).toLocaleString(
       "vi-VN"
     );
     setItemTotal(itemTotal);
   }, [cart]);
 
-  const decrementCart = (productId) => {
-    incrementItemQuantity(user?.user_id, productId, "decrement").then(
-      (data) => {
-        dispatch(alertSuccess("Update the cart"));
+  const decrementCart = () => {
+    const productId = cart?.id;
+    console.log(productId);
 
-        getAllCartItems(user?.user_id).then((items) => {
-          dispatch(setCartItems(items));
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
+    if (productId) {
+      decrementItemQuantity(productId)
+        .then((data) => {
+          if (data) {
+            dispatch(alertSuccess("Updated the cart"));
+
+            getAllCartItems(cart?.user?._id).then((items) => {
+              if (items) {
+                dispatch(setCartItems(items));
+                setTimeout(() => {
+                  dispatch(alertNULL());
+                }, 3000);
+              }
+            });
+          } else {
+            dispatch(alertDanger("Failed to update the cart"));
+          }
+        })
+        .catch(() => {
+          dispatch(alertDanger("Failed to update the cart"));
         });
-      }
-    );
+    } else {
+      dispatch(alertDanger("Invalid product ID"));
+    }
   };
-
   const incrementCart = (productId) => {
     incrementItemQuantity(user?.user_id, productId, "increment").then(
       (data) => {
@@ -184,15 +202,18 @@ export const CartItemCard = ({ index, data }) => {
       className="w-full flex items-center justify-start bg-zinc-800 rounded-md drop-shadow-md px-4 gap-4"
     >
       <img
-        src={data?.product_image}
+        src={baseURL + data.product.image}
         className="w-24 min-w-[94px] h-24 object-contain"
         alt=""
       />
       <div className="flex items-center justify-start gap-1 w-full">
         <p className=" text-lg text-primary font-semibold">
-          {data?.product_name}
+          {data?.product?.name}
           <span className=" text-sm block font-semibold text-gray-400 ">
-            {data?.product_category}
+            {data?.product?.category?.name}
+          </span>
+          <span className=" text-sm block font-semibold text-gray-400 ">
+            Store : {data?.user?.name}
           </span>
         </p>
         <p className="flex text-sm font-semibold text-red-400 ml-auto">

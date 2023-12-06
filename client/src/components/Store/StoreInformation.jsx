@@ -15,16 +15,17 @@ import {
   GetUserDetail,
   setUserDetail,
 } from "../../context/actions/userActions";
-import Header from "../Header";
-import Footer from "../Footer";
 
-const Profile = () => {
+const StoreInformation = () => {
   const user = useSelector((state) => state.user);
   const allUsers = useSelector((state) => state.allUsers);
   const [userName, setUserName] = useState("");
   const [userPhone, setUserPhone] = useState("");
   const [userAddress, setUserAddress] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [storeName, setStoreName] = useState("");
+  const [closeAt, setCloseAt] = useState("");
+  const [openAt, setOpenAt] = useState("");
 
   const alert = useSelector((state) => state.alert);
   const dispatch = useDispatch();
@@ -47,17 +48,19 @@ const Profile = () => {
   const saveNewData = async () => {
     try {
       const userId = user.user.userId;
-      console.log(userId)
-      
+
+ 
       const newData = {
         name: userName || user.user.name,
-        phone: userPhone || user.user.phone,
+        store: storeName || user.user.store,
         address: userAddress !== undefined ? userAddress : user.user.address,
-        email: userEmail || user.user.email,
+        openAt: openAt !== undefined ? openAt : user.user.openAt,
+        closeAt: closeAt !== undefined ? closeAt : user.user.closeAt,
+        
       };
-     
+
       const updatedUserData = await editUser(userId, newData);
-      console.log(updatedUserData)
+      
       if (updatedUserData && updatedUserData.data) {
         dispatch(setUserDetail(updatedUserData.data));
         dispatch(alertSuccess("User information updated successfully"));
@@ -66,17 +69,16 @@ const Profile = () => {
       }
     } catch (error) {
       console.error("Error updating user information:", error);
-      dispatch(
-        dispatch(alertSuccess("Cập nhật thành công  "))
-      );
+      dispatch(dispatch(alertSuccess("Cập nhật thành công  ")));
       setTimeout(() => {
         dispatch(alertNULL());
       }, 3000);
-      setUserName("")
-      setUserPhone("")
-      setUserAddress("")
-      setUserEmail("")
     }
+    setUserName("")
+    setStoreName("")
+    setUserAddress("")
+    setOpenAt("")
+    setCloseAt("")
   };
 
   const loggedInUserId = user.user.userId;
@@ -86,33 +88,30 @@ const Profile = () => {
 
   return (
     <div className="flex items-center justify-center flex-col pt-6 px-24 w-full gap-3 ">
-      <Header />
-      <p className="text-3xl font-semibold text-orange-500 pt-24">Cập nhật thông tin!</p>
+      <p className="text-3xl font-semibold text-orange-500">
+        Thông tin cửa hàng
+      </p>
       <div className="border border-gray-300 rounded-md p-4 w-[80%] flex flex-col items-start  font-semibold justify-center gap-4">
-        <p className="text-xl text-start text-red-400 font-semibold ">Tên </p>
+        <p className="text-xl text-start text-red-400 font-semibold ">
+          {" "}
+          Chủ Cửa Hàng{" "}
+        </p>
 
         <InputValueField
           type="text"
-          placeholder={loggedInUser ? loggedInUser.name : ""}
+          placeholder={user.user.name}
           stateValue={userName}
           stateFunc={setUserName}
         />
         <p className="text-xl text-start text-red-400 font-semibold ">
-          Số điện Thoại
+          Tên Cửa Hàng
         </p>
 
         <InputValueField
-          type="number"
-          placeholder={loggedInUser ? loggedInUser.phone : ""}
-          stateValue={userPhone}
-          stateFunc={setUserPhone}
-        />
-        <p className="text-xl text-start text-red-400 font-semibold ">Email</p>
-        <InputValueField
           type="text"
-          placeholder={loggedInUser ? loggedInUser.email : ""}
-          stateValue={userEmail}
-          stateFunc={setUserEmail}
+          placeholder={loggedInUser ? loggedInUser.store : ""}
+          stateValue={storeName}
+          stateFunc={setStoreName}
         />
         <p className="text-xl text-start text-red-400 font-semibold ">
           Địa Chỉ
@@ -123,6 +122,23 @@ const Profile = () => {
           stateValue={userAddress}
           stateFunc={setUserAddress}
         />
+        <p className="text-xl text-start text-red-400 font-semibold ">
+          Thời gian mở cửa
+        </p>
+        <div className="flex w-full gap-12 ">
+          <InputValueField
+            type="time"
+            placeholder={loggedInUser ? loggedInUser.openAt : ""}
+            stateValue={openAt}
+            stateFunc={setOpenAt}
+          />
+          <InputValueField
+            type="time"
+            placeholder={loggedInUser ? loggedInUser.closeAt : ""}
+            stateValue={closeAt}
+            stateFunc={setCloseAt}
+          />
+        </div>
       </div>
 
       <motion.button
@@ -132,7 +148,6 @@ const Profile = () => {
       >
         <p className="font-semibold text-card text-xl ">Lưu Thay Đổi</p>
       </motion.button>
-      <Footer/>
     </div>
   );
 };
@@ -156,4 +171,4 @@ export const InputValueField = ({
   );
 };
 
-export default Profile;
+export default StoreInformation;

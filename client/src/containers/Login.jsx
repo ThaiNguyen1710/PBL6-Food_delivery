@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { faceLogo, igLogo, logo } from "../assets";
+import { faceLogo, igLogo, logo, logo2 } from "../assets";
 import { LoginInput } from "../components";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle, FcIphone } from "react-icons/fc";
@@ -7,19 +7,7 @@ import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { BiLogOutCircle } from "react-icons/bi";
-
-import {
-  getAuth,
-  signInWithPopup,
-  GoogleAuthProvider,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  FacebookAuthProvider,
-  sendPasswordResetEmail,
-  updatePassword,
-} from "firebase/auth";
-import { app } from "../config/firebase.config";
-import { loginUser, validateUserJWTToken } from "../api";
+import { loginUser, signUpUser} from "../api";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,8 +16,9 @@ import {
   alertDanger,
   alertInfo,
   alertNULL,
-  alertWarning,
+
 } from "../context/actions/alertActions";
+import { gradientStyle } from "../utils/styles";
 
 const Login = () => {
   const [userEmail, setUserEmail] = useState("");
@@ -41,9 +30,10 @@ const Login = () => {
   const [forgotEmail, setForgotEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirm_newPassword, setConfirm_newPassword] = useState("");
-  const firebaseAuth = getAuth(app);
-  const provider = new GoogleAuthProvider();
-  const provider1 = new FacebookAuthProvider();
+  const [userName, setUserName] = useState("");
+  
+  // const provider = new GoogleAuthProvider();
+
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,243 +43,86 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
+      
       navigate("/", { replace: true });
     }
   }, [user]);
+  const loginWithGoogle = async () => {}
 
-  const loginWithPhone = async () => {
-    await signInWithPopup(firebaseAuth, provider1).then((userCred) => {
-      firebaseAuth.onAuthStateChanged((cred) => {
-        if (cred) {
-          cred.getIdToken().then((token) => {
-            validateUserJWTToken(token).then((data) => {
-              dispatch(setUserDetail(data));
-            });
-            navigate("/", { replace: true });
-          });
-        }
-      });
-    });
-  };
-
-  const loginWithGoogle = async () => {
-    await signInWithPopup(firebaseAuth, provider).then((userCred) => {
-      firebaseAuth.onAuthStateChanged((cred) => {
-        if (cred) {
-          cred.getIdToken().then((token) => {
-            validateUserJWTToken(token).then((data) => {
-              if (data.user_id === process.env.REACT_APP_ADMIN) {
-                dispatch(setUserDetail(data));
-                navigate("/dashboard/home", { replace: true });
-              } else {
-                dispatch(setUserDetail(data));
-                navigate("/", { replace: true });
-              }
-            });
-          });
-        }
-      });
-    });
-  };
-  const signInWithEmailPass = async () => {
-    if (userEmail !== "" && password !== "") {
-      try {
-        const res = await loginUser(userEmail, password);
-
-        if (res && res.data) {
-          const  token = res.data.token;
-          localStorage.setItem("token", token);
-          console.log(token)
-          dispatch(setUserDetail(res.data));
-          navigate("/", { replace: true });
-        } else {
-          console.log("Đăng nhập không thành công.");
-        }
-      } catch (error) {
-        console.error("Lỗi khi đăng nhập:", error);
-      }
-    }
-  };
+  // const loginWithGoogle = async () => {
+  //   await signInWithPopup(firebaseAuth, provider).then((userCred) => {
+  //     firebaseAuth.onAuthStateChanged((cred) => {
+  //       if (cred) {
+  //         cred.getIdToken().then((token) => {
+  //           validateUserJWTToken(token).then((data) => {
+  //             if (data.user_id === process.env.REACT_APP_ADMIN) {
+  //               dispatch(setUserDetail(data));
+  //               navigate("/dashboard/home", { replace: true });
+  //             } else {
+  //               dispatch(setUserDetail(data));
+  //               navigate("/", { replace: true });
+  //             }
+  //           });
+  //         });
+  //       }
+  //     });
+  //   });
+  // };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   const signUpWithEmailPass = async () => {
-    if (userEmail === "" || password === "" || confirm_password === "") {
-      dispatch(alertInfo("Require fields should not be empty"));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    } else if (
-      !/^[A-Za-z0-9](\.?[A-Za-z0-9]){0,}@gmail\.com$/.test(userEmail)
-    ) {
-      // Kiểm tra email có đúng định dạng "...@gmail.com" hay không
-      dispatch(alertDanger("Email không đúng định dạng. Vui lòng nhập lại."));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    } else if (
-      password.length < 8 ||
-      !/^(?=.*[a-zA-Z])(?=.*\d)/.test(password)
-    ) {
-      // Kiểm tra độ dài và yêu cầu chữ cái và số cho mật khẩu
-      dispatch(
-        alertDanger(
-          "Mật khẩu phải có ít nhất 8 ký tự và phải chứa ít nhất một chữ cái và một chữ số."
-        )
-      );
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    } else if (password === confirm_password) {
-      setUserEmail("");
-      setPassword("");
-      setConfirm_password("");
-      try {
-        const userCred = await createUserWithEmailAndPassword(
-          firebaseAuth,
-          userEmail,
-          password
-        );
-        if (userCred) {
-          const token = await userCred.user.getIdToken();
-          const data = await validateUserJWTToken(token);
-          dispatch(setUserDetail(data));
-          navigate("/profile", { replace: true });
-        }
-      } catch (error) {
-        if (error.code === "auth/user-not-found") {
-          // Xử lý trường hợp địa chỉ email chưa được đăng ký
-          dispatch(
-            alertDanger(
-              "Địa chỉ email chưa được đăng ký. Vui lòng kiểm tra lại."
-            )
-          );
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
-        } else {
-          // Xử lý các lỗi khác
-          dispatch(alertDanger("Lỗi: " + error.message));
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
-        }
+    try {
+      const userData = {
+        name : userName,
+        email: userEmail,
+        password: password,
+        // ...Thêm các trường thông tin người dùng khác tại đây nếu cần
+      };
+  
+      const res = await signUpUser(userData); // Truyền đối tượng data vào hàm signUpUser
+  
+      console.log(res);
+  
+      if (res && res.data) {
+        const token = res.data.token;
+        localStorage.setItem("token", token); 
+        console.log(token);
+        dispatch(setUserDetail(res.data));
+        navigate("/", { replace: true });
+       
+      } else {
+        console.log("Đăng ký không thành công.");
       }
-    } else {
-      dispatch(alertDanger("Không khớp mật khẩu!"));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
+      
+    } catch (error) {
+      console.error("Lỗi khi đăng ký:", error);
     }
   };
+  
 
-  // const signInWithEmailPass = async () => {
-  //   if (userEmail !== "" && password !== "") {
-  //     try {
-  //       const userCred = await signInWithEmailAndPassword(
-  //         firebaseAuth,
-  //         userEmail,
-  //         password
-  //       );
+    const signInWithEmailPass = async () => {
+      if (userEmail !== "" && password !== "") {
+        try {
+          const res = await loginUser(userEmail, password);
 
-  //       if (userCred) {
-  //         const token = await userCred.user.getIdToken();
-  //         const data = await validateUserJWTToken(token);
-  //         dispatch(setUserDetail(data));
-  //         navigate("/", { replace: true });
-  //       }
-  //     } catch (error) {
-  //       if (error.code === "auth/user-not-found") {
-  //         // Xử lý trường hợp địa chỉ email chưa được đăng ký
-  //         dispatch(
-  //           alertDanger(
-  //             "Địa chỉ email chưa được đăng ký. Vui lòng kiểm tra lại."
-  //           )
-  //         );
-  //         setTimeout(() => {
-  //           dispatch(alertNULL());
-  //         }, 3000);
-  //       } else {
-  //         // Xử lý các lỗi khác
-  //         dispatch(alertDanger("Mật khẩu sai!"));
-  //         setTimeout(() => {
-  //           dispatch(alertNULL());
-  //         }, 3000);
-  //       }
-  //     }
-  //   } else {
-  //     dispatch(alertWarning("Nhập đủ thông tin!"));
-  //     setTimeout(() => {
-  //       dispatch(alertNULL());
-  //     }, 3000);
-  //   }
-  // };
-
-  const forgotPass = async () => {
-    setIsForgot(true);
-    if (userEmail === "" || newPassword === "" || confirm_newPassword === "") {
-      dispatch(alertInfo("Require fields should not be empty"));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    } else if (
-      !/^[A-Za-z0-9](\.?[A-Za-z0-9]){0,}@gmail\.com$/.test(userEmail)
-    ) {
-      // Kiểm tra email có đúng định dạng "...@gmail.com" hay không
-      dispatch(alertDanger("Email không đúng định dạng. Vui lòng nhập lại."));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    } else if (
-      newPassword.length < 8 ||
-      !/^(?=.*[a-zA-Z])(?=.*\d)/.test(newPassword)
-    ) {
-      // Kiểm tra độ dài và yêu cầu chữ cái và số cho mật khẩu
-      dispatch(
-        alertDanger(
-          "Mật khẩu phải có ít nhất 8 ký tự và phải chứa ít nhất một chữ cái và một chữ số."
-        )
-      );
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    } else if (newPassword === confirm_newPassword) {
-      // dispatch(alertDanger("Please enter your email address."));
-      try {
-        // Send a password reset email
-        await updatePassword(firebaseAuth, userEmail);
-        dispatch(alertInfo("Email đặt lại mật khẩu đã được gửi thành công."));
-        setForgotEmail("");
-        setNewPassword("");
-        setIsForgot(false);
-      } catch (error) {
-        if (error.code === "auth/user-not-found") {
-          // Xử lý trường hợp địa chỉ email chưa được đăng ký
-          dispatch(
-            alertDanger(
-              "Địa chỉ email chưa được đăng ký. Vui lòng kiểm tra lại."
-            )
-          );
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
-        } else {
-          // Xử lý các lỗi khác
-          dispatch(alertDanger("Lỗi: " + error.message));
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
+          if (res && res.data) {
+            const  token = res.data.token;
+            localStorage.setItem("token", token);
+            console.log(token)
+            dispatch(setUserDetail(res.data));
+            navigate("/", { replace: true });
+          } else {
+            console.log("Đăng nhập không thành công.");
+          }
+        } catch (error) {
+          console.error("Lỗi khi đăng nhập:", error);
         }
       }
-    } else {
-      dispatch(alertDanger("Không khớp mật khẩu!"));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    }
-  };
+    };
+
 
   return (
     <div className="w-screen h-screen relative overflow-auto  bg-lighttextGray gap-4">
@@ -298,9 +131,9 @@ const Login = () => {
           <div className="flex flex-col items-center bg-cardOverlay  md:w-auto h-auto z-10 backdrop-blur-md   ">
             <div className="w-screen h-[5px] bg-green-300" />
 
-            <NavLink to={"/login"} className="flex items-center gap-6">
-              <img src={logo} className="w-12" alt="" />
-              <p className="flex font-bold text-3xl text-green-700">6Food</p>
+            <NavLink to={"/login"} className="flex items-center gap-3">
+              <img src={logo2} className="w-16" alt="" />
+              <p className="flex font-bold text-3xl" style={gradientStyle}>6Food</p>
             </NavLink>
           </div>
           {/* container box */}
@@ -351,7 +184,7 @@ const Login = () => {
 
               <motion.button
                 {...buttonClick}
-                onClick={forgotPass}
+                // onClick={forgotPass}
                 className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
               >
                 Reset Password
@@ -365,8 +198,8 @@ const Login = () => {
             <div className="w-screen h-[5px] bg-green-300" />
 
             <div className="flex items-center gap-6">
-              <img src={logo} className="w-12" alt="" />
-              <p className="flex font-bold text-3xl text-green-700">6Food</p>
+              <img src={logo2} className="w-16" alt="" />
+              <p className="flex font-bold text-3xl "style={gradientStyle}>6Food</p>
             </div>
           </div>
           {/* container box */}
@@ -459,7 +292,7 @@ const Login = () => {
               <motion.button
                 {...buttonClick}
                 className="text-red-500 cursor-pointer underline hover:text-red-700 "
-                onClick={forgotPass}
+                // onClick={forgotPass}
               >
                 Quên mật khẩu?
               </motion.button>
@@ -486,7 +319,7 @@ const Login = () => {
             <motion.div
               {...buttonClick}
               className=" flex justify-start items-center bg-cardOverlay w-[80%] backdrop-blur-md cursor-pointer px-4 py-2 mx-auto rounded-3xl gap-10"
-              onClick={loginWithPhone}
+              // onClick={loginWithPhone}
             >
               <FcIphone className="text-3xl" />
               <div className="justify-center flex items-center ">

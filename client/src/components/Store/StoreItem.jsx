@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import DataTable from "./DataTable";
+
 import { useDispatch, useSelector } from "react-redux";
 import { FaDongSign } from "react-icons/fa6";
 import {
@@ -14,9 +14,9 @@ import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 import { motion } from "framer-motion";
 import { buttonClick, slideIn } from "../../animations";
 import { BiChevronsLeft } from "react-icons/bi";
-import { statuses } from "../../utils/styles";
+import DataTable from "../Admin/DataTable";
 
-const DBItems = () => {
+const StoreItem = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
@@ -40,24 +40,26 @@ const DBItems = () => {
     fetchData();
   }, []);
   const [statusList, setStatusList] = useState([]);
-
+  const user = useSelector((state) => state.user);
   const products = useSelector((state) => state.products);
-  const dispatch = useDispatch();
+  const filteredProducts = products ?products.filter(product => product?.user?.id === user?.user?.userId) :[];
 
-  // Hàm mở modal và đặt sản phẩm được chọn
+  const dispatch = useDispatch();
+ 
+
   const handleEditClick = (event, rowData) => {
     setSelectedProduct(rowData);
     setIsEditModalOpen(true);
   };
 
-  // Hàm đóng modal
+
   const handleCloseModal = () => {
     setIsEditModalOpen(false);
   };
 
   const handleSaveChanges = async () => {
     try {
-      // Gọi hàm để lưu thay đổi trên backend
+
       const updatedProduct = await editProduct(
         selectedProduct.id,
         selectedProduct
@@ -119,7 +121,7 @@ const DBItems = () => {
             field: "description",
           },
           {
-            title: "Store",
+            title: "Store Owner",
             field: "user.name",
           },
           {
@@ -137,7 +139,7 @@ const DBItems = () => {
             field: "ratings",
           },
         ]}
-        data={products}
+        data={filteredProducts}
         title="List of products"
         actions={[
           {
@@ -260,4 +262,4 @@ const DBItems = () => {
   );
 };
 
-export default DBItems;
+export default StoreItem;
