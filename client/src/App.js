@@ -7,7 +7,7 @@ import { getAllCartItems, validateUserJWTToken } from "./api";
 import { setUserDetail } from "./context/actions/userActions";
 import { motion } from "framer-motion";
 import { fadeInOut } from "./animations";
-import { Alert, CheckOutSuccess, MainLoader, Profile, UserOrder } from "./components";
+import { Alert, CheckOutSuccess, MainLoader, Product, Profile, UserOrder } from "./components";
 import { setCartItems } from "./context/actions/cartAction";
 
 const App = () => {
@@ -55,6 +55,7 @@ const App = () => {
         <Route path="/user-orders" element={<UserOrder />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/my-store/*" element={<Store />} />
+        <Route path="/product/:id" element={<Product />} />
         
       </Routes>
       {alert?.type && <Alert type={alert?.type} message={alert?.message} />}

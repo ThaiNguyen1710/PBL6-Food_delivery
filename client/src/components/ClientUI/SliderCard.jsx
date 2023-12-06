@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 import { FaDongSign } from "react-icons/fa6";
 import { buttonClick } from "../../animations";
 import { BsFillBasket2Fill } from "react-icons/bs";
@@ -11,11 +11,16 @@ import {
   alertSuccess,
 } from "../../context/actions/alertActions";
 import { setCartItems } from "../../context/actions/cartAction";
+import { useNavigate } from "react-router-dom"; 
 
 const SliderCard = ({ data, index }) => {
   const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const navigateToProduct = () => {
+    navigate(`/product/${data.id}`); // Navigate to the specific product page
+  };
 
   const sendToCart = async () => {
     try {
@@ -51,6 +56,7 @@ const SliderCard = ({ data, index }) => {
         alt=""
         src={baseURL + data.image}
         className="w-40 h-40 object-contain"
+        onClick={navigateToProduct}
       />
       <div className="relative pt-12">
         <p className="text-xl text-headingColor font-semibold">{data.name}</p>
@@ -64,7 +70,7 @@ const SliderCard = ({ data, index }) => {
         <p className="text-sm font-normal text-textColor text-center">
           Store: {data.user.name}
         </p>
-        
+
         <motion.div
           {...buttonClick}
           onClick={sendToCart}

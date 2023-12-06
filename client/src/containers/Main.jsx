@@ -24,6 +24,7 @@ const Main = () => {
         <Home />
         <HomeSlider />
         <FilterSection />
+        
        
       </div>
       {isCart && <Cart/>}
