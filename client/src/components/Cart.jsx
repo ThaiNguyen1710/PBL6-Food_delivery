@@ -15,6 +15,7 @@ import {
 import {
   baseURL,
   clearAllCart,
+  clearItem,
   decrementItemQuantity,
   getAllCartItems,
   incrementItemQuantity,
@@ -31,23 +32,23 @@ const Cart = () => {
 
   useEffect(() => {
     let total = 0;
-  let totalQuantity = 0;
-  
-  
-      const filteredCart = cart?cart.filter((item) => item.user.id === user.user.userId):[];
-      setUserCart(filteredCart);
-    
+    let totalQuantity = 0;
 
-  if (filteredCart && filteredCart.length > 0) {
-    filteredCart.forEach((data) => {
-      total += data.product.price * data.quantity;
-      totalQuantity += data.quantity;
-    });
+    const filteredCart = cart
+      ? cart.filter((item) => item.user.id === user.user.userId)
+      : [];
+    setUserCart(filteredCart);
 
-    setTotal(total.toLocaleString("vi-VN"));
-    setTotalQuantity(totalQuantity);
-  }
-  },[cart, user]);
+    if (filteredCart && filteredCart.length > 0) {
+      filteredCart.forEach((data) => {
+        total += data.product.price * data.quantity;
+        totalQuantity += data.quantity;
+      });
+
+      setTotal(total.toLocaleString("vi-VN"));
+      setTotalQuantity(totalQuantity);
+    }
+  }, [cart, user]);
   // const userCart = cart
   //   ? cart.filter((product) => product.user.id === user.userId)
   //   : [];
@@ -110,10 +111,9 @@ const Cart = () => {
         {cart && userCart.length > 0 ? (
           <>
             <div className="flex flex-col w-full items-start justify-start gap-3 h-[65%] overflow-y-scroll scrollbar-none px-4">
-              {userCart
-                .map((item, i) => (
-                  <CartItemCard key={i} index={i} data={item} />
-                ))}
+              {userCart.map((item, i) => (
+                <CartItemCard key={i} index={i} data={item} />
+              ))}
             </div>
             <div className="bg-zinc-800 rounded-t-[60px] w-full h-[35%] flex flex-col items-center justify-start px-4 py-6 gap-4">
               <div className=" w-full flex items-center justify-evenly">
@@ -159,16 +159,62 @@ export const CartItemCard = ({ index, data }) => {
     setItemTotal(itemTotal);
   }, [cart]);
 
-  const decrementCart = () => {
-    const productId = cart?.id;
-    console.log(productId);
-
+  const decrementCart = (productId) => {
+    console.log(data)
+    console.log(productId.quantity)
     if (productId) {
       decrementItemQuantity(productId)
         .then((data) => {
-          if (data) {
+          if (!data) {
             dispatch(alertSuccess("Updated the cart"));
-
+            getAllCartItems(cart?.user?._id).then((items) => {
+              if (items) {
+                dispatch(setCartItems(items));
+                setTimeout(() => {
+                  dispatch(alertNULL());
+                }, 3000);
+              }
+            });
+          } 
+          
+        })
+        .catch(() => {
+          dispatch(alertDanger("Failed to update the cart"));
+          setTimeout(() => {
+            dispatch(alertNULL());
+          }, 3000);
+        });
+    } 
+    if (data.quantity===1) {
+      clearItem(productId)
+        .then((data) => {
+          if (!data) {
+            dispatch(alertSuccess("Updated the cart"));
+            getAllCartItems(cart?.user?._id).then((items) => {
+              if (items) {
+                dispatch(setCartItems(items));
+                setTimeout(() => {
+                  dispatch(alertNULL());
+                }, 3000);
+              }
+            });
+          } 
+          
+        })
+        .catch(() => {
+          dispatch(alertDanger("Failed to update the cart"));
+          setTimeout(() => {
+            dispatch(alertNULL());
+          }, 3000);
+        });
+    } 
+  };
+  const incrementCart = (productId) => {
+    if (productId) {
+      incrementItemQuantity( productId)
+        .then((data) => {
+          if (!data) {
+            dispatch(alertSuccess("Updated the cart"));
             getAllCartItems(cart?.user?._id).then((items) => {
               if (items) {
                 dispatch(setCartItems(items));
@@ -179,27 +225,23 @@ export const CartItemCard = ({ index, data }) => {
             });
           } else {
             dispatch(alertDanger("Failed to update the cart"));
+            setTimeout(() => {
+              dispatch(alertNULL());
+            }, 3000);
           }
         })
         .catch(() => {
           dispatch(alertDanger("Failed to update the cart"));
-        });
-    } else {
-      dispatch(alertDanger("Invalid product ID"));
-    }
-  };
-  const incrementCart = (productId) => {
-    incrementItemQuantity(user?.user_id, productId, "increment").then(
-      (data) => {
-        dispatch(alertSuccess("Update the cart"));
-        getAllCartItems(user?.user_id).then((items) => {
-          dispatch(setCartItems(items));
           setTimeout(() => {
             dispatch(alertNULL());
           }, 3000);
         });
-      }
-    );
+    } else {
+      dispatch(alertDanger("Invalid product ID"));
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
+    }
   };
 
   return (
@@ -231,7 +273,7 @@ export const CartItemCard = ({ index, data }) => {
       <div className=" ml-auto flex items-center justify-center gap-3">
         <motion.div
           {...buttonClick}
-          onClick={() => decrementCart(data?.productId)}
+          onClick={() => decrementCart(data?._id)}
           className="w-8 h-8 flex items-center justify-center rounded-md drop-shadow-md bg-zinc-900 cursor-pointer"
         >
           <p className="text-xl font-semibold text-primary">--</p>
@@ -239,7 +281,7 @@ export const CartItemCard = ({ index, data }) => {
         <p className=" text-lg text-primary font-semibold">{data?.quantity}</p>
         <motion.div
           {...buttonClick}
-          onClick={() => incrementCart(data?.productId)}
+          onClick={() => incrementCart(data?._id)}
           className="w-8 h-8 flex items-center justify-center rounded-md drop-shadow-md bg-zinc-900 cursor-pointer"
         >
           <p className="text-xl font-semibold text-primary">+</p>

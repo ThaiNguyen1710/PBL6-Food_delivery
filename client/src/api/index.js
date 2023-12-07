@@ -174,31 +174,41 @@ export const getAllCartItems = async (products, users) => {
 };
 //cart increment
 
-export const incrementItemQuantity = async (user_id, productId, type) => {
+export const incrementItemQuantity = async (order_id) => {
   try {
-    const res = await axios.post(
-      `${baseURL}/api/products/updateCart/${user_id}`,
+    const res = await axios.put(
+      `${baseURL}/pbl6/orderItem/asc/${order_id}`,
       null,
-      { params: { productId: productId, type: type } }
+      { params: { order_id: order_id } }
     );
     return res.data.data;
   } catch (error) {
     return null;
   }
 };
-export const decrementItemQuantity = async (user_id, productId) => {
+export const decrementItemQuantity = async (order_id) => {
   try {
-    const res = await axios.post(
-      `${baseURL}/pbl6/orderItem/desc/${user_id}`,
+    const res = await axios.put(
+      `${baseURL}/pbl6/orderItem/desc/${order_id}`,
       null,
-      { params: { productId: productId } }
+      { params: { order_id: order_id } }
     );
     return res.data.data;
   } catch (error) {
     return null;
   }
 };
+export const clearItem = async (user_id) => {
+  try {
+    const res = await axios.delete(
+      `${baseURL}/pbl6/orderItem/${user_id}`
+    );
 
+    return res.data.data;
+  } catch (error) {
+    return null;
+  }
+};
 export const clearAllCart = async (user_id) => {
   try {
     const res = await axios.delete(
