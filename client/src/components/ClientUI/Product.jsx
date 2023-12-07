@@ -1,20 +1,29 @@
 import React from "react";
-import { NavLink, useParams } from "react-router-dom";
-import { baseURL } from "../../api";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { addNewItemToCart, baseURL, getAllCartItems } from "../../api";
 import { FaDongSign } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
 import { buttonClick } from "../../animations";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Header from "../Header";
 
 import { BiChevronsLeft } from "react-icons/bi";
 import Footer from "../Footer";
+import Cart from "../Cart";
+import { alertDanger, alertNULL, alertSuccess } from "../../context/actions/alertActions";
+import { setCartItems } from "../../context/actions/cartAction";
+import { setCartOn } from "../../context/actions/displayCartAction";
 
-const Product = ({ closeProduct }) => {
+const Product = ({  closeProduct }) => {
   const { id } = useParams();
   const product = useSelector((state) => state.products);
   const allUser = useSelector((state) => state.allUsers);
+  const isCart = useSelector((state) => state.isCart);
+  const user = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const productList = product ? product.filter((item) => item.id === id) : [];
   const selectedProduct = productList.length > 0 ? productList[0] : null;
@@ -23,11 +32,48 @@ const Product = ({ closeProduct }) => {
     ? allUser.filter((user) => user?.id === selectedProduct?.user?.id)
     : [];
 
-  console.log(userProduct);
+ console.log (selectedProduct)
   if (!product) {
-    return <div>Loading...</div>;
+    navigate("/", { replace: true });
   }
 
+ 
+  const sendToCart = async () => {
+    try {
+      const newData = {
+        product: selectedProduct.id,
+        user: user.user.userId,
+      };
+      console.log("New Data:", newData);
+      const addedItem = await addNewItemToCart(newData);
+
+      if (addedItem) {
+        dispatch(alertDanger("Failed to add to cart"));
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+      } else {
+        dispatch(alertSuccess("Added to the cart"));
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+        const allCartItems = await getAllCartItems();
+        if (allCartItems) {
+          dispatch(setCartItems(allCartItems));
+        }
+      }
+    } catch (error) {
+      dispatch(alertDanger("Failed to add to cart"));
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
+    }
+  };
+  const handleButtonClick = () => {
+    sendToCart();
+    dispatch(setCartOn());
+  };
+  
   return (
     <div className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
       <Header />
@@ -82,6 +128,8 @@ const Product = ({ closeProduct }) => {
               <motion.button
                 {...buttonClick}
                 className="bg-gradient-to-bl from-orange-400 to-orange-600 px-4 py-2 rounded-xl text-black text-base font-semibold "
+                // onClick={() => dispatch(setCartOn())}
+                onClick={handleButtonClick} 
               >
                 Đặt Hàng Ngay
               </motion.button>
@@ -89,6 +137,7 @@ const Product = ({ closeProduct }) => {
           </div>
         </motion.div>
       </div>
+      {isCart && <Cart/>}
       <Footer />
     </div>
   );

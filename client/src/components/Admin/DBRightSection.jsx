@@ -19,7 +19,7 @@ const DBRightSection = () => {
           <Route path="/home" element={<DBHome />} />
           <Route path="/orders" element={<DBOrders />} />
           <Route path="/items" element={<DBItems/>} />
-          <Route path="/newItem" element={<DBNewItem />} />
+          {/* <Route path="/newItem" element={<DBNewItem />} /> */}
           <Route path="/users" element={<DBUsers />} />
           <Route path="/store" element={<DBStore />} />
           <Route path="/shipper" element={<DBShipper />} />

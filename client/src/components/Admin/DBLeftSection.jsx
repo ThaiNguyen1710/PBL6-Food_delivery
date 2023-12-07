@@ -45,7 +45,7 @@ const DBLeftSection = () => {
         >
           Items
         </NavLink>
-        <NavLink
+        {/* <NavLink
           className={({ isActive }) =>
             isActive
               ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
@@ -54,7 +54,7 @@ const DBLeftSection = () => {
           to={"/dashboard/newItem"}
         >
           Add New Item
-        </NavLink>
+        </NavLink> */}
         <NavLink
           className={({ isActive }) =>
             isActive

@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { logo, avatar, logo2 } from "../assets";
-import { gradientStyle, isActiveStyles, isNotActiveStyles } from "../utils/styles";
+import { logo, avatar, logo2, shoppingStore } from "../assets";
+import {
+  gradientStyle,
+  isActiveStyles,
+  isNotActiveStyles,
+} from "../utils/styles";
 import { motion } from "framer-motion";
 import { buttonClick, slideTop } from "../animations";
 import { MdShoppingCart, MdLogout } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 // import { getAuth } from "firebase/auth";
-// import { app } from "../config/firebase.config"; 
+// import { app } from "../config/firebase.config";
 import { setUserDetail, setUserNull } from "../context/actions/userActions";
 import { setCartOn } from "../context/actions/displayCartAction";
 
@@ -21,27 +25,29 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const signOut = () => {
-    localStorage.removeItem('token')
+    localStorage.removeItem("token");
     dispatch(setUserDetail(null));
     navigate("/login", { replace: true });
   };
- 
+
   const [userCart, setUserCart] = useState([]);
 
   useEffect(() => {
-    // Logic lọc dữ liệu vào userCart từ cart và user
-    if (cart && user) {
-      const filteredCart = cart?cart.filter((item) => item.user.id === user.user.userId):[];
+    if (cart && user && user.user && user.user.userId) {
+      const filteredCart = cart.filter(
+        (item) => item.user.id === user.user.userId
+      );
       setUserCart(filteredCart);
     }
   }, [cart, user]);
-
 
   return (
     <header className="fixed backdrop-blur-md z-50 inset-x-0 top-0 flex justify-between items-center px-12 md:px-20 py-6 ">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={logo2} className="w-16 " alt="" />
-        <p className="font-semibold text-3xl" style={gradientStyle}>6Food</p>
+        <p className="font-semibold text-3xl" style={gradientStyle}>
+          6Food
+        </p>
       </NavLink>
 
       <nav className="flex justify-center items-center  gap-4">
@@ -54,22 +60,31 @@ const Header = () => {
           >
             Trang chủ
           </NavLink>
-          <NavLink
-            className={({ isActive }) =>
-              isActive ? isActiveStyles : isNotActiveStyles
-            }
-            to={"/menu"}
-          >
-            Khám Phá
-          </NavLink>
-          {/* <NavLink
-            className={({ isActive }) =>
-              isActive ? isActiveStyles : isNotActiveStyles
-            }
-            to={"/services"}
-          >
-            Services
-          </NavLink> */}
+          {user ? (
+      user.user && user.user.isStore === true ? (
+        <NavLink
+          className={({ isActive }) =>
+            isActive ? isActiveStyles : isNotActiveStyles
+          }
+          to={"/my-store/home"}
+        >
+          <div className="flex items-center">
+            <img alt="" src={shoppingStore} className="w-10 h-10 mr-2" />
+            My Store
+          </div>
+        </NavLink>
+      ) : (
+        <NavLink
+          className={({ isActive }) =>
+            isActive ? isActiveStyles : isNotActiveStyles
+          }
+          to={"/menu"}
+        >
+          Khám Phá
+        </NavLink>
+      )
+    ) : null}
+
           <NavLink
             className={({ isActive }) =>
               isActive ? isActiveStyles : isNotActiveStyles
@@ -111,16 +126,15 @@ const Header = () => {
                     onMouseLeave={() => setIsMenu(false)}
                     className="px-4 py-6 bg-cardOverlay absolute top-12 -right-28 rounded-md backdrop-blur-md shadow-sm flex flex-col gap-4"
                   >
-                   
-                   {user?.user?.userId ==="655b5b0af25e95d6494625c5" &&(
+                    {user?.user?.userId === "655b5b0af25e95d6494625c5" && (
                       <Link
-                      className="hover:text-red-400 text-xl text-textColor"
-                      to={"/dashboard/home"}
-                    >
-                      Dashboard
-                    </Link>
+                        className="hover:text-red-400 text-xl text-textColor"
+                        to={"/dashboard/home"}
+                      >
+                        Dashboard
+                      </Link>
                     )}
-                    
+
                     <Link
                       className="hover:text-red-400 text-xl text-textColor"
                       to={"/profile"}
@@ -133,14 +147,14 @@ const Header = () => {
                     >
                       Orders
                     </Link>
-                    {user?.user?.isStore ===true &&(
-                    <Link
-                      className="hover:text-red-400 text-xl text-textColor"
-                      to={"/my-store/home"}
-                    >
-                      My Store
-                    </Link>
-                    )}
+                    {/* {user?.user?.isStore === true && (
+                      <Link
+                        className="hover:text-red-400 text-xl text-textColor"
+                        to={"/my-store/home"}
+                      >
+                        My Store
+                      </Link>
+                    )} */}
                     <hr />
                     <motion.div
                       {...buttonClick}

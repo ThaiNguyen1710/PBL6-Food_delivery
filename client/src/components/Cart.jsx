@@ -143,9 +143,13 @@ const Cart = () => {
           </>
         )}
       </div>
+      
     </motion.div>
+    
   );
+  
 };
+
 export const CartItemCard = ({ index, data }) => {
   const cart = useSelector((state) => state.cart);
   const user = useSelector((state) => state.user);
@@ -160,8 +164,6 @@ export const CartItemCard = ({ index, data }) => {
   }, [cart]);
 
   const decrementCart = (productId) => {
-    console.log(data)
-    console.log(productId.quantity)
     if (productId) {
       decrementItemQuantity(productId)
         .then((data) => {

@@ -14,7 +14,7 @@ const DBStore = () => {
   const [isBlock, setIsBlock] = useState("");
   const dispatch = useDispatch();
   const isStore = allUsers
-    ? allUsers.filter((store) => store?.isStore === true)
+    ? allUsers.filter((store) => store?.store !== null)
     : [];
 
   useEffect(() => {
@@ -46,8 +46,11 @@ const DBStore = () => {
       dispatch(alertSuccess("Cập nhật thành công  "));
       setTimeout(() => {
         dispatch(alertNULL());
+        window.location.reload()
       }, 3000);
+      
     }
+ 
   };
   return (
     <div className="flex justify-center items-center gap-4 pt-6 w-full">
@@ -106,17 +109,18 @@ const DBStore = () => {
             field: "isStore",
             render: (rowData) => (
               <select
-                value={rowData.isStore}
-                onChange={() => blockStore(rowData)}
-                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
-              >
+              value={rowData.isStore}
+              onChange={() => blockStore(rowData)}
+              className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
+              style={{ color: rowData.isStore === true ? "blue" : "red" }}
+            >
                 <option value="true" className="font-semibold text-blue-500">
                   True
                 </option>
                 <option value="false" className="font-semibold text-red-500">
                   False
                 </option>
-              </select>
+            </select>
             ),
           },
         ]}

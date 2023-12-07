@@ -32,7 +32,7 @@ export const loginUser = async (email, password) => {
 export const signUpUser =async (data) => {
   try {
     const res = await axios.post(`${baseURL}/pbl6/user/register`, data);
-    console.log(res)
+
     return res.data; 
   } catch (err) {
     console.error( err);
@@ -97,7 +97,7 @@ export const addNewProduct = async (data) => {
     const res = await axios.post(`${baseURL}/pbl6/product`, {
       ...data,
     });
-    console.log(res);
+
     return res.data.data;
   } catch (err) {
     return null;
@@ -133,7 +133,7 @@ export const editProduct = async (productId, data) => {
       `${baseURL}/pbl6/product/${productId}`,
       data
     );
-      console.log(res.data.data)
+     
     return res.data.data;
   } catch (err) {
     return null;
@@ -225,7 +225,7 @@ export const handleCheckOut = async () => {
   axios
     .post(`${baseURL}/api/products/create-checkout-session`)
     .then((res) => {
-      console.log(res);
+   
     })
     .catch((err) => console.log(err));
 };

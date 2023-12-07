@@ -20,7 +20,8 @@ const App = () => {
  
   useEffect(() => {
     setIsLoading(true);
-    const cred = localStorage.getItem("token");
+    const cred = localStorage.getItem("token")
+    console.log(cred)
     if (cred) {
       validateUserJWTToken(cred).then((data) => {
         if (data) {
@@ -28,14 +29,16 @@ const App = () => {
             dispatch(setCartItems(items));
           });
         }
+        console.log(data)
         dispatch(setUserDetail(data));
+
       });
     }
 
     setInterval(() => {
       setIsLoading(false);
     }, 3000);
-  }, []);
+  },[]);
 
   return (
     <div className="w-screen min-h-screen h-auto flex flex-col items-center justify-center">

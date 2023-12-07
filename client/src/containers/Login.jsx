@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { BiLogOutCircle } from "react-icons/bi";
-import { loginUser, signUpUser} from "../api";
+import { loginUser, signUpUser } from "../api";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,7 +16,6 @@ import {
   alertDanger,
   alertInfo,
   alertNULL,
-
 } from "../context/actions/alertActions";
 import { gradientStyle } from "../utils/styles";
 
@@ -31,9 +30,8 @@ const Login = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirm_newPassword, setConfirm_newPassword] = useState("");
   const [userName, setUserName] = useState("");
-  
-  // const provider = new GoogleAuthProvider();
 
+  // const provider = new GoogleAuthProvider();
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -43,12 +41,14 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      window.location.reload(); 
-      navigate("/", { replace: true });
       
+      navigate("/", { replace: true });
+      window.location.reload()
     }
+ 
+    
   }, [user]);
-  const loginWithGoogle = async () => {}
+  const loginWithGoogle = async () => {};
 
   // const loginWithGoogle = async () => {
   //   await signInWithPopup(firebaseAuth, provider).then((userCred) => {
@@ -77,53 +77,48 @@ const Login = () => {
   const signUpWithEmailPass = async () => {
     try {
       const userData = {
-        name : userName,
+        name: userName,
         email: userEmail,
         password: password,
-        // ...Thêm các trường thông tin người dùng khác tại đây nếu cần
       };
-  
-      const res = await signUpUser(userData); // Truyền đối tượng data vào hàm signUpUser
-  
-      console.log(res);
-  
+
+      const res = await signUpUser(userData);
+
+   
+
       if (res && res.data) {
         const token = res.data.token;
-        localStorage.setItem("token", token); 
-        console.log(token);
+        localStorage.setItem("token", token);
+        
         dispatch(setUserDetail(res.data));
         navigate("/", { replace: true });
-       
       } else {
         console.log("Đăng ký không thành công.");
       }
-      
     } catch (error) {
       console.error("Lỗi khi đăng ký:", error);
     }
   };
-  
 
-    const signInWithEmailPass = async () => {
-      if (userEmail !== "" && password !== "") {
-        try {
-          const res = await loginUser(userEmail, password);
-
-          if (res && res.data) {
-            const  token = res.data.token;
-            localStorage.setItem("token", token);
-            console.log(token)
-            dispatch(setUserDetail(res.data));
-            navigate("/", { replace: true });
-          } else {
-            console.log("Đăng nhập không thành công.");
-          }
-        } catch (error) {
-          console.error("Lỗi khi đăng nhập:", error);
+  const signInWithEmailPass = async () => {
+    if (userEmail !== "" && password !== "") {
+      try {
+        const res = await loginUser(userEmail, password);
+     
+        if (res && res.data) {
+          const token = res.data.token;
+          localStorage.setItem("token", token);
+        
+          dispatch(setUserDetail(res.data));
+          navigate("/", { replace: true });
+        } else {
+          console.log("Đăng nhập không thành công.");
         }
+      } catch (error) {
+        console.error("Lỗi khi đăng nhập:", error);
       }
-    };
-
+    }
+  };
 
   return (
     <div className="w-screen h-screen relative overflow-auto  bg-lighttextGray gap-4">
@@ -134,7 +129,9 @@ const Login = () => {
 
             <NavLink to={"/login"} className="flex items-center gap-3">
               <img src={logo2} className="w-16" alt="" />
-              <p className="flex font-bold text-3xl" style={gradientStyle}>6Food</p>
+              <p className="flex font-bold text-3xl" style={gradientStyle}>
+                6Food
+              </p>
             </NavLink>
           </div>
           {/* container box */}
@@ -200,7 +197,9 @@ const Login = () => {
 
             <div className="flex items-center gap-6">
               <img src={logo2} className="w-16" alt="" />
-              <p className="flex font-bold text-3xl "style={gradientStyle}>6Food</p>
+              <p className="flex font-bold text-3xl " style={gradientStyle}>
+                6Food
+              </p>
             </div>
           </div>
           {/* container box */}
