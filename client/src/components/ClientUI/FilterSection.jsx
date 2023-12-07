@@ -8,6 +8,7 @@ import { getAllCategory } from "../../api";
 const FilterSection = () => {
   const [category, setCategory] = useState("Đồ Ăn Nhanh");
   const product = useSelector((state) => state.products);
+  const allUser = useSelector((state)=> state.allUsers)
   const [statusList, setStatusList] = useState([]);
 
   useEffect(() => {
@@ -26,6 +27,9 @@ const FilterSection = () => {
     fetchData();
   }, []);
   
+  // const isStore = product?product.filter((item)=> item.user.id === allUser.id) :[]
+  // console.log(isStore)
+
   return (
     <motion.div className="w-full flex items-start justify-start flex-col ">
       <div className="w-full flex items-center justify-between">
@@ -47,7 +51,7 @@ const FilterSection = () => {
       <div className="w-full flex items-center justify-evenly flex-wrap gap-4 mt-12">
         {product &&
           product
-            .filter((data) => data.category.name === category)
+            .filter((data) => data.category.name === category && data.user.isStore === true)
             .map((data, i) => <SliderCard key={i} data={data} index={i} />)}
       </div>
     </motion.div>
@@ -57,7 +61,7 @@ const FilterSection = () => {
 export const FilterCard = ({ data, category, setCategory }) => {
   return (
     <motion.div
-      onClick={() => setCategory(data.name)} // Sửa thành data.name để set category
+      onClick={() => setCategory(data.name)} 
       className={`group w-28 min-w-[128px] cursor-pointer rounded-md py-6 ${
         category === data.name ? "bg-red-500" : "bg-primary"
       } hover:bg-red-500 shadow-md flex flex-col items-center justify-center gap-4`}

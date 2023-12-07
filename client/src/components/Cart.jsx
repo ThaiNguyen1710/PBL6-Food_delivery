@@ -26,23 +26,31 @@ const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const [total, setTotal] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
+  const [userCart, setUserCart] = useState([]);
   const user = useSelector((state) => state.user);
 
   useEffect(() => {
     let total = 0;
-    let totalQuantity = 0;
-    if (cart && cart.length > 0) {
-      cart.map((data) => {
-        total = total + data.product.price * data.quantity;
-        setTotal(total.toLocaleString("vi-VN"));
-      });
+  let totalQuantity = 0;
+  
+  
+      const filteredCart = cart?cart.filter((item) => item.user.id === user.user.userId):[];
+      setUserCart(filteredCart);
+    
 
-      cart.map((data) => {
-        totalQuantity = totalQuantity + data.quantity;
-        setTotalQuantity(totalQuantity);
-      });
-    }
-  });
+  if (filteredCart && filteredCart.length > 0) {
+    filteredCart.forEach((data) => {
+      total += data.product.price * data.quantity;
+      totalQuantity += data.quantity;
+    });
+
+    setTotal(total.toLocaleString("vi-VN"));
+    setTotalQuantity(totalQuantity);
+  }
+  },[cart, user]);
+  // const userCart = cart
+  //   ? cart.filter((product) => product.user.id === user.userId)
+  //   : [];
 
   const clearAllItems = () => {
     clearAllCart(user?.user?.userId).then((data) => {
@@ -99,12 +107,11 @@ const Cart = () => {
         <p className="text-primary font-semibold text-xl px-4">
           Sản phẩm: {totalQuantity}
         </p>
-        {cart && cart?.length > 0 ? (
+        {cart && userCart.length > 0 ? (
           <>
-            <div className=" flex flex-col w-full items-start justify-start gap-3 h-[65%] overflow-y-scroll scrollbar-none px-4">
-              {cart &&
-                cart?.length > 0 &&
-                cart?.map((item, i) => (
+            <div className="flex flex-col w-full items-start justify-start gap-3 h-[65%] overflow-y-scroll scrollbar-none px-4">
+              {userCart
+                .map((item, i) => (
                   <CartItemCard key={i} index={i} data={item} />
                 ))}
             </div>
@@ -213,7 +220,7 @@ export const CartItemCard = ({ index, data }) => {
             {data?.product?.category?.name}
           </span>
           <span className=" text-sm block font-semibold text-gray-400 ">
-            Store : {data?.user?.name}
+            Store : {data?.user?.store}
           </span>
         </p>
         <p className="flex text-sm font-semibold text-red-400 ml-auto">

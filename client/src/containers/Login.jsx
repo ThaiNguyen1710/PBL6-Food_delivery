@@ -43,8 +43,9 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      
+      window.location.reload(); 
       navigate("/", { replace: true });
+      
     }
   }, [user]);
   const loginWithGoogle = async () => {}

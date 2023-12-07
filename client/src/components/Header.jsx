@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { logo, avatar, logo2 } from "../assets";
 import { gradientStyle, isActiveStyles, isNotActiveStyles } from "../utils/styles";
@@ -26,6 +26,16 @@ const Header = () => {
     navigate("/login", { replace: true });
   };
  
+  const [userCart, setUserCart] = useState([]);
+
+  useEffect(() => {
+    // Logic lọc dữ liệu vào userCart từ cart và user
+    if (cart && user) {
+      const filteredCart = cart?cart.filter((item) => item.user.id === user.user.userId):[];
+      setUserCart(filteredCart);
+    }
+  }, [cart, user]);
+
 
   return (
     <header className="fixed backdrop-blur-md z-50 inset-x-0 top-0 flex justify-between items-center px-12 md:px-20 py-6 ">
@@ -78,7 +88,7 @@ const Header = () => {
           {cart?.length > 0 && (
             <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-5 -right-1 ">
               <p className="text-primary text-base font-semibold">
-                {cart?.length}
+                {userCart.length}
               </p>
             </div>
           )}
