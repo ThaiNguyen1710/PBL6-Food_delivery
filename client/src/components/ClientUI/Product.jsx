@@ -3,7 +3,7 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { addNewItemToCart, baseURL, getAllCartItems } from "../../api";
 import { FaDongSign } from "react-icons/fa6";
 import { motion } from "framer-motion";
-
+import { MdAccessTimeFilled } from "react-icons/md";
 import { buttonClick } from "../../animations";
 import { useDispatch, useSelector } from "react-redux";
 import Header from "../Header";
@@ -37,6 +37,7 @@ const Product = ({  closeProduct }) => {
     navigate("/", { replace: true });
   }
 
+  
  
   const sendToCart = async () => {
     try {
@@ -108,14 +109,17 @@ const Product = ({  closeProduct }) => {
                 <p className="text-5xl font-semibold">
                   {selectedProduct?.name}
                 </p>
-                <p className="text-xl text-gray-500 font-serif">
+                <p className="text-xl text-gray-500 font-normal">
                   {selectedProduct?.category?.name}
                 </p>
-                <p className="text-xl  text-gray-500 font-serif">
+                <p className="text-xl  text-gray-500 font-normal">
                   Thông tin: {selectedProduct?.description}
                 </p>
               </div>
               <div className="gap-12 pb-8">
+              <p className="text-2xl font-medium flex gap-4">
+              <MdAccessTimeFilled className="w-10 h-8 " /> {userProduct?.[0]?.openAt} :  {userProduct?.[0]?.closeAt}
+                </p>
                 <p className="text-2xl font-medium">
                   {userProduct?.[0]?.address}
                 </p>

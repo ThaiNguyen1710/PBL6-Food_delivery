@@ -22,6 +22,7 @@ import {
 } from "../api";
 import { setCartItems } from "../context/actions/cartAction";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
@@ -29,6 +30,7 @@ const Cart = () => {
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [userCart, setUserCart] = useState([]);
   const user = useSelector((state) => state.user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let total = 0;
@@ -65,6 +67,9 @@ const Cart = () => {
         }, 3000);
       });
     });
+  };
+  const checkOut = () => {
+    navigate(`/checkout-success`); // Navigate to the specific product page
   };
   const handleCheckOut = () => {
     const data = {
@@ -126,7 +131,7 @@ const Cart = () => {
               <motion.button
                 className="w-[80%] h-12 rounded-full bg-orange-400 shadow-md items-center justify-center flex cursor-pointer"
                 {...buttonClick}
-                onClick={handleCheckOut}
+                onClick={checkOut}
               >
                 <p className="text-2xl font-semibold text-primary">
                   Thanh Toán
@@ -153,7 +158,9 @@ const Cart = () => {
 export const CartItemCard = ({ index, data }) => {
   const cart = useSelector((state) => state.cart);
   const user = useSelector((state) => state.user);
+  const allUser = useSelector((state) => state.allUsers);
   const [itemTotal, setItemTotal] = useState(0);
+  const [itemCart, setItemCart] = useState("");
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -161,7 +168,12 @@ export const CartItemCard = ({ index, data }) => {
       "vi-VN"
     );
     setItemTotal(itemTotal);
+
+      const filterItem = cart? cart.filter((item)=>item.product.user === allUser.id):[]
+      setItemCart(filterItem)
+
   }, [cart]);
+
 
   const decrementCart = (productId) => {
     if (productId) {
@@ -245,6 +257,7 @@ export const CartItemCard = ({ index, data }) => {
       }, 3000);
     }
   };
+
 
   return (
     <motion.div

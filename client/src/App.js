@@ -21,7 +21,7 @@ const App = () => {
   useEffect(() => {
     setIsLoading(true);
     const cred = localStorage.getItem("token")
-    console.log(cred)
+
     if (cred) {
       validateUserJWTToken(cred).then((data) => {
         if (data) {
@@ -29,7 +29,7 @@ const App = () => {
             dispatch(setCartItems(items));
           });
         }
-        console.log(data)
+
         dispatch(setUserDetail(data));
 
       });

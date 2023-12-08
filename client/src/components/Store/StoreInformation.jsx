@@ -52,7 +52,7 @@ const StoreInformation = () => {
       const newData = {
         name: userName || user.user.name,
         store: storeName || user.user.store,
-        address: userAddress !== undefined ? userAddress : user.user.address,
+        address: userAddress || user.user.address,
         openAt: openAt !== undefined ? openAt : user.user.openAt,
         closeAt: closeAt !== undefined ? closeAt : user.user.closeAt,
       };
