@@ -99,7 +99,7 @@ const StoreHome = () => {
             <p className="text-xl text-headingColor font-semibold">
               Total Revenue
             </p>
-            <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
+            {/* <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {orders
                 ?.reduce(
                   (total, order) =>
@@ -109,7 +109,7 @@ const StoreHome = () => {
                 )
                 .toLocaleString("vi-VN")}
               <FaDongSign className="text-red-400" />
-            </p>
+            </p> */}
           </div>
         </div>
 
