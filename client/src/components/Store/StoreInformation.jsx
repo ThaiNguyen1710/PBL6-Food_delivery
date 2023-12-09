@@ -71,6 +71,7 @@ const StoreInformation = () => {
       dispatch(dispatch(alertSuccess("Cập nhật thành công  ")));
       setTimeout(() => {
         dispatch(alertNULL());
+         window.location.reload()
       }, 3000);
     }
     setUserName("");
@@ -84,7 +85,7 @@ const StoreInformation = () => {
   const loggedInUser = loggedInUserId
     ? allUsers.find((user) => user.id === loggedInUserId)
     : null;
-  console.log(loggedInUser?.openAt);
+
 
   return (
     <div className="flex items-center justify-center flex-col pt-6 px-24 w-full gap-3 ">

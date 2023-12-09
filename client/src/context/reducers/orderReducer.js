@@ -1,12 +1,12 @@
-const orderReudcer = (state = null, action) => {
+const orderReducer = (state = null, action) => {
   switch (action.type) {
     case "GET_ORDERS":
       return state;
-    case "SET_ORDERS":
-      return action.orders;
+      case "SET_ORDERS":
+        return action.orders
 
     default:
       return state;
   }
 };
-export default orderReudcer;
+export default orderReducer;

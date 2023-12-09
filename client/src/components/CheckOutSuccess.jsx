@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from "react";
 import Header from "./Header";
-import { Bill } from "../assets";
 import { motion } from "framer-motion";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { FaArrowLeft } from "react-icons/fa";
+import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { buttonClick } from "../animations";
 import { BiChevronsLeft } from "react-icons/bi";
-import { baseURL } from "../api";
+import { baseURL, getAllOrders, handleCheckOut } from "../api";
 import { useDispatch, useSelector } from "react-redux";
 import { FaDongSign } from "react-icons/fa6";
 import Cart from "./Cart";
+import { alertInfo, alertNULL, alertSuccess } from "../context/actions/alertActions";
+import { getOrders, setOrders } from "../context/actions/orderAction";
+import { BsCashCoin } from "react-icons/bs";
+import { paypal } from "../assets";
 
 const CheckOutSuccess = () => {
   const user = useSelector((state) => state.user);
   const product = useSelector((state) => state.products);
   const cart = useSelector((state) => state.cart);
-  const allUser = useSelector((state) => state.allUsers);
   const isCart = useSelector((state) => state.isCart);
 
   const [userCart, setUserCart] = useState([]);
@@ -27,7 +28,6 @@ const CheckOutSuccess = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { id } = useParams();
 
   const order = cart
     ? cart.filter((item) => item.user.id === user.user.userId)
@@ -58,12 +58,52 @@ const CheckOutSuccess = () => {
   if (!product) {
     navigate("/", { replace: true });
   }
-  const currentTime = Date.now(); // Lấy thời gian hiện tại (timestamp)
+  const currentTime = Date.now();
   const estimatedTimes = [15, 20, 30];
-  const randomTime = estimatedTimes[Math.floor(Math.random() * estimatedTimes.length)];
-  
-  const deliveryTime = new Date(currentTime + randomTime * 60 * 1000); // Tính toán thời gian giao
-  
+  const randomTime =
+    estimatedTimes[Math.floor(Math.random() * estimatedTimes.length)];
+
+  const deliveryTime = new Date(currentTime + randomTime * 60 * 1000);
+
+
+  const checkOut = async () => {
+    try {
+      const orderData = {
+        user: user.user.userId,
+        shippingAddress1: order?.[0]?.user?.address,
+        shippingAddress2: order?.[0]?.product?.user?.store,
+        totalPrice: totalOrder,
+        phone: order?.[0]?.user?.phone,
+      };
+
+      const createdOrder = await handleCheckOut(orderData);
+
+      console.log(createdOrder); // Log dữ liệu nhận được từ handleCheckOut
+
+      if (createdOrder) {
+        
+        dispatch(alertInfo("Đơn hàng đang được xử lý!"));
+   
+        setTimeout(() => {
+          dispatch(alertNULL());
+          window.location.reload()
+          navigate("/user-orders", { replace: true });
+         
+        }, 3000);
+        const allCartItems = await getAllOrders();
+        console.log(allCartItems)
+        if (allCartItems) {
+          dispatch(setOrders(allCartItems));
+        }
+     
+      } else {
+        throw new Error("Failed to update user information");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <main className="w-screen min-h-screen flex items-center justify-start flex-col">
       <Header />
@@ -84,11 +124,16 @@ const CheckOutSuccess = () => {
                   </p>
                 </NavLink>
               </motion.button>
-              <div className=" pb-8 pt-8">
-                <p className="text-2xl font-serif"></p>
-              </div>
 
-              <div className="flex flex-wrap gap-4 ">
+              <div className="flex flex-wrap gap-4 pt-16">
+                <p className="text-2xl font-semibold">
+                  {order?.[0]?.product?.user?.store} {">"}
+                </p>
+                <p className="text-2xl font-normal">
+                  {order?.[0]?.product?.user?.address}
+                </p>
+
+                <div className="w-[70%] h-[1px] rounded-md bg-gray-500 "></div>
                 {order.map((item, index) => (
                   <img
                     key={index}
@@ -121,9 +166,11 @@ const CheckOutSuccess = () => {
                 <div className="gap-12">
                   <p className="text-2xl font-semibold">Giao hàng đến</p>
                 </div>
-                <p className="text-xl font-serif text-red-500 flex gap-4">{order?.[0]?.user?.name}</p>
-                <p className="text-xl font-serif text-red-500 flex gap-4">
-                  {order?.[0]?.user?.address} | {order?.[0]?.user?.phone} 
+                <p className="text-xl font-semibold text-red-500 flex gap-4">
+                  {order?.[0]?.user?.name}
+                </p>
+                <p className="text-xl font-semibold text-red-500 flex gap-4">
+                  {order?.[0]?.user?.address} | {order?.[0]?.user?.phone}
                   <NavLink
                     to="/profile"
                     className="bg-gradient-to-bl from-blue-400 to-yellow-500 px-4 py-1 rounded-xl text-black text-base font-semibold"
@@ -132,7 +179,8 @@ const CheckOutSuccess = () => {
                   </NavLink>
                 </p>
                 <p className=" text-xl font-normal flex gap-1 pb-12">
-                Thời gian giao: {deliveryTime.toLocaleTimeString()} ({randomTime} phút)
+                  Thời gian giao: {deliveryTime.toLocaleTimeString()} (
+                  {randomTime} phút)
                 </p>
                 <div className="gap-12 flex">
                   <p className="text-2xl font-semibold">
@@ -145,25 +193,37 @@ const CheckOutSuccess = () => {
                   <p className="text-2xl font-serif">15.000</p>
                 </div>
                 <div className="w-[75%] h-[1px] rounded-md bg-gray-500 "></div>
-                <div className="gap-52 flex pt-4">
+                <div className="gap-52 flex pt-4 pb-6">
                   <p className="text-2xl font-serif">Tổng </p>
                   <p className="text-2xl font-serif flex">
                     {totalOrder}
                     <FaDongSign className="text-red-500" />{" "}
                   </p>
                 </div>
-                <motion.button
-                  {...buttonClick}
-                  className="bg-gradient-to-bl from-orange-400 to-orange-600 px-4 py-2 rounded-xl text-black text-base font-semibold "
-                >
-                  Thanh toán
-                </motion.button>
+                <div className="flex gap-6 w-full">
+                  {" "}
+                  <motion.button
+                    {...buttonClick}
+                    className="bg-gradient-to-bl from-orange-400 to-orange-500 px-4 py-2 gap-8 rounded-xl text-black text-base font-semibold flex items-center justify-start "
+                    onClick={checkOut}
+                  >
+                    <BsCashCoin className="text-3xl text-green-500" />
+                    Thanh toán tiền mặt
+                  </motion.button>
+                  <motion.button
+                    {...buttonClick}
+                    className="bg-gradient-to-bl from-orange-400 to-orange-500  py-2 px-2 rounded-xl text-black text-base font-semibold flex items-center justify-start "
+                    onClick={checkOut}
+                  >
+                  <img alt="" src={paypal} className="object-contain w-24 h-16"/>
+                    Thanh toán PayPal
+                  </motion.button>
+                </div>
               </div>
             </div>
           </motion.div>
         </div>
         {isCart && <Cart />}
-     
       </div>
       <Footer />
     </main>

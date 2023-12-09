@@ -7,15 +7,30 @@ import { useDispatch } from "react-redux";
 import { setOrders } from "../../context/actions/orderAction";
 
 const OrderData = ({ index, data, admin }) => {
-const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const handleClick = (orderId, sts) => {
-    updatedOrderSts(orderId,sts).then(res=>{
-        getAllOrders().then((data)=>{
-            dispatch(setOrders(data))
-        })
-    })
+  const handleClick = (orderId, status) => {
+    console.log(orderId);
+    updatedOrderSts(orderId).then((res) => {
+      getAllOrders().then((data) => {
+        dispatch(setOrders(data));
+      });
+    });
   };
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  };
+
+  // Sử dụng hàm formatDate với data.dateOrdered
+  const formattedDate = formatDate(data.dateOrdered);
+
   return (
     <motion.div
       {...staggerFadeInOut(index)}
@@ -26,42 +41,44 @@ const dispatch = useDispatch()
         <div className="flex items-center gap-4">
           <p className="flex items-center gap-1 text-textColor">
             Total:
-            <span className="text-headingColor font-bold">{data?.total}</span>
+            <span className="text-headingColor font-bold">
+              {parseFloat(data?.totalPrice).toLocaleString("vi-VN")}
+            </span>
             <FaDongSign className="text-lg text-red-500" />
           </p>
-          <p className="px-2 py-[2px] text-sm text-headingColor font-semibold capitalize rounded-md bg-emerald-400 drop-shadow-md">
+          {/* <p className="px-2 py-[2px] text-sm text-headingColor font-semibold capitalize rounded-md bg-emerald-400 drop-shadow-md">
             {data?.status}
-          </p>
+          </p> */}
           <p
             className={`text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md ${
-              (data.sts === "preparing" && "text-orange-500 bg-orange-100") ||
-              (data.sts === "cancelled" && "text-red-500 bg-red-100") ||
-              (data.sts === "delivered" && "text-emerald-500 bg-emerald-100")
+              (data.status === "Pending" && "text-orange-500 bg-orange-100") ||
+              (data.status === "Cancelled" && "text-red-500 bg-red-100") ||
+              (data.status === "Delivered" && "text-emerald-500 bg-emerald-100")
             }`}
           >
-            {data?.sts}
+            {data?.status}
           </p>
           {admin && (
             <div className="flex items-center justify-center gap-2">
               <p className="text-lg font-semibold text-headingColor">Mark As</p>
               <motion.p
                 {...buttonClick}
-                onClick={() => handleClick(data.orderId, "preparing")}
-                className={`text-orange-500 text-base font-semibold capitalize border border-gray-300 px2 py-[2px] rounded-md cursor-pointer`}
+                onClick={() => handleClick(data._id, "Preparing")}
+                className={`text-orange-500 text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md cursor-pointer`}
               >
                 Preparing
               </motion.p>
               <motion.p
                 {...buttonClick}
-                onClick={() => handleClick(data.orderId, "cancelled")}
-                className={`text-red-500 text-base font-semibold capitalize border border-gray-300 px2 py-[2px] rounded-md cursor-pointer`}
+                onClick={() => handleClick(data._id, "Cancelled")}
+                className={`text-red-500 text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md cursor-pointer`}
               >
                 Cancelled
               </motion.p>
               <motion.p
                 {...buttonClick}
-                onClick={() => handleClick(data.orderId, "delivered")}
-                className={`text-emerald-500 text-base font-semibold capitalize border border-gray-300 px2 py-[2px] rounded-md cursor-pointer`}
+                onClick={() => handleClick(data._id, "Delivered")}
+                className={`text-emerald-500 text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md cursor-pointer`}
               >
                 Delivered
               </motion.p>
@@ -70,29 +87,36 @@ const dispatch = useDispatch()
         </div>
       </div>
       <div className="flex items-center justify-start flex-wrap w-full">
+        <div className="flex items-center justify-start w-full gap-4">
+          <h1 className="text-xl font-semibold text-red-500 -mt-2">
+            {data.shippingAddress2} {">>"} 
+          </h1>
+        </div>
+      </div>
+      <div className="flex items-center justify-start flex-wrap w-full">
         <div className="flex items-center justify-center gap-4">
-          {data?.items &&
-            data.items.map((item, j) => (
+          {data?.orderLists &&
+            data.orderLists.map((item, j) => (
               <motion.div
                 {...staggerFadeInOut(j)}
                 key={j}
                 className="flex items-center justify-center gap-1"
               >
                 <img
-                  src={item.product_image}
+                  src={item.product.image}
                   alt=""
                   className="w-10 h-10 object-contain"
                 />
                 <div className="flex items-start flex-col">
                   <p className="text-base font-semibold text-headingColor">
-                    {item.product_name}
+                    {item.product.name}
                   </p>
                   <p className="flex items-start gap-2">
                     {" "}
                     Quantity: {item.quantity}
                   </p>
                   <p className="flex items-center gap-1 text-textColor">
-                    {parseFloat(item.product_price).toLocaleString("vi-VN")}
+                    {parseFloat(item.product.price).toLocaleString("vi-VN")}
                     <FaDongSign className="text-red-400" />
                   </p>
                 </div>
@@ -100,20 +124,29 @@ const dispatch = useDispatch()
             ))}
         </div>
         <div className="flex items-start justify-start flex-col gap-2 px-6 ml-auto w-full md:w-460">
+          
           <h1 className="text-lg text-headingColor -mt-2">
-            {data.shipping_details.name}
+            {data.user.name} - {data.phone}
           </h1>
-          <p className="text-base text-textColor -mt-2">
-            {data.shipping_details.address.line1},
-            {data.shipping_details.address.line2}{" "}
-            {data.shipping_details.address.country},
-            {data.shipping_details.address.state}
-            {data.shipping_details.address.postal_code}
-          </p>
-          <h1 className="text-lg text-headingColor -mt-2">
-            {data.customer.phone} {"| "}
-            {data.customer.email }
-          </h1>
+          <div className="flex ">
+            <p className="text-base font-semibold text-headingColor -mt-2">
+              Giao hàng đến:
+            </p>
+            <p className="text-base text-textColor -mt-2">
+              <span>&nbsp;</span>
+              {data.shippingAddress1}
+            </p>
+          </div>
+
+          <div className="flex ">
+            <p className="text-base font-semibold text-headingColor -mt-2">
+              Thời gian hoàn thành:
+            </p>
+            <p className="text-base text-textColor -mt-2">
+              <span>&nbsp;</span>
+              {formattedDate}
+            </p>
+          </div>
         </div>
       </div>
     </motion.div>

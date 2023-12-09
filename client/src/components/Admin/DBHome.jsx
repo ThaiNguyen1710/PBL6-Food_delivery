@@ -94,7 +94,7 @@ const DBHome = () => {
             src={budget}
             className="w-20 h-20 object-contain items-center justify-center "
           />
-          <div className="relative ">
+          {/* <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
               Total Revenue
             </p>
@@ -109,7 +109,7 @@ const DBHome = () => {
                 .toLocaleString("vi-VN")}
               <FaDongSign className="text-red-400" />
             </p>
-          </div>
+          </div> */}
         </div>
 
         <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">

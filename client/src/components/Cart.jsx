@@ -277,7 +277,7 @@ export const CartItemCard = ({ index, data }) => {
             {data?.product?.category?.name}
           </span>
           <span className=" text-sm block font-semibold text-gray-400 ">
-            Store : {data?.user?.store}
+            Store : {data?.product?.user?.store}
           </span>
         </p>
         <p className="flex text-sm font-semibold text-red-400 ml-auto">

@@ -221,30 +221,31 @@ export const clearAllCart = async (user_id) => {
   }
 };
 
-export const handleCheckOut = async () => {
-  axios
-    .post(`${baseURL}/api/products/create-checkout-session`)
-    .then((res) => {
-   
-    })
-    .catch((err) => console.log(err));
+export const handleCheckOut = async (orderData) => {
+  try {
+    const response = await axios.post(`${baseURL}/pbl6/order`, orderData);
+    return response.data; 
+  } catch (error) {
+    console.log(error);
+    throw error; 
+  }
 };
 //get all orders
 export const getAllOrders = async () => {
   try {
-    const res = await axios.get(`${baseURL1}/api/products/orders`);
-    return res.data.data;
+    const res = await axios.get(`${baseURL}/pbl6/order`);
+    return res.data;
   } catch (err) {
     return null;
   }
 };
 
-export const updatedOrderSts = async (order_id, sts) => {
+export const updatedOrderSts = async (order_id, status) => {
   try {
-    const res = await axios.post(
-      `${baseURL}/api/products/updateOrder/${order_id}`,
+    const res = await axios.put(
+      `${baseURL}/pbl6/order/${order_id}`,
       null,
-      { params: { sts: sts } }
+      { params: { status: status } }
     );
     return res.data.data;
   } catch (err) {

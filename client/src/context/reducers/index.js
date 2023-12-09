@@ -5,18 +5,17 @@ import productReducer from "./productReducer";
 import allUserReducer from "./allUserReducer";
 import cartReducer from "./cartReducer";
 import displayCartReducer from "./displayCartReducer";
-import orderReudcer from "./orderReducer";
-import categoryReducer from "./categoryReducer";
+
+import orderReducer from "./orderReducer";
 
 const myReducers = combineReducers({
   user: userReducer,
   alert: alertReducer,
-  category: categoryReducer,
   products: productReducer,
   allUsers: allUserReducer,
   cart: cartReducer,
   isCart: displayCartReducer,
-  orders: orderReudcer,
+  orders: orderReducer,
 });
 
 export default myReducers;

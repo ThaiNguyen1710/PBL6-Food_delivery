@@ -52,7 +52,7 @@ const Profile = () => {
       const newData = {
         name: userName || user.user.name,
         phone: userPhone || user.user.phone,
-        address: userAddress !== undefined ? userAddress : user.user.address,
+        address: userAddress || user.user.address,
         email: userEmail || user.user.email,
       };
      

@@ -8,15 +8,17 @@ import {
   HomeSlider,
 } from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllProducts, getAllUsers } from "../api";
+import { getAllOrders, getAllProducts, getAllUsers } from "../api";
 import { setAllProducts } from "../context/actions/productAction";
 import { setAllUserDetail } from "../context/actions/allUsersAction";
 import { useNavigate } from "react-router-dom";
+import { setOrders } from "../context/actions/orderAction";
 
 const Main = () => {
   const products = useSelector((state) => state.products);
   const allUsers = useSelector((state) => state.allUsers);
   const user = useSelector((state) => state.user);
+  const order = useSelector((state) => state.orders);
   const isCart = useSelector((state) => state.isCart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ const Main = () => {
         dispatch(setAllUserDetail(data));
       });
     }
+    
     if (user && user.user) {
       if (user.user.isAdmin === true) {
         navigate("/dashboard/home", { replace: true });

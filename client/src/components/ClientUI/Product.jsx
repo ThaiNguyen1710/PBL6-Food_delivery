@@ -11,11 +11,15 @@ import Header from "../Header";
 import { BiChevronsLeft } from "react-icons/bi";
 import Footer from "../Footer";
 import Cart from "../Cart";
-import { alertDanger, alertNULL, alertSuccess } from "../../context/actions/alertActions";
+import {
+  alertDanger,
+  alertNULL,
+  alertSuccess,
+} from "../../context/actions/alertActions";
 import { setCartItems } from "../../context/actions/cartAction";
 import { setCartOn } from "../../context/actions/displayCartAction";
 
-const Product = ({  closeProduct }) => {
+const Product = ({ closeProduct }) => {
   const { id } = useParams();
   const product = useSelector((state) => state.products);
   const allUser = useSelector((state) => state.allUsers);
@@ -32,13 +36,11 @@ const Product = ({  closeProduct }) => {
     ? allUser.filter((user) => user?.id === selectedProduct?.user?.id)
     : [];
 
- console.log (selectedProduct)
+  console.log(selectedProduct);
   if (!product) {
     navigate("/", { replace: true });
   }
 
-  
- 
   const sendToCart = async () => {
     try {
       const newData = {
@@ -74,7 +76,13 @@ const Product = ({  closeProduct }) => {
     sendToCart();
     dispatch(setCartOn());
   };
+  const currentDate = new Date();
+  const hours = currentDate.getHours().toString().padStart(2, "0");
+  const minutes = currentDate.getMinutes().toString().padStart(2, "0");
+
+  const currentTime = `${hours}:${minutes}`;
   
+
   return (
     <div className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
       <Header />
@@ -117,8 +125,15 @@ const Product = ({  closeProduct }) => {
                 </p>
               </div>
               <div className="gap-12 pb-8">
-              <p className="text-2xl font-medium flex gap-4">
-              <MdAccessTimeFilled className="w-10 h-8 " /> {userProduct?.[0]?.openAt} :  {userProduct?.[0]?.closeAt}
+                <p className="text-2xl font-medium flex gap-4">
+                  {currentTime >= userProduct?.[0]?.openAt &&
+                  currentTime <= userProduct?.[0]?.closeAt ? (
+                    
+                    <MdAccessTimeFilled className="w-10 h-8 text-green-500" />
+                  ) : (
+                    <MdAccessTimeFilled className="w-10 h-8 text-red-500" />
+                  )}
+                  {userProduct?.[0]?.openAt} : {userProduct?.[0]?.closeAt}
                 </p>
                 <p className="text-2xl font-medium">
                   {userProduct?.[0]?.address}
@@ -133,7 +148,7 @@ const Product = ({  closeProduct }) => {
                 {...buttonClick}
                 className="bg-gradient-to-bl from-orange-400 to-orange-600 px-4 py-2 rounded-xl text-black text-base font-semibold "
                 // onClick={() => dispatch(setCartOn())}
-                onClick={handleButtonClick} 
+                onClick={handleButtonClick}
               >
                 Đặt Hàng Ngay
               </motion.button>
@@ -141,7 +156,7 @@ const Product = ({  closeProduct }) => {
           </div>
         </motion.div>
       </div>
-      {isCart && <Cart/>}
+      {isCart && <Cart />}
       <Footer />
     </div>
   );
