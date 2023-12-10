@@ -19,6 +19,8 @@ import {
 import { setCartItems } from "../../context/actions/cartAction";
 import { setCartOn } from "../../context/actions/displayCartAction";
 
+import ProductSlider from "./ProductSlider";
+
 const Product = ({ closeProduct }) => {
   const { id } = useParams();
   const product = useSelector((state) => state.products);
@@ -40,6 +42,7 @@ const Product = ({ closeProduct }) => {
   if (!product) {
     navigate("/", { replace: true });
   }
+  
 
   const sendToCart = async () => {
     try {
@@ -155,10 +158,12 @@ const Product = ({ closeProduct }) => {
             </div>
           </div>
         </motion.div>
+        <ProductSlider data={selectedProduct}/>
       </div>
       {isCart && <Cart />}
       <Footer />
     </div>
+    
   );
 };
 

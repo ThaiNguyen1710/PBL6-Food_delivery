@@ -6,6 +6,7 @@ import {
   Header,
   Home,
   HomeSlider,
+  ListStore,
 } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllOrders, getAllProducts, getAllUsers } from "../api";
@@ -49,8 +50,10 @@ const Main = () => {
       <Header />
       <div className="w-full flex flex-col items-start justify-center mt-32 px-6 md:px-24 2xl:px-40 gap-2 pb-24 ">
         <Home />
-        <HomeSlider />
+       
         <FilterSection />
+        <ListStore/>
+        <HomeSlider />
       </div>
       {isCart && <Cart />}
       <Footer />

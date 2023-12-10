@@ -91,7 +91,13 @@ export const PostCreate = (formData) => {
     }
   });
 };
-
+export const PostUser = (id,formData) => {
+  return  axios.put(`${baseURL}/pbl6/user/${id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
 export const addNewProduct = async (data) => {
   try {
     const res = await axios.post(`${baseURL}/pbl6/product`, {

@@ -110,8 +110,9 @@ const Header = () => {
         </motion.div>
 
         {user ? (
-          <>
-            <div className="relative cursor-pointer">
+          <> 
+            <div className="relative cursor-pointer ">
+             
               <div className="rounded-full  shadow-md overflow-hidden w-12 h-12 cursor-pointer  flex items-center justify-end">
                 <motion.img
                   onMouseEnter={() => setIsMenu(true)}
@@ -120,6 +121,7 @@ const Header = () => {
                   whileHover={{ scale: 1.15 }}
                   referrerPolicy="no-referrer"
                 ></motion.img>
+              
                 {isMenu && (
                   <motion.div
                     {...slideTop}
@@ -169,6 +171,10 @@ const Header = () => {
                   </motion.div>
                 )}
               </div>
+            </div>
+            <div className="items-center justify-center  ">
+                
+          <p className="text-base text-headingColor font-semibold w-12 text-center h-full">{user?.user?.name}</p>
             </div>
           </>
         ) : (

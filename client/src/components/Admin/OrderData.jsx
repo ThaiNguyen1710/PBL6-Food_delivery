@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import React from "react";
 import { buttonClick, staggerFadeInOut } from "../../animations";
 import { FaDongSign } from "react-icons/fa6";
-import { getAllOrders, updatedOrderSts } from "../../api";
+import { baseURL, getAllOrders, updatedOrderSts } from "../../api";
 import { useDispatch } from "react-redux";
 import { setOrders } from "../../context/actions/orderAction";
 
@@ -103,7 +103,7 @@ const OrderData = ({ index, data, admin }) => {
                 className="flex items-center justify-center gap-1"
               >
                 <img
-                  src={item.product.image}
+                  src={baseURL +item.product.image}
                   alt=""
                   className="w-10 h-10 object-contain"
                 />

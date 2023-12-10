@@ -74,7 +74,7 @@ const SliderCard = ({ data, index }) => {
         </p>
         </div>
         
-        <p className="text-sm font-normal text-textColor text-center">
+        <p className="text-sm font-normal text-textColor ">
            {data.user.address}
         </p>
 

@@ -105,9 +105,9 @@ const CheckOutSuccess = () => {
   };
 
   return (
-    <main className="w-screen min-h-screen flex items-center justify-start flex-col">
+    <main className="w-screen min-h-screen flex items-center justify-start flex-col bg-primary ">
       <Header />
-      <div className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
+      <div className="w-screen h-800 flex justify-start items-center flex-col bg-primary">
         <Header />
         <div className="w-full flex flex-col items-center justify-center mt-32 px-6 md:px-24 2xl:px-40 gap-2 pb-24 ">
           <motion.div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -225,7 +225,8 @@ const CheckOutSuccess = () => {
         </div>
         {isCart && <Cart />}
       </div>
-      <Footer />
+      <Footer/>
+      
     </main>
   );
 };

@@ -1,20 +1,38 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-
 import { motion } from "framer-motion";
 import { faceLogo, igLogo, logo2 } from "../../assets";
-import { gradientStyle, isActiveStyles, isNotActiveStyles } from "../../utils/styles";
+import {
+  gradientStyle,
+  isActiveStyles,
+  isNotActiveStyles,
+} from "../../utils/styles";
+import { baseURL } from "../../api";
+import { useSelector } from "react-redux";
 
 const ShopLeftSection = () => {
+  const user = useSelector((state) => state.user);
+  const allUser = useSelector((state) => state.allUsers);
+  const storeOwner = allUser
+    ? allUser.filter((store) => store.id === user.user.userId)
+    : [];
   return (
     <div className="h-full py-2 flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-300 gap-3 overflow-auto">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
-        <img src={logo2} className="w-20 " alt="" />
+        <img src={logo2} className="w-20 " alt="Please uploadImage!" />
         <p className=" font-semibold text-5xl " style={gradientStyle}>
           6Food
         </p>
       </NavLink>
+      <div className="rounded-md  shadow-md overflow-hidden w-full h-340 cursor-pointer ">
+        <motion.img
+          className="w-full h-full object-cover"
+          src={baseURL + storeOwner?.[0]?.imgStore}
+          whileHover={{ scale: 1.15 }}
+          referrerPolicy="no-referrer"
+        ></motion.img>
+      </div>
 
       <hr />
 
@@ -47,7 +65,7 @@ const ShopLeftSection = () => {
           }
           to={"/my-store/item"}
         >
-        Item
+          Item
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -59,7 +77,6 @@ const ShopLeftSection = () => {
         >
           Add New Item
         </NavLink>
-        
       </ul>
 
       <div className="w-full h-full justify-center items-center flex  mt-auto">

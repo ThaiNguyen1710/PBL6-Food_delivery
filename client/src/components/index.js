@@ -32,6 +32,9 @@ export {default as FilterSection} from "./ClientUI/FilterSection"
 export {default as UserOrder} from "./ClientUI/UserOrder"
 export {default as Profile} from "./ClientUI/Profile"
 export {default as Product} from "./ClientUI/Product"
+export {default as ProductSlider} from "./ClientUI/ProductSlider"
+export {default as SliderProduct} from "./ClientUI/SliderProduct"
+export {default as ListStore} from "./ClientUI/ListStore"
 
 export {default as CheckOutSuccess} from "./CheckOutSuccess"
 
@@ -43,4 +46,5 @@ export {default as StoreHome} from "./Store/StoreHome"
 export {default as StoreInformation} from "./Store/StoreInformation"
 export {default as StoreItem} from "./Store/StoreItem"
 export {default as StoreAddItem} from "./Store/StoreAddItem"
+export {default as StoreCard} from "./Store/StoreCard"
 
