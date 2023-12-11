@@ -63,6 +63,16 @@ const ShopLeftSection = () => {
               ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
               : isNotActiveStyles
           }
+          to={"/my-store/order"}
+        >
+          Orders
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
+              : isNotActiveStyles
+          }
           to={"/my-store/item"}
         >
           Item

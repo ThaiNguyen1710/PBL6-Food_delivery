@@ -14,32 +14,49 @@ const StoreHome = () => {
   const users = useSelector((state) => state.allUsers);
   const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  
 
   const category = products
     ? [
         ...new Set(
           products
-            .filter((item) => item.user.id === user.user.userId) 
+            .filter((item) => item.user.id === user.user.userId)
             .map((item) => item.category.name)
-            .filter((name) => name !== "length") // Loại bỏ các phần tử có giá trị 'length'
+            .filter((name) => name !== "length")
         ),
       ]
     : [];
+  const orderStore = orders
+    ? orders.filter((order) => order.shippingAddress2 === user.user.store)
+    : [];
+  const totalRevenue = orderStore
+    ? orderStore.reduce(
+        (total, order) => total + (order.totalPrice * 1000 || 0),
+        0
+      )
+    : 0;
 
-  const sts = orders ? orders.map((order) => order.sts) : [];
+  const sts = orderStore ? orderStore.map((order) => order.status) : [];
 
   const countStatus = (status) => {
     return sts.reduce((count, currentStatus) => {
       return currentStatus === status ? count + 1 : count;
     }, 0);
   };
+
+  const preparingCount = countStatus("Pending");
+  const cancelledCount = countStatus("Shipping");
+  const deliveredCount = countStatus("Done");
+
+  const numberPaypal = orderStore?orderStore.filter(order => order.isPay === true).length:[]
+  const numberMoney =  orderStore? orderStore.length -numberPaypal :0;
+
+
   const productStore = products
     ? products.filter((item) => item.user.id === user.user.userId)
     : [];
 
-  const preparingCount = countStatus("preparing");
-  const cancelledCount = countStatus("cancelled");
-  const deliveredCount = countStatus("delivered");
+ 
   const categoryCounts = {};
   if (productStore) {
     productStore.forEach((productStore) => {
@@ -85,7 +102,7 @@ const StoreHome = () => {
               Total Orders
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
-              {orders?.length}
+              {orderStore?.length}
             </p>
           </div>
         </div>
@@ -99,17 +116,10 @@ const StoreHome = () => {
             <p className="text-xl text-headingColor font-semibold">
               Total Revenue
             </p>
-            {/* <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
-              {orders
-                ?.reduce(
-                  (total, order) =>
-                    total +
-                    parseFloat(order.total.replace(".", "").replace(",", ".")),
-                  0
-                )
-                .toLocaleString("vi-VN")}
+            <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
+              {totalRevenue.toLocaleString("vi-VN")}
               <FaDongSign className="text-red-400" />
-            </p> */}
+            </p>
           </div>
         </div>
 
@@ -157,14 +167,14 @@ const StoreHome = () => {
           </div>
         </div>
         <div className="w-340 md:w-375 items-center justify-center">
-          <CChart
+        <CChart
             type="polarArea"
             data={{
-              labels: ["Preparing", "Delivered", "Cancelled"],
+              labels: ["Pending", "Shipping", "Done", "PayPal", "Money"],
               datasets: [
                 {
-                  data: [preparingCount, deliveredCount, cancelledCount],
-                  backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56"],
+                  data: [preparingCount, deliveredCount, cancelledCount, numberPaypal, numberMoney],
+                  backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56", "#1255e6","#45e31e"],
                 },
               ],
             }}

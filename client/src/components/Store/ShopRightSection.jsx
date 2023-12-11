@@ -6,6 +6,7 @@ import StoreItem from "./StoreItem";
 import StoreAddItem from "./StoreAddItem";
 import StoreInformation from "./StoreInformation";
 import StoreHeader from "./StoreHeader";
+import StoreOrder from "./StoreOrder";
 
 const ShopRightSection = () => {
   return (
@@ -15,6 +16,7 @@ const ShopRightSection = () => {
         <Routes>
           <Route path="/home" element={<StoreHome />} />
           <Route path="/information" element={<StoreInformation />} />
+          <Route path="/order" element={<StoreOrder />} />
           <Route path="/item" element={<StoreItem />} />
           <Route path="/add-item" element={<StoreAddItem />} />
         </Routes>
