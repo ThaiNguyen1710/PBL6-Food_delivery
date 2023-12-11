@@ -25,7 +25,7 @@ const DBHome = () => {
       ]
     : [];
 
-  const sts = orders ? orders.map((order) => order.sts) : [];
+  const sts = orders ? orders.map((order) => order.status) : [];
 
   const countStatus = (status) => {
     return sts.reduce((count, currentStatus) => {
@@ -33,9 +33,9 @@ const DBHome = () => {
     }, 0);
   };
 
-  const preparingCount = countStatus("preparing");
-  const cancelledCount = countStatus("cancelled");
-  const deliveredCount = countStatus("delivered");
+  const preparingCount = countStatus("Pending");
+  const cancelledCount = countStatus("Shipping");
+  const deliveredCount = countStatus("Done");
   const categoryCounts = {};
   if (products) {
     products.forEach((product) => {
@@ -51,6 +51,15 @@ const DBHome = () => {
   const isStore = users
   ? users.filter((store) => store?.isStore === true)
   : [];
+
+  const totalRevenue = orders
+  ? orders.reduce((total, order) => total + (order.totalPrice * 1000 || 0), 0)
+  : 0;
+
+
+  const numberPaypal = orders?orders.filter(order => order.isPay === true).length:[]
+  const numberMoney =  orders? orders.length -numberPaypal :0;
+  
 
   useEffect(() => {
     if (!products) {
@@ -69,6 +78,8 @@ const DBHome = () => {
       });
     }
   }, []);
+ 
+
 
   return (
     <div className="flex items-start justify-center flex-col pt-12 w-full  gap-8 h-full">
@@ -94,22 +105,15 @@ const DBHome = () => {
             src={budget}
             className="w-20 h-20 object-contain items-center justify-center "
           />
-          {/* <div className="relative ">
+          <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
               Total Revenue
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
-              {orders
-                ?.reduce(
-                  (total, order) =>
-                    total +
-                    parseFloat(order.total.replace(".", "").replace(",", ".")),
-                  0
-                )
-                .toLocaleString("vi-VN")}
+            {totalRevenue.toLocaleString("vi-VN")}
               <FaDongSign className="text-red-400" />
             </p>
-          </div> */}
+          </div>
         </div>
 
         <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
@@ -174,11 +178,11 @@ const DBHome = () => {
           <CChart
             type="polarArea"
             data={{
-              labels: ["Preparing", "Delivered", "Cancelled"],
+              labels: ["Pending", "Shipping", "Done", "PayPal", "Money"],
               datasets: [
                 {
-                  data: [preparingCount, deliveredCount, cancelledCount],
-                  backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56"],
+                  data: [preparingCount, deliveredCount, cancelledCount, numberPaypal, numberMoney],
+                  backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56", "#1255e6","#45e31e"],
                 },
               ],
             }}

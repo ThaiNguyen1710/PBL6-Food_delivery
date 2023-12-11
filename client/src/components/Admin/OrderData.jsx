@@ -1,26 +1,17 @@
 import { motion } from "framer-motion";
 import React from "react";
-import { buttonClick, staggerFadeInOut } from "../../animations";
+import { staggerFadeInOut } from "../../animations";
 import { FaDongSign } from "react-icons/fa6";
-import { baseURL, getAllOrders, updatedOrderSts } from "../../api";
-import { useDispatch, useSelector } from "react-redux";
-import { setOrders } from "../../context/actions/orderAction";
+import { baseURL } from "../../api";
+import { useSelector } from "react-redux";
 
 const OrderData = ({ index, data, admin }) => {
-  const dispatch = useDispatch();
-  const allUser = useSelector(state=>state.allUsers)
+  const allUser = useSelector((state) => state.allUsers);
 
-  const store= allUser? allUser.filter((store)=>store.store===data.shippingAddress2):[]
+  const store = allUser
+    ? allUser.filter((store) => store.store === data.shippingAddress2)
+    : [];
 
-
-  const handleClick = (orderId, status) => {
-    console.log(orderId);
-    updatedOrderSts(orderId).then((res) => {
-      getAllOrders().then((data) => {
-        dispatch(setOrders(data));
-      });
-    });
-  };
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, "0");
@@ -32,7 +23,6 @@ const OrderData = ({ index, data, admin }) => {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   };
 
-  // Sử dụng hàm formatDate với data.dateOrdered
   const formattedDate = formatDate(data.dateOrdered);
 
   return (
@@ -44,25 +34,31 @@ const OrderData = ({ index, data, admin }) => {
         <h1 className="text-xl text-headingColor font-semibold">Order</h1>
         <div className="flex items-center gap-4">
           <p className="flex items-center gap-1 text-textColor">
+            Thanh toán:{" "}
+            {data?.isPay ? (
+              <p className=" font-bold text-teal-400">PayPal</p>
+            ) : (
+              <p className="font-bold text-emerald-500">Tiền Mặt</p>
+            )}
+          </p>
+          <p className="flex items-center gap-1 text-textColor">
             Total:
             <span className="text-headingColor font-bold">
               {parseFloat(data?.totalPrice * 1000).toLocaleString("vi-VN")}
             </span>
             <FaDongSign className="text-lg text-red-500" />
           </p>
-          {/* <p className="px-2 py-[2px] text-sm text-headingColor font-semibold capitalize rounded-md bg-emerald-400 drop-shadow-md">
-            {data?.status}
-          </p> */}
+
           <p
             className={`text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md ${
               (data.status === "Pending" && "text-orange-500 bg-orange-100") ||
-              (data.status === "Cancelled" && "text-red-500 bg-red-100") ||
-              (data.status === "Delivered" && "text-emerald-500 bg-emerald-100")
+              (data.status === "Shipping" && "text-red-500 bg-red-100") ||
+              (data.status === "Done" && "text-emerald-500 bg-emerald-100")
             }`}
           >
             {data?.status}
           </p>
-          {admin && (
+          {/* {admin && (
             <div className="flex items-center justify-center gap-2">
               <p className="text-lg font-semibold text-headingColor">Mark As</p>
               <motion.p
@@ -87,7 +83,7 @@ const OrderData = ({ index, data, admin }) => {
                 Delivered
               </motion.p>
             </div>
-          )}
+          )} */}
         </div>
       </div>
       <div className="flex items-center justify-start flex-wrap w-full">
@@ -145,7 +141,7 @@ const OrderData = ({ index, data, admin }) => {
             <p className="text-base font-semibold text-headingColor -mt-2">
               Thời gian hoàn thành:
             </p>
-            <p className="text-base text-textColor -mt-2">
+            <p className="text-base text-rose-600 -mt-2">
               <span>&nbsp;</span>
               {formattedDate}
             </p>

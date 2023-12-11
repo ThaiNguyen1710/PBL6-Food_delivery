@@ -161,7 +161,7 @@ const CheckOutSuccess = () => {
                   (link) => link.method === "REDIRECT"
                 );
                 if (redirectLink) {
-                  window.location.href = redirectLink.href; // Chuyển hướng đến trang PayPal\
+                  window.open(redirectLink.href, '_blank');// Chuyển hướng đến trang PayPal\
                 }
               }
             } catch (err) {

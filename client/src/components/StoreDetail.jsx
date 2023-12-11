@@ -72,6 +72,15 @@ const StoreDetail = ({ closeStore }) => {
                 {" >> "}
                 <span>{selectedStore?.[0]?.address}</span>
               </div>
+              <div className=" pb-8 pt-8">
+                <p className="text-5xl font-semibold">
+                  {selectedStore?.[0]?.store}
+                </p>
+                <p className="text-xl text-gray-500 font-normal">
+                  {selectedStore?.[0]?.address}
+                </p>
+               
+              </div>
               <div className="gap-12 pb-8">
                 <p className="text-xl font-normal flex items-center">
                   {currentTime >= selectedStore?.[0]?.openAt &&

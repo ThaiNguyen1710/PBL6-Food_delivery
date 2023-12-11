@@ -100,7 +100,7 @@ const ListStore = () => {
               onChange={handleDistrictChange}
               value={selectedDistrict}
             >
-              <option value="" disabled selected hidden className="text-center">
+              <option value="" disabled hidden className="text-center">
                 ---Quận/Huyện---
               </option>
               <option value="">---Quận/Huyện---</option>

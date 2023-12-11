@@ -119,7 +119,7 @@ const Product = ({ closeProduct }) => {
                 {" >> "}
                 {selectedProduct?.name}
               </NavLink>
-              <div className=" pb-8 pt-8">
+              <div className="pb-8 pt-8">
                 <p className="text-5xl font-semibold">
                   {selectedProduct?.name}
                 </p>
@@ -144,7 +144,6 @@ const Product = ({ closeProduct }) => {
                   {userProduct?.[0]?.address}
                 </p>
               </div>
-
               <p className=" text-3xl font-semibold text-red-500 flex gap-1">
                 {parseFloat(selectedProduct?.price).toLocaleString("vi-VN")}
                 <FaDongSign className="text-red-500" />{" "}
