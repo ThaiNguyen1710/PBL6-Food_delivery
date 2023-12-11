@@ -64,27 +64,23 @@ const StoreDetail = ({ closeStore }) => {
           </div>
           <div className=" flex flex-col items-center justify-start gap-16 ">
             <div className="w-508 h-370  items-center justify-center pt-8">
-             
-              <NavLink to={"/"} className="text-blue-500 font-normal">
-                Home {">> "}
-                <NavLink
-                  to={`/store/${selectedStore?.[0]?.id}`}
-                  className="text-blue-500 font-normal"
-                >
+              <div className="text-blue-500 font-normal">
+                <NavLink to={"/"}>Home &gt;&gt; </NavLink>
+                <span className="text-blue-500 font-normal">
                   {selectedStore?.[0]?.store}
-                </NavLink>
+                </span>
                 {" >> "}
-                {selectedStore?.[0]?.address}
-              </NavLink>
+                <span>{selectedStore?.[0]?.address}</span>
+              </div>
               <div className="gap-12 pb-8">
                 <p className="text-xl font-normal flex items-center">
                   {currentTime >= selectedStore?.[0]?.openAt &&
                   currentTime <= selectedStore?.[0]?.closeAt ? (
                     <>
                       <GoDotFill className="text-xl text-green-500" />
-                      <p className="text-xl font-semibold">
+                      <span className="text-xl font-semibold">
                         Mở Cửa <span>&nbsp;</span>{" "}
-                      </p>
+                      </span>
                       <div></div>
                       <MdAccessTimeFilled className="w-8 h-6 text-emerald-400" />
                     </>

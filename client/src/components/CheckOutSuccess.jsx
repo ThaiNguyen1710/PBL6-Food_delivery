@@ -5,11 +5,21 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { buttonClick } from "../animations";
 import { BiChevronsLeft } from "react-icons/bi";
-import { baseURL, clearAllCart, getAllCartItems, getAllOrders, handleCheckOut } from "../api";
+import {
+  baseURL,
+  clearAllCart,
+  getAllCartItems,
+  getAllOrders,
+  handleCheckOut,
+} from "../api";
 import { useDispatch, useSelector } from "react-redux";
 import { FaDongSign } from "react-icons/fa6";
 import Cart from "./Cart";
-import { alertInfo, alertNULL, alertSuccess } from "../context/actions/alertActions";
+import {
+  alertInfo,
+  alertNULL,
+  alertSuccess,
+} from "../context/actions/alertActions";
 import { getOrders, setOrders } from "../context/actions/orderAction";
 import { BsCashCoin } from "react-icons/bs";
 import { paypal } from "../assets";
@@ -57,7 +67,6 @@ const CheckOutSuccess = () => {
     }
   }, [cart, user]);
 
-
   if (!product) {
     navigate("/", { replace: true });
   }
@@ -68,8 +77,7 @@ const CheckOutSuccess = () => {
 
   const deliveryTime = new Date(currentTime + randomTime * 60 * 1000);
 
-
-  const Checkout = async () => {
+  const checkOutByMoney = async () => {
     try {
       const orderData = {
         user: user.user.userId,
@@ -81,13 +89,11 @@ const CheckOutSuccess = () => {
 
       const createdOrder = await handleCheckOut(orderData);
 
-      console.log(createdOrder); 
+      console.log(createdOrder);
 
       if (createdOrder) {
-        
         dispatch(alertInfo("Đơn hàng đang được xử lý!"));
         clearAllCart(user?.user?.userId).then((data) => {
-      
           getAllCartItems().then((items) => {
             dispatch(setCartItems(items));
             let totalQuantity = 0;
@@ -97,15 +103,17 @@ const CheckOutSuccess = () => {
             }, 3000);
           });
         });
-   
-       
+
         const allCartItems = await getAllOrders();
-        console.log(allCartItems)
+        console.log(allCartItems);
         if (allCartItems) {
           dispatch(setOrders(allCartItems));
-          
+          setTimeout(() => {
+            dispatch(alertSuccess("Thanh toan "));
+            // window.location.reload()
+            navigate("/user-orders", { replace: true });
+          }, 3000);
         }
-     
       } else {
         throw new Error("Failed to update user information");
       }
@@ -113,27 +121,62 @@ const CheckOutSuccess = () => {
       console.log(error);
     }
   };
-   console.log(order)
 
-
-   const checkOutByMony = async()=>{
-    setTimeout(() => {
-      dispatch(alertSuccess("Thanh toan "));
-      window.location.reload()
-      navigate("/user-orders", { replace: true });
-     
-    }, 3000);
-   }
   const checkOutByPayPal = async () => {
- 
-    axios
-      .post(`${baseURL}/pbl6/paypal `)
-      .then((res) => {
-        if (res.data.url) {
-          window.location.href = res.data.url;
+    try {
+      const orderData = {
+        user: user.user.userId,
+        shippingAddress1: order?.[0]?.user?.address,
+        shippingAddress2: order?.[0]?.product?.user?.store,
+        totalPrice: totalOrder,
+        phone: order?.[0]?.user?.phone,
+      };
+
+      const createdOrder = await handleCheckOut(orderData);
+
+      if (createdOrder) {
+        dispatch(alertInfo("Đơn hàng đang được xử lý!"));
+        await clearAllCart(user?.user?.userId);
+        const items = await getAllCartItems();
+        dispatch(setCartItems(items));
+        setTotalQuantity(0);
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+
+        const allCartItems = await getAllOrders();
+        if (allCartItems) {
+          dispatch(setOrders(allCartItems));
+          setTimeout(async () => {
+            dispatch(alertSuccess("Thanh toan"));
+            try {
+              const paymentResponse = await axios.post(
+                `${baseURL}/pbl6/paypal/${createdOrder.id}`
+              );
+              if (
+                paymentResponse.data.links &&
+                paymentResponse.data.links.length > 0
+              ) {
+                const redirectLink = paymentResponse.data.links.find(
+                  (link) => link.method === "REDIRECT"
+                );
+                if (redirectLink) {
+                  window.location.href = redirectLink.href; // Chuyển hướng đến trang PayPal\
+                }
+              }
+            } catch (err) {
+              console.error(err);
+            }
+          }, 3000);
         }
-      })
-      .catch((err) => console.log(err));
+        navigate("/user-orders", { replace: true });
+      } else {
+        throw new Error("Failed to update user information");
+      }
+     
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
   };
   return (
     <main className="w-screen min-h-screen flex items-center justify-start flex-col bg-primary ">
@@ -232,19 +275,10 @@ const CheckOutSuccess = () => {
                   </p>
                 </div>
                 <div className="flex gap-6 w-full">
-                <motion.button
-                    {...buttonClick}
-                    className="bg-gradient-to-bl from-orange-400 to-orange-500 px-4 py-2 gap-8 rounded-xl text-black text-base font-semibold flex items-center justify-start "
-                    onClick={Checkout}
-                  >
-                    <BsCashCoin className="text-3xl text-green-500" />
-                    Thanh toán 
-                  </motion.button>
-                  {" "}
                   <motion.button
                     {...buttonClick}
                     className="bg-gradient-to-bl from-orange-400 to-orange-500 px-4 py-2 gap-8 rounded-xl text-black text-base font-semibold flex items-center justify-start "
-                    onClick={checkOutByMony}
+                    onClick={checkOutByMoney}
                   >
                     <BsCashCoin className="text-3xl text-green-500" />
                     Thanh toán tiền mặt
@@ -254,7 +288,11 @@ const CheckOutSuccess = () => {
                     className="bg-gradient-to-bl from-orange-400 to-orange-500  py-2 px-2 rounded-xl text-black text-base font-semibold flex items-center justify-start "
                     onClick={checkOutByPayPal}
                   >
-                  <img alt="" src={paypal} className="object-contain w-24 h-16"/>
+                    <img
+                      alt=""
+                      src={paypal}
+                      className="object-contain w-24 h-16"
+                    />
                     Thanh toán PayPal
                   </motion.button>
                 </div>
@@ -264,8 +302,7 @@ const CheckOutSuccess = () => {
         </div>
         {isCart && <Cart />}
       </div>
-      <Footer/>
-      
+      <Footer />
     </main>
   );
 };

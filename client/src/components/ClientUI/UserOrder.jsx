@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Header from "../Header";
 import Footer from "../Footer";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,7 +22,7 @@ const UserOrder = () => {
     ? orders.filter((order) => order.user.id === user.user.userId)
     : [];
 
-  console.log(filterOrder);
+ 
 
   return (
     <main className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
