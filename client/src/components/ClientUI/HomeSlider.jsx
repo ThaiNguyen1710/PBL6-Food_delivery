@@ -13,8 +13,10 @@ const HomeSlider = () => {
           <div className="w-40 h-1 rounded-md bg-orange-500"></div>
         </div>
         
+        
       </div>
       <Slider />
+      
     
     </motion.div>
   );

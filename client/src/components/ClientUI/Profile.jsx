@@ -8,7 +8,7 @@ import {
 import { motion } from "framer-motion";
 import { buttonClick } from "../../animations";
 
-import { editUser, getAllUsers } from "../../api";
+import { PostUser, editUser, getAllUsers } from "../../api";
 
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import {
@@ -17,6 +17,7 @@ import {
 } from "../../context/actions/userActions";
 import Header from "../Header";
 import Footer from "../Footer";
+import { FiUpload } from "react-icons/fi";
 
 const Profile = () => {
   const user = useSelector((state) => state.user);
@@ -25,6 +26,7 @@ const Profile = () => {
   const [userPhone, setUserPhone] = useState("");
   const [userAddress, setUserAddress] = useState("");
   const [userEmail, setUserEmail] = useState("");
+  const [imageDownloadURL, setImageDownloadURL] = useState(null);
 
   const alert = useSelector((state) => state.alert);
   const dispatch = useDispatch();
@@ -71,11 +73,69 @@ const Profile = () => {
       );
       setTimeout(() => {
         dispatch(alertNULL());
+        window.location.reload()
       }, 3000);
       setUserName("")
       setUserPhone("")
       setUserAddress("")
       setUserEmail("")
+    }
+  };
+  const uploadImage = () => {
+    if (!imageDownloadURL) {
+      dispatch(alertDanger("Please choose an image!"));
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
+    } else {
+      try {
+        const userId = user.user.userId;
+        const formData = new FormData();
+
+        formData.append("image", imageDownloadURL);
+
+        // Gửi FormData lên server
+        PostUser(userId, formData)
+          .then((res) => {
+            if (res && res.data) {
+              dispatch(alertSuccess("Image uploaded successfully!"));
+              setTimeout(() => {
+                dispatch(alertNULL());
+                window.location.reload()
+              }, 3000);
+              setImageDownloadURL(null);
+            } else {
+              console.log(
+                "Received null or incomplete response when uploading the image."
+              );
+              dispatch(
+                alertDanger(
+                  "Failed to upload image. Received incomplete response."
+                )
+              );
+              setTimeout(() => {
+                dispatch(alertNULL());
+              }, 3000);
+            }
+          })
+          .catch((error) => {
+            console.error("Error uploading image:", error);
+            dispatch(
+              alertDanger(`Error uploading image: ${error.message || error}`)
+            );
+            setTimeout(() => {
+              dispatch(alertNULL());
+            }, 3000);
+          });
+      } catch (error) {
+        console.error("Error preparing image upload:", error);
+        dispatch(
+          alertDanger(`Error preparing image upload: ${error.message || error}`)
+        );
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+      }
     }
   };
 
@@ -87,7 +147,35 @@ const Profile = () => {
   return (
     <div className="flex items-center justify-center flex-col pt-6 px-24 w-full gap-3 ">
       <Header />
-      <p className="text-3xl font-semibold text-orange-500 pt-24">Cập nhật thông tin!</p>
+    
+      <div className="flex justify-center items-start w-full pt-24">
+        <div className="w-[50%] text-center flex "><p className="text-3xl font-semibold text-orange-500 ">
+        Thông tin cửa hàng
+      </p></div>
+      
+          <label className="flex flex-col items-center justify-center h-full cursor-pointer mr-4">
+            <div className="text-2xl font-bold">
+              <FiUpload className="" />
+            </div>
+            <p className="flex font-semibold text-textColor">
+              Cập nhật ảnh đại diện!
+            </p>
+            <input
+              type="file"
+              name="upload-image"
+              accept="image/*"
+              onChange={(event) => setImageDownloadURL(event.target.files[0])}
+              className="w-0 h-0"
+            ></input>
+          </label>
+          <motion.button
+            onClick={uploadImage}
+            {...buttonClick}
+            className="border w-24 h-11 rounded-md shadow-md bg-orange-300"
+          >
+            <p className="font-semibold text-black text-xl ">Save</p>
+          </motion.button>
+        </div>
       <div className="border border-gray-300 rounded-md p-4 w-[80%] flex flex-col items-start  font-semibold justify-center gap-4">
         <p className="text-xl text-start text-red-400 font-semibold ">Tên </p>
 

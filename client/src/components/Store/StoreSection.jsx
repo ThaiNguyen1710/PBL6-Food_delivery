@@ -2,16 +2,18 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { IoFastFood } from "react-icons/io5";
-import SliderCard from "./SliderCard";
 import { getAllCategory } from "../../api";
+import SliderCard from "../ClientUI/SliderCard";
 
-const FilterSection = () => {
-  const [category, setCategory] = useState("Đồ Ăn Nhanh");
+const StoreSection = (data) => {
+  const [category, setCategory] = useState("");
+
   const product = useSelector((state) => state.products);
 
   const [statusList, setStatusList] = useState([]);
 
   useEffect(() => {
+  
     const fetchData = async () => {
       try {
         const res = await getAllCategory();
@@ -24,10 +26,19 @@ const FilterSection = () => {
       }
     };
 
-    fetchData();
-  }, []);
-  
 
+    fetchData();
+    
+  }, []);
+  const storeCategoryIds = product
+    .filter((category) => category.user.id === data?.data?.[0]?.id)
+    .map((data) => data.category.id);
+
+  const filteredStatusList = statusList.filter((data) =>
+    storeCategoryIds.includes(data._id),
+    
+  );
+  console.log(filteredStatusList)
   return (
     <motion.div className="w-full flex items-start justify-start flex-col ">
       <div className="w-full flex items-center justify-between">
@@ -36,8 +47,8 @@ const FilterSection = () => {
           <div className="w-40 h-1 rounded-md bg-orange-500"></div>
         </div>
       </div>
-      <div className="w-full overflow-x-scroll pt-6 flex items-center justify-start gap-6 py-8">
-        {statusList.map((data, index) => (
+      <div className="w-full overflow-x-scroll pt-6 flex items-center justify-center gap-6 py-8">
+        {filteredStatusList.map((data, index) => (
           <FilterCard
             key={index}
             data={data}
@@ -49,7 +60,10 @@ const FilterSection = () => {
       <div className="w-full flex items-center justify-evenly flex-wrap gap-4 mt-12">
         {product &&
           product
-            .filter((data) => data.category.name === category && data.user.isStore === true)
+            .filter(
+              (data) =>
+                data.category.name === category && data.user.isStore === true
+            )
             .map((data, i) => <SliderCard key={i} data={data} index={i} />)}
       </div>
     </motion.div>
@@ -59,7 +73,7 @@ const FilterSection = () => {
 export const FilterCard = ({ data, category, setCategory }) => {
   return (
     <motion.div
-      onClick={() => setCategory(data.name)} 
+      onClick={() => setCategory(data.name)}
       className={`group w-28 min-w-[128px] cursor-pointer rounded-md py-6 ${
         category === data.name ? "bg-red-500" : "bg-primary"
       } hover:bg-red-500 shadow-md flex flex-col items-center justify-center gap-4`}
@@ -86,4 +100,4 @@ export const FilterCard = ({ data, category, setCategory }) => {
   );
 };
 
-export default FilterSection;
+export default StoreSection;

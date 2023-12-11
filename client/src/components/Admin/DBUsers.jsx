@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers } from "../../api";
+import { editUser, getAllUsers } from "../../api";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import DataTable from "./DataTable";
 import { avatar } from "../../assets";
+import { setUserDetail } from "../../context/actions/userActions";
+import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 const DBUsers = () => {
   const allUsers = useSelector((state) => state.allUsers);
   const dispatch = useDispatch();
@@ -16,6 +18,34 @@ const DBUsers = () => {
       });
     }
   }, []);
+  const typeUser = async (rowData) => {
+    try {
+      const userId = rowData.id; 
+      const newData = {
+        isStore: !rowData.isStore,
+      };
+
+      const updatedUserData = await editUser(userId, newData);
+
+      if (updatedUserData && updatedUserData.data) {
+       
+        dispatch(setUserDetail(updatedUserData.data));
+        dispatch(alertSuccess("User information updated successfully"));
+      } else {
+        throw new Error("Failed to update user information");
+      }
+    } catch (error) {
+      console.error("Error updating user information:", error);
+      dispatch(alertSuccess("Cập nhật thành công  "));
+      setTimeout(() => {
+        dispatch(alertNULL());
+        window.location.reload()
+      }, 3000);
+      
+    }
+ 
+  };
+  
 
   return (
     <div className="flex justify-center items-center gap-4 pt-6 w-full">
@@ -60,6 +90,35 @@ const DBUsers = () => {
               <p className="text-textColor font-medium ">{rowData.address}</p>
             ),
           },
+          {
+            title: <p className="font-semibold text-xl">Role</p>,
+            field: "role",
+            render: (rowData) => (
+              <select
+                value={rowData.isStore ? "Store" : rowData.isAdmin ? "Admin" : "User"}
+                onChange={(e) => typeUser(rowData, e.target.value)}
+                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
+                style={{
+                  color:
+                    rowData.isStore
+                      ? "blue"
+                      : rowData.isAdmin
+                      ? "red"
+                      : "black",
+                }}
+              >
+                <option value="User" className="font-semibold text-black">
+                  User
+                </option>
+                <option value="Store" className="font-semibold text-blue-500">
+                  Store
+                </option>
+                <option value="Admin" className="font-semibold text-red-500">
+                  Admin
+                </option>
+              </select>
+            ),
+          },
          
           {
             title: <p className="font-semibold text-xl">Verified</p>,
@@ -74,6 +133,7 @@ const DBUsers = () => {
               </p>
             ),
           },
+       
         ]}
         data={allUsers}
         title={<p className="font-semibold text-red-400 text-3xl">List of Users</p>}

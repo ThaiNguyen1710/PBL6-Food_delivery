@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React from "react";
 import { FaDongSign } from "react-icons/fa6";
 import { buttonClick } from "../../animations";
 import { BsFillBasket2Fill } from "react-icons/bs";
@@ -19,7 +19,7 @@ const SliderCard = ({ data, index }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const navigateToProduct = () => {
-    navigate(`/product/${data.id}`); // Navigate to the specific product page
+    navigate(`/product/${data.id}`); 
   };
 
   const sendToCart = async () => {
@@ -51,7 +51,7 @@ const SliderCard = ({ data, index }) => {
     }
   };
   return (
-    <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-between relative px-4 py-2 w-full md:w-340 md:min-w-350 gap-3">
+    <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-between relative px-4 py-2 w-full md:w-340 md:min-w-350 md:h-225 gap-3">
       <img
         alt=""
         src={baseURL + data.image}

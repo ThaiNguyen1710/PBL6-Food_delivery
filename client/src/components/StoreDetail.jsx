@@ -1,27 +1,29 @@
 import React from "react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { addNewItemToCart, baseURL, getAllCartItems } from "../../api";
-import { FaDongSign } from "react-icons/fa6";
-import { motion } from "framer-motion";
-import { MdAccessTimeFilled } from "react-icons/md";
-import { buttonClick } from "../../animations";
 import { useDispatch, useSelector } from "react-redux";
-import Header from "../Header";
-
-import { BiChevronsLeft } from "react-icons/bi";
-import Footer from "../Footer";
-import Cart from "../Cart";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { addNewItemToCart, baseURL, getAllCartItems } from "../api";
 import {
   alertDanger,
   alertNULL,
   alertSuccess,
-} from "../../context/actions/alertActions";
-import { setCartItems } from "../../context/actions/cartAction";
-import { setCartOn } from "../../context/actions/displayCartAction";
+} from "../context/actions/alertActions";
+import { setCartItems } from "../context/actions/cartAction";
+import { setCartOn } from "../context/actions/displayCartAction";
+import Header from "./Header";
+import { motion } from "framer-motion";
+import { buttonClick } from "../animations";
+import { BiChevronsLeft } from "react-icons/bi";
+import { MdAccessTimeFilled } from "react-icons/md";
+import { GoDotFill } from "react-icons/go";
+import Cart from "./Cart";
+import Footer from "./Footer";
+import { IoShieldCheckmark } from "react-icons/io5";
+import { TbMinusVertical } from "react-icons/tb";
+import { gradientStyle } from "../utils/styles";
+import FilterSection from "./ClientUI/FilterSection";
+import StoreSection from "./Store/StoreSection";
 
-import ProductSlider from "./ProductSlider";
-
-const Product = ({ closeProduct }) => {
+const StoreDetail = ({ closeStore }) => {
   const { id } = useParams();
   const product = useSelector((state) => state.products);
   const allUser = useSelector((state) => state.allUsers);
@@ -31,6 +33,11 @@ const Product = ({ closeProduct }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const selectedStore = allUser
+    ? allUser.filter((store) => store.id === id)
+    : [];
+  
+
   const productList = product ? product.filter((item) => item.id === id) : [];
   const selectedProduct = productList.length > 0 ? productList[0] : null;
 
@@ -38,11 +45,9 @@ const Product = ({ closeProduct }) => {
     ? allUser.filter((user) => user?.id === selectedProduct?.user?.id)
     : [];
 
- 
   if (!product) {
     navigate("/", { replace: true });
   }
-  
 
   const sendToCart = async () => {
     try {
@@ -84,7 +89,6 @@ const Product = ({ closeProduct }) => {
   const minutes = currentDate.getMinutes().toString().padStart(2, "0");
 
   const currentTime = `${hours}:${minutes}`;
-  
 
   return (
     <div className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
@@ -104,7 +108,7 @@ const Product = ({ closeProduct }) => {
 
             <img
               alt=""
-              src={baseURL + selectedProduct?.image}
+              src={baseURL + selectedStore?.[0]?.imgStore}
               className="w-[80%] h-420 object-contain"
             ></img>
           </div>
@@ -112,60 +116,72 @@ const Product = ({ closeProduct }) => {
             <div className="w-508 h-370  items-center justify-center pt-8">
               <p className="text-blue-500 font-normal">
                 Home {">> "}
-                {userProduct?.[0]?.store}
+                {selectedStore?.[0]?.store}
                 {" >> "}
-                {selectedProduct?.name}
+                {selectedStore?.[0]?.address}
               </p>
               <div className=" pb-8 pt-8">
                 <p className="text-5xl font-semibold">
-                  {selectedProduct?.name}
+                  {selectedStore?.[0]?.store}
                 </p>
                 <p className="text-xl text-gray-500 font-normal">
-                  {selectedProduct?.category?.name}
-                </p>
-                <p className="text-xl  text-gray-500 font-normal">
-                  Thông tin: {selectedProduct?.description}
+                  {selectedStore?.[0]?.address}
                 </p>
               </div>
               <div className="gap-12 pb-8">
-                <p className="text-2xl font-medium flex gap-4">
-                  {currentTime >= userProduct?.[0]?.openAt &&
-                  currentTime <= userProduct?.[0]?.closeAt ? (
-                    
-                    <MdAccessTimeFilled className="w-10 h-8 text-green-500" />
+                <p className="text-xl font-normal flex items-center">
+                  {currentTime >= selectedStore?.[0]?.openAt &&
+                  currentTime <= selectedStore?.[0]?.closeAt ? (
+                    <>
+                      <GoDotFill className="text-xl text-green-500" />
+                      <p className="text-xl font-semibold">
+                        Mở Cửa <span>&nbsp;</span>{" "}
+                      </p>
+                      <div></div>
+                      <MdAccessTimeFilled className="w-8 h-6 text-emerald-400" />
+                    </>
                   ) : (
                     <MdAccessTimeFilled className="w-10 h-8 text-red-500" />
                   )}
-                  {userProduct?.[0]?.openAt} : {userProduct?.[0]?.closeAt}
+                  {selectedStore?.[0]?.openAt} : {selectedStore?.[0]?.closeAt}
                 </p>
-                <p className="text-xl font-medium">
+                <p className="text-xl font-medium pb-6">
                   {userProduct?.[0]?.address}
                 </p>
+                <div className="w-[80%] h-[1px] rounded-md bg-gray-500 "></div>
+                <div className=" w-full gap-6 flex items-center">
+                 
+                  <motion.button
+                    {...buttonClick}
+                    className=" flex  items-center  gap-1 bg-gradient-to-bl from-amber-200 to-amber-400 px-2 py-1 rounded-xl text-black text-base font-semibold "
+                    // onClick={() => dispatch(setCartOn())}
+                    // onClick={handleButtonClick}
+                  >
+                    <IoShieldCheckmark className="w-8 h-8 text-slate-100" />
+                    Quán đối tác
+                  </motion.button>
+                  <TbMinusVertical  className="text-headingColor text-5xl"/>
+                  <div className=" w-auto h-full items-center justify-center">
+                  <p className="text-base text-center font-normal text-slate-500 ">
+                  Dịch vụ bởi
+                </p>
+                <p className="font-semibold text-3xl" style={gradientStyle}>
+          6Food
+        </p>
+                  </div>
+                </div>
               </div>
 
-              <p className=" text-3xl font-semibold text-red-500 flex gap-1">
-                {parseFloat(selectedProduct?.price).toLocaleString("vi-VN")}
-                <FaDongSign className="text-red-500" />{" "}
-              </p>
-              <motion.button
-                {...buttonClick}
-                className="bg-gradient-to-bl from-orange-400 to-orange-600 px-4 py-2 rounded-xl text-black text-base font-semibold "
-                // onClick={() => dispatch(setCartOn())}
-                onClick={handleButtonClick}
-              >
-                Đặt Hàng Ngay
-              </motion.button>
+            
             </div>
           </div>
         </motion.div>
-        <div className="pt-12 w-full pb-6"> <ProductSlider data={selectedProduct}/></div>
-       
+                    <StoreSection data={selectedStore}/>
       </div>
       {isCart && <Cart />}
       <Footer />
     </div>
-    
   );
 };
 
-export default Product;
+export default StoreDetail;

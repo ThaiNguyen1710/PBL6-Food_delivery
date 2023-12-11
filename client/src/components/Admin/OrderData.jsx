@@ -3,11 +3,15 @@ import React from "react";
 import { buttonClick, staggerFadeInOut } from "../../animations";
 import { FaDongSign } from "react-icons/fa6";
 import { baseURL, getAllOrders, updatedOrderSts } from "../../api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setOrders } from "../../context/actions/orderAction";
 
 const OrderData = ({ index, data, admin }) => {
   const dispatch = useDispatch();
+  const allUser = useSelector(state=>state.allUsers)
+
+  const store= allUser? allUser.filter((store)=>store.store===data.shippingAddress2):[]
+
 
   const handleClick = (orderId, status) => {
     console.log(orderId);
@@ -42,7 +46,7 @@ const OrderData = ({ index, data, admin }) => {
           <p className="flex items-center gap-1 text-textColor">
             Total:
             <span className="text-headingColor font-bold">
-              {parseFloat(data?.totalPrice).toLocaleString("vi-VN")}
+              {parseFloat(data?.totalPrice * 1000).toLocaleString("vi-VN")}
             </span>
             <FaDongSign className="text-lg text-red-500" />
           </p>
@@ -89,7 +93,7 @@ const OrderData = ({ index, data, admin }) => {
       <div className="flex items-center justify-start flex-wrap w-full">
         <div className="flex items-center justify-start w-full gap-4">
           <h1 className="text-xl font-semibold text-red-500 -mt-2">
-            {data.shippingAddress2} {">>"} 
+            {data.shippingAddress2} {">>"} {store?.[0]?.address}
           </h1>
         </div>
       </div>
@@ -103,7 +107,7 @@ const OrderData = ({ index, data, admin }) => {
                 className="flex items-center justify-center gap-1"
               >
                 <img
-                  src={baseURL +item.product.image}
+                  src={baseURL + item.product.image}
                   alt=""
                   className="w-10 h-10 object-contain"
                 />
@@ -123,8 +127,7 @@ const OrderData = ({ index, data, admin }) => {
               </motion.div>
             ))}
         </div>
-        <div className="flex items-start justify-start flex-col gap-2 px-6 ml-auto w-full md:w-460">
-          
+        <div className="flex items-start justify-start flex-col gap-2 ml-auto w-full md:w-508">
           <h1 className="text-lg text-headingColor -mt-2">
             {data.user.name} - {data.phone}
           </h1>

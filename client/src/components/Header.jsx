@@ -14,9 +14,11 @@ import { useDispatch, useSelector } from "react-redux";
 // import { app } from "../config/firebase.config";
 import { setUserDetail, setUserNull } from "../context/actions/userActions";
 import { setCartOn } from "../context/actions/displayCartAction";
+import { baseURL } from "../api";
 
 const Header = () => {
   const user = useSelector((state) => state.user);
+  const allUser = useSelector((state) => state.allUsers);
   const cart = useSelector((state) => state.cart);
 
   const [isMenu, setIsMenu] = useState(false);
@@ -31,6 +33,9 @@ const Header = () => {
   };
 
   const [userCart, setUserCart] = useState([]);
+  const [userLogin, setUserLogin] = useState([]);
+
+
 
   useEffect(() => {
     if (cart && user && user.user && user.user.userId) {
@@ -38,6 +43,10 @@ const Header = () => {
         (item) => item.user.id === user.user.userId
       );
       setUserCart(filteredCart);
+    }
+    if ( user && user.user && user.user.userId) {
+      const filteredUser = allUser?allUser.filter((userLogin)=>userLogin.id === user.user.userId):[]
+      setUserLogin(filteredUser);
     }
   }, [cart, user]);
 
@@ -117,7 +126,7 @@ const Header = () => {
                 <motion.img
                   onMouseEnter={() => setIsMenu(true)}
                   className="w-full h-full object-cover"
-                  src={user?.picture ? user?.picture : avatar}
+                  src={baseURL+userLogin?.[0]?.image ? baseURL+userLogin?.[0]?.image : avatar}
                   whileHover={{ scale: 1.15 }}
                   referrerPolicy="no-referrer"
                 ></motion.img>

@@ -51,9 +51,6 @@ const Cart = () => {
       setTotalQuantity(totalQuantity);
     }
   }, [cart, user]);
-  // const userCart = cart
-  //   ? cart.filter((product) => product.user.id === user.userId)
-  //   : [];
 
   const clearAllItems = () => {
     clearAllCart(user?.user?.userId).then((data) => {

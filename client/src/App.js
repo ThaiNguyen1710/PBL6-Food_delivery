@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { fadeInOut } from "./animations";
 import { Alert, CheckOutSuccess, MainLoader, Product, Profile, UserOrder } from "./components";
 import { setCartItems } from "./context/actions/cartAction";
+import StoreDetail from "./components/StoreDetail";
 
 const App = () => {
   
@@ -59,6 +60,7 @@ const App = () => {
         <Route path="/profile" element={<Profile />} />
         <Route path="/my-store/*" element={<Store />} />
         <Route path="/product/:id" element={<Product />} />
+        <Route path="/store/:id" element={<StoreDetail />} />
         
       </Routes>
       {alert?.type && <Alert type={alert?.type} message={alert?.message} />}

@@ -22,6 +22,7 @@ const StoreHeader = () => {
     ? allUser.filter((store) => store.id === user.user.userId)
     : [];
  
+ 
 
   const signOut = () => {
     localStorage.removeItem("token");
@@ -63,7 +64,7 @@ const StoreHeader = () => {
           <div className="rounded-md  shadow-md overflow-hidden w-10 h-10 cursor-pointer ">
             <motion.img
               className="w-full h-full object-cover"
-              src={avatar}
+              src={baseURL+storeOwner?.[0]?.image ? baseURL+storeOwner?.[0]?.image : avatar}
               whileHover={{ scale: 1.15 }}
               referrerPolicy="no-referrer"
             ></motion.img>

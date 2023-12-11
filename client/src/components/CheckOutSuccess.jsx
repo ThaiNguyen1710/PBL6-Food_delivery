@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { buttonClick } from "../animations";
 import { BiChevronsLeft } from "react-icons/bi";
-import { baseURL, getAllOrders, handleCheckOut } from "../api";
+import { baseURL, clearAllCart, getAllCartItems, getAllOrders, handleCheckOut } from "../api";
 import { useDispatch, useSelector } from "react-redux";
 import { FaDongSign } from "react-icons/fa6";
 import Cart from "./Cart";
@@ -13,6 +13,8 @@ import { alertInfo, alertNULL, alertSuccess } from "../context/actions/alertActi
 import { getOrders, setOrders } from "../context/actions/orderAction";
 import { BsCashCoin } from "react-icons/bs";
 import { paypal } from "../assets";
+import { setCartItems } from "../context/actions/cartAction";
+import axios from "axios";
 
 const CheckOutSuccess = () => {
   const user = useSelector((state) => state.user);
@@ -55,6 +57,7 @@ const CheckOutSuccess = () => {
     }
   }, [cart, user]);
 
+
   if (!product) {
     navigate("/", { replace: true });
   }
@@ -66,7 +69,7 @@ const CheckOutSuccess = () => {
   const deliveryTime = new Date(currentTime + randomTime * 60 * 1000);
 
 
-  const checkOut = async () => {
+  const Checkout = async () => {
     try {
       const orderData = {
         user: user.user.userId,
@@ -78,22 +81,29 @@ const CheckOutSuccess = () => {
 
       const createdOrder = await handleCheckOut(orderData);
 
-      console.log(createdOrder); // Log dữ liệu nhận được từ handleCheckOut
+      console.log(createdOrder); 
 
       if (createdOrder) {
         
         dispatch(alertInfo("Đơn hàng đang được xử lý!"));
+        clearAllCart(user?.user?.userId).then((data) => {
+      
+          getAllCartItems().then((items) => {
+            dispatch(setCartItems(items));
+            let totalQuantity = 0;
+            setTotalQuantity(totalQuantity);
+            setTimeout(() => {
+              dispatch(alertNULL());
+            }, 3000);
+          });
+        });
    
-        setTimeout(() => {
-          dispatch(alertNULL());
-          window.location.reload()
-          navigate("/user-orders", { replace: true });
-         
-        }, 3000);
+       
         const allCartItems = await getAllOrders();
         console.log(allCartItems)
         if (allCartItems) {
           dispatch(setOrders(allCartItems));
+          
         }
      
       } else {
@@ -103,7 +113,28 @@ const CheckOutSuccess = () => {
       console.log(error);
     }
   };
+   console.log(order)
 
+
+   const checkOutByMony = async()=>{
+    setTimeout(() => {
+      dispatch(alertSuccess("Thanh toan "));
+      window.location.reload()
+      navigate("/user-orders", { replace: true });
+     
+    }, 3000);
+   }
+  const checkOutByPayPal = async () => {
+ 
+    axios
+      .post(`${baseURL}/pbl6/paypal `)
+      .then((res) => {
+        if (res.data.url) {
+          window.location.href = res.data.url;
+        }
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     <main className="w-screen min-h-screen flex items-center justify-start flex-col bg-primary ">
       <Header />
@@ -201,11 +232,19 @@ const CheckOutSuccess = () => {
                   </p>
                 </div>
                 <div className="flex gap-6 w-full">
+                <motion.button
+                    {...buttonClick}
+                    className="bg-gradient-to-bl from-orange-400 to-orange-500 px-4 py-2 gap-8 rounded-xl text-black text-base font-semibold flex items-center justify-start "
+                    onClick={Checkout}
+                  >
+                    <BsCashCoin className="text-3xl text-green-500" />
+                    Thanh toán 
+                  </motion.button>
                   {" "}
                   <motion.button
                     {...buttonClick}
                     className="bg-gradient-to-bl from-orange-400 to-orange-500 px-4 py-2 gap-8 rounded-xl text-black text-base font-semibold flex items-center justify-start "
-                    onClick={checkOut}
+                    onClick={checkOutByMony}
                   >
                     <BsCashCoin className="text-3xl text-green-500" />
                     Thanh toán tiền mặt
@@ -213,7 +252,7 @@ const CheckOutSuccess = () => {
                   <motion.button
                     {...buttonClick}
                     className="bg-gradient-to-bl from-orange-400 to-orange-500  py-2 px-2 rounded-xl text-black text-base font-semibold flex items-center justify-start "
-                    onClick={checkOut}
+                    onClick={checkOutByPayPal}
                   >
                   <img alt="" src={paypal} className="object-contain w-24 h-16"/>
                     Thanh toán PayPal

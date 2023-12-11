@@ -11,7 +11,9 @@ import { BsToggles2 } from "react-icons/bs";
 
 const ListStore = () => {
   const allUser = useSelector((state) => state.allUsers);
-  const isStore = allUser ? allUser.filter((store) => store.isStore === true) : [];
+  const isStore = allUser
+    ? allUser.filter((store) => store.isStore === true)
+    : [];
 
   const [selectedDistrict, setSelectedDistrict] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -20,20 +22,25 @@ const ListStore = () => {
     setSelectedDistrict(event.target.value);
   };
 
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-
   const filteredStoresBySearch = isStore.filter((store) => {
     const searchString = searchTerm.toLowerCase();
-    return (
-      (!selectedDistrict || store.address.includes(selectedDistrict)) &&
-      (store.store.toLowerCase().includes(searchString) ||
-        store.address.toLowerCase().includes(searchString))
-    );
-  });
+    const storeAddress = store.address ? store.address.toLowerCase() : "";
+    const storeName = store.store ? store.store.toLowerCase() : "";
+    const selected = selectedDistrict.toLowerCase(); 
+  
+  
+    const isMatchingDistrict = !selected || storeAddress.includes(selected);
 
+    const isMatchingSearch =
+      storeName.includes(searchString) || storeAddress.includes(searchString);
+  
+    return isMatchingDistrict && isMatchingSearch;
+  });
 
   const showAllStores = !selectedDistrict && !searchTerm;
 
@@ -73,13 +80,15 @@ const ListStore = () => {
 
       <div className=" gap-6  bg-white w-full">
         <div className="w-full h-12 flex justify-center rounded-md bg-slate-300 items-center px-6 gap-96 py-4 ">
-          <motion.div className="flex  bg-slate-100 gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md"
-          {...buttonClick}>
+          <motion.div
+            className="flex  bg-slate-100 gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md"
+            {...buttonClick}
+          >
             <MdSearch className="text-gray-400 text-2xl" />
             <input
               type="text"
               placeholder="Tìm kiếm"
-              className="border-none outline-none font-medium bg-transparent text-base text-textColor cursor-pointer" 
+              className="border-none outline-none font-medium bg-transparent text-base text-textColor cursor-pointer"
               onChange={handleSearch}
               value={searchTerm}
             />
@@ -109,19 +118,17 @@ const ListStore = () => {
             </select>
           </div>
         </div>
-        <div className=" px-2 gap-6 items-center justify-center w-full flex pt-6">
-        {showAllStores ? (
+        <div className="flex flex-wrap justify-center gap-4  py-4">
+          {showAllStores ? (
             isStore.map((store, index) => (
               <StoreCard key={index} data={store} />
             ))
+          ) : filteredStoresBySearch.length > 0 ? (
+            filteredStoresBySearch.map((store, index) => (
+              <StoreCard key={index} data={store} />
+            ))
           ) : (
-            filteredStoresBySearch.length > 0 ? (
-              filteredStoresBySearch.map((store, index) => (
-                <StoreCard key={index} data={store} />
-              ))
-            ) : (
-              <p>No matching stores found</p>
-            )
+            <p>No matching stores found</p>
           )}
         </div>
       </div>

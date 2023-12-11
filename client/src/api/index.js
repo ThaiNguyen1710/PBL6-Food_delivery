@@ -1,8 +1,9 @@
 import axios from "axios";
-export const baseURL1 =
-  "http://localhost:5001/food-delivery-app-1449c/us-central1/app";
+
 export const baseURL =
   "https://pbl-6-nine.vercel.app";
+  // export const baseURL =
+  // "https://pbl6-lssz.onrender.com";
 
 
   //user

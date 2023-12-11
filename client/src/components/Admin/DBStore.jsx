@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import DataTable from "./DataTable";
 import { useDispatch, useSelector } from "react-redux";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
-import { editUser, getAllUsers } from "../../api";
+import { baseURL, editUser, getAllUsers } from "../../api";
 import { avatar } from "../../assets";
 import { setUserDetail } from "../../context/actions/userActions";
 import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
@@ -27,15 +27,15 @@ const DBStore = () => {
 
   const blockStore = async (rowData) => {
     try {
-      const userId = rowData.id; // Lấy ID của người dùng từ rowData
+      const userId = rowData.id; 
       const newData = {
-        isStore: !rowData.isStore, // Đảo ngược giá trị isStore khi block/unblock
+        isStore: !rowData.isStore,
       };
 
       const updatedUserData = await editUser(userId, newData);
 
       if (updatedUserData && updatedUserData.data) {
-        // Cập nhật dữ liệu người dùng và thông báo thành công
+       
         dispatch(setUserDetail(updatedUserData.data));
         dispatch(alertSuccess("User information updated successfully"));
       } else {
@@ -61,7 +61,7 @@ const DBStore = () => {
             field: "photoURL",
             render: (rowData) => (
               <img
-                src={rowData.photoURL ? rowData.photoURL : avatar}
+                src={baseURL+rowData.imgStore ?baseURL+ rowData.imgStore : avatar}
                 className="w-32 h-16 object-contain rounded-md"
                 alt=""
               />

@@ -4,6 +4,7 @@ export {default as Alert} from "./Alert"
 export {default as Header} from "./Header"
 export {default as Cart} from "./Cart"
 export {default as Footer} from "./Footer"
+export {default as StoreDetail} from "./StoreDetail"
 
 
 
@@ -47,4 +48,7 @@ export {default as StoreInformation} from "./Store/StoreInformation"
 export {default as StoreItem} from "./Store/StoreItem"
 export {default as StoreAddItem} from "./Store/StoreAddItem"
 export {default as StoreCard} from "./Store/StoreCard"
+export {default as StoreSection} from "./Store/StoreSection"
+
+
 
