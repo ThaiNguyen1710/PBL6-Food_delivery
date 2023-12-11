@@ -49,7 +49,7 @@ const FilterSection = () => {
       <div className="w-full flex items-center justify-evenly flex-wrap gap-4 mt-12">
         {product &&
           product
-            .filter((data) => data.category.name === category && data.user.isStore === true)
+            .filter((data) => data.category.name === category && data.user.isStore === true&& data.isFeatured===false)
             .map((data, i) => <SliderCard key={i} data={data} index={i} />)}
       </div>
     </motion.div>

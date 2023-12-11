@@ -8,11 +8,27 @@ import SliderCard from "./SliderCard";
 
 const Slider = () => {
   const products = useSelector((state) => state.products);
-  const [fruits, setFruits] = useState(null);
+  const [randomProducts, setRandomProducts] = useState([]);
+
   useEffect(() => {
-    setFruits(products?.filter((data) => data.category.name === "Kem"));
-    
+    if (products) {
+      const numberOfRandomProducts = 10;
+
+      const randomIndexes = [];
+      while (randomIndexes.length < numberOfRandomProducts) {
+        const randomIndex = Math.floor(Math.random() * products.length);
+        if (!randomIndexes.includes(randomIndex)) {
+          randomIndexes.push(randomIndex);
+        }
+      }
+
+      // Lấy các sản phẩm tương ứng với các index ngẫu nhiên
+      const selectedProducts = randomIndexes.map((index) => products[index]);
+
+      setRandomProducts(selectedProducts);
+    }
   }, [products]);
+
   return (
     <div className=" w-full  pt-12">
       <Swiper
@@ -22,8 +38,8 @@ const Slider = () => {
         grabCursor={true}
         className="mySwiper"
       >
-        {fruits&&
-         fruits.map((data, i) => (
+        {randomProducts &&
+          randomProducts.map((data, i) => (
             <SwiperSlide key={i}>
               <SliderCard key={i} data={data} index={i} />
             </SwiperSlide>

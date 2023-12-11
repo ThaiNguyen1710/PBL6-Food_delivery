@@ -42,16 +42,16 @@ const StoreItem = () => {
   const [statusList, setStatusList] = useState([]);
   const user = useSelector((state) => state.user);
   const products = useSelector((state) => state.products);
-  const filteredProducts = products ?products.filter(product => product?.user?.id === user?.user?.userId) :[];
+  const filteredProducts = products
+    ? products.filter((product) => product?.user?.id === user?.user?.userId)
+    : [];
 
   const dispatch = useDispatch();
- 
 
   const handleEditClick = (event, rowData) => {
     setSelectedProduct(rowData);
     setIsEditModalOpen(true);
   };
-
 
   const handleCloseModal = () => {
     setIsEditModalOpen(false);
@@ -59,7 +59,6 @@ const StoreItem = () => {
 
   const handleSaveChanges = async () => {
     try {
-
       const updatedProduct = await editProduct(
         selectedProduct.id,
         selectedProduct
@@ -92,13 +91,38 @@ const StoreItem = () => {
       console.error("Error updating product:", error);
     }
   };
+  const blockProduct = async (rowData) => {
+    try {
+      const productId = rowData.id;
+      const newData = {
+        isFeatured: !rowData.isFeatured,
+      };
+
+      const updatedProduct = await editProduct(productId, newData);
+
+      if (updatedProduct && updatedProduct.data) {
+        dispatch(setAllProducts(updatedProduct.data));
+        dispatch(alertSuccess("User information updated successfully"));
+      } else {
+        throw new Error("Failed to update user information");
+      }
+    } catch (error) {
+      console.error("Error updating user information:", error);
+      dispatch(alertSuccess("Cập nhật thành công  "));
+ 
+      setTimeout(() => {
+        dispatch(alertNULL());
+        // window.location.reload();
+      }, 3000);
+    }
+  };
 
   return (
     <div className="flex justify-center items-center gap-4 pt-6 w-full">
       <DataTable
         columns={[
           {
-            title: "Image",
+            title: <p className="font-semibold text-xl">Image</p>,
             field: "image",
             render: (rowData) => (
               <img
@@ -109,23 +133,35 @@ const StoreItem = () => {
             ),
           },
           {
-            title: "Name",
+            title: <p className="font-semibold text-xl">Name</p>,
             field: "name",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.name}</p>
+            ),
           },
           {
-            title: "Category",
+            title: <p className="font-semibold text-xl">Category</p>,
             field: "category.name",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.category.name}</p>
+            ),
           },
           {
-            title: "Description",
+            title: <p className="font-semibold text-xl">Description</p>,
             field: "description",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.description}</p>
+            ),
           },
           {
-            title: "Store Owner",
+            title: <p className="font-semibold text-xl">Store Owner</p>,
             field: "user.name",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.user.name}</p>
+            ),
           },
           {
-            title: "Price",
+            title: <p className="font-semibold text-xl">Price</p>,
             field: "price",
             render: (rowData) => (
               <p className="text-textColor text-2xl flex font-semibold items-center justify-start gap-2">
@@ -135,12 +171,37 @@ const StoreItem = () => {
             ),
           },
           {
-            title: "Rating",
+            title: <p className="font-semibold text-xl">In Stock</p>,
+            field: "isFeatured",
+            render: (rowData) => (
+              <select
+                value={rowData.isFeatured ? "Available" : "Sold Out"}
+                onChange={(e) => blockProduct(rowData, e.target.value)}
+                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
+                style={{
+                  color: rowData.isFeatured ? "red" : "blue"
+                }}
+              >
+                   <option value="true" className="font-semibold text-blue-500">
+                  {rowData.isFeatured ? "Sold Out" : "Available"}
+                </option>
+                <option value="false" className="font-semibold text-red-500">
+                  {rowData.isFeatured ? "Available" : "Sold Out"}
+                </option>
+             
+              </select>
+            ),
+          },
+          {
+            title: <p className="font-semibold text-xl">Rating</p>,
             field: "ratings",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.ratings}</p>
+            ),
           },
         ]}
         data={filteredProducts}
-        title="List of products"
+        title={<p className="font-semibold text-red-400 text-3xl">List of Products</p>}
         actions={[
           {
             icon: "edit",

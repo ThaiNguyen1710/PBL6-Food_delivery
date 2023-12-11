@@ -48,7 +48,7 @@ const Product = ({ closeProduct }) => {
         product: selectedProduct.id,
         user: user.user.userId,
       };
-      console.log("New Data:", newData);
+      
       const addedItem = await addNewItemToCart(newData);
 
       if (addedItem) {
@@ -82,8 +82,7 @@ const Product = ({ closeProduct }) => {
   const minutes = currentDate.getMinutes().toString().padStart(2, "0");
 
   const currentTime = `${hours}:${minutes}`;
-  console.log(selectedProduct);
-
+ 
   return (
     <div className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
       <Header />
@@ -94,10 +93,12 @@ const Product = ({ closeProduct }) => {
               {...buttonClick}
               className="bg-gradient-to-bl from-orange-400 to-orange-600 px-2 py-2 rounded-xl text-black text-base font-semibold "
             >
-              <NavLink to={"/"} className="flex justify-start">
-                <BiChevronsLeft className="text-[50px] text-black" />
+              <div className="flex justify-start">
+                <NavLink to={"/"}>
+                  <BiChevronsLeft className="text-[50px] text-black" />
+                </NavLink>
                 <p className="font-semibold text-3xl text-white mt-2"> Back</p>
-              </NavLink>
+              </div>
             </motion.button>
 
             <img

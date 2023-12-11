@@ -18,6 +18,7 @@ export const isNotActiveStyles =
 //   // { id: 9, title: "Bánh Ngọt", category: "Bánh Ngọt" },
 
 // ];
+
  export const gradientStyle = {
   backgroundImage: 'linear-gradient(45deg, #FFB400FF, #FF0085FF)',
   WebkitBackgroundClip: 'text',
