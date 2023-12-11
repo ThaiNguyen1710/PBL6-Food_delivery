@@ -1,14 +1,8 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
-import { addNewItemToCart, baseURL, getAllCartItems } from "../api";
-import {
-  alertDanger,
-  alertNULL,
-  alertSuccess,
-} from "../context/actions/alertActions";
-import { setCartItems } from "../context/actions/cartAction";
-import { setCartOn } from "../context/actions/displayCartAction";
+import { useSelector } from "react-redux";
+import { NavLink, useParams } from "react-router-dom";
+import { baseURL } from "../api";
+
 import Header from "./Header";
 import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
@@ -20,7 +14,7 @@ import Footer from "./Footer";
 import { IoShieldCheckmark } from "react-icons/io5";
 import { TbMinusVertical } from "react-icons/tb";
 import { gradientStyle } from "../utils/styles";
-import FilterSection from "./ClientUI/FilterSection";
+
 import StoreSection from "./Store/StoreSection";
 
 const StoreDetail = ({ closeStore }) => {
@@ -28,15 +22,10 @@ const StoreDetail = ({ closeStore }) => {
   const product = useSelector((state) => state.products);
   const allUser = useSelector((state) => state.allUsers);
   const isCart = useSelector((state) => state.isCart);
-  const user = useSelector((state) => state.user);
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const selectedStore = allUser
     ? allUser.filter((store) => store.id === id)
     : [];
-  
 
   const productList = product ? product.filter((item) => item.id === id) : [];
   const selectedProduct = productList.length > 0 ? productList[0] : null;
@@ -45,45 +34,6 @@ const StoreDetail = ({ closeStore }) => {
     ? allUser.filter((user) => user?.id === selectedProduct?.user?.id)
     : [];
 
-  if (!product) {
-    navigate("/", { replace: true });
-  }
-
-  const sendToCart = async () => {
-    try {
-      const newData = {
-        product: selectedProduct.id,
-        user: user.user.userId,
-      };
-      console.log("New Data:", newData);
-      const addedItem = await addNewItemToCart(newData);
-
-      if (addedItem) {
-        dispatch(alertDanger("Failed to add to cart"));
-        setTimeout(() => {
-          dispatch(alertNULL());
-        }, 3000);
-      } else {
-        dispatch(alertSuccess("Added to the cart"));
-        setTimeout(() => {
-          dispatch(alertNULL());
-        }, 3000);
-        const allCartItems = await getAllCartItems();
-        if (allCartItems) {
-          dispatch(setCartItems(allCartItems));
-        }
-      }
-    } catch (error) {
-      dispatch(alertDanger("Failed to add to cart"));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    }
-  };
-  const handleButtonClick = () => {
-    sendToCart();
-    dispatch(setCartOn());
-  };
   const currentDate = new Date();
   const hours = currentDate.getHours().toString().padStart(2, "0");
   const minutes = currentDate.getMinutes().toString().padStart(2, "0");
@@ -114,20 +64,18 @@ const StoreDetail = ({ closeStore }) => {
           </div>
           <div className=" flex flex-col items-center justify-start gap-16 ">
             <div className="w-508 h-370  items-center justify-center pt-8">
-              <p className="text-blue-500 font-normal">
+             
+              <NavLink to={"/"} className="text-blue-500 font-normal">
                 Home {">> "}
-                {selectedStore?.[0]?.store}
+                <NavLink
+                  to={`/store/${selectedStore?.[0]?.id}`}
+                  className="text-blue-500 font-normal"
+                >
+                  {selectedStore?.[0]?.store}
+                </NavLink>
                 {" >> "}
                 {selectedStore?.[0]?.address}
-              </p>
-              <div className=" pb-8 pt-8">
-                <p className="text-5xl font-semibold">
-                  {selectedStore?.[0]?.store}
-                </p>
-                <p className="text-xl text-gray-500 font-normal">
-                  {selectedStore?.[0]?.address}
-                </p>
-              </div>
+              </NavLink>
               <div className="gap-12 pb-8">
                 <p className="text-xl font-normal flex items-center">
                   {currentTime >= selectedStore?.[0]?.openAt &&
@@ -150,33 +98,28 @@ const StoreDetail = ({ closeStore }) => {
                 </p>
                 <div className="w-[80%] h-[1px] rounded-md bg-gray-500 "></div>
                 <div className=" w-full gap-6 flex items-center">
-                 
                   <motion.button
                     {...buttonClick}
                     className=" flex  items-center  gap-1 bg-gradient-to-bl from-amber-200 to-amber-400 px-2 py-1 rounded-xl text-black text-base font-semibold "
-                    // onClick={() => dispatch(setCartOn())}
-                    // onClick={handleButtonClick}
                   >
                     <IoShieldCheckmark className="w-8 h-8 text-slate-100" />
                     Quán đối tác
                   </motion.button>
-                  <TbMinusVertical  className="text-headingColor text-5xl"/>
+                  <TbMinusVertical className="text-headingColor text-5xl" />
                   <div className=" w-auto h-full items-center justify-center">
-                  <p className="text-base text-center font-normal text-slate-500 ">
-                  Dịch vụ bởi
-                </p>
-                <p className="font-semibold text-3xl" style={gradientStyle}>
-          6Food
-        </p>
+                    <p className="text-base text-center font-normal text-slate-500 ">
+                      Dịch vụ bởi
+                    </p>
+                    <p className="font-semibold text-3xl" style={gradientStyle}>
+                      6Food
+                    </p>
                   </div>
                 </div>
               </div>
-
-            
             </div>
           </div>
         </motion.div>
-                    <StoreSection data={selectedStore}/>
+        <StoreSection data={selectedStore} />
       </div>
       {isCart && <Cart />}
       <Footer />

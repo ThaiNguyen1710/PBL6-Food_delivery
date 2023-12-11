@@ -38,11 +38,9 @@ const Product = ({ closeProduct }) => {
     ? allUser.filter((user) => user?.id === selectedProduct?.user?.id)
     : [];
 
- 
   if (!product) {
     navigate("/", { replace: true });
   }
-  
 
   const sendToCart = async () => {
     try {
@@ -84,7 +82,7 @@ const Product = ({ closeProduct }) => {
   const minutes = currentDate.getMinutes().toString().padStart(2, "0");
 
   const currentTime = `${hours}:${minutes}`;
-  
+  console.log(selectedProduct);
 
   return (
     <div className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
@@ -110,12 +108,17 @@ const Product = ({ closeProduct }) => {
           </div>
           <div className=" flex flex-col items-center justify-start gap-16 ">
             <div className="w-508 h-370  items-center justify-center pt-8">
-              <p className="text-blue-500 font-normal">
+              <NavLink to={"/"} className="text-blue-500 font-normal">
                 Home {">> "}
-                {userProduct?.[0]?.store}
+                <NavLink
+                  to={`/store/${selectedProduct?.user?.id}`}
+                  className="text-blue-500 font-normal"
+                >
+                  {userProduct?.[0]?.store}
+                </NavLink>
                 {" >> "}
                 {selectedProduct?.name}
-              </p>
+              </NavLink>
               <div className=" pb-8 pt-8">
                 <p className="text-5xl font-semibold">
                   {selectedProduct?.name}
@@ -131,7 +134,6 @@ const Product = ({ closeProduct }) => {
                 <p className="text-2xl font-medium flex gap-4">
                   {currentTime >= userProduct?.[0]?.openAt &&
                   currentTime <= userProduct?.[0]?.closeAt ? (
-                    
                     <MdAccessTimeFilled className="w-10 h-8 text-green-500" />
                   ) : (
                     <MdAccessTimeFilled className="w-10 h-8 text-red-500" />
@@ -150,7 +152,6 @@ const Product = ({ closeProduct }) => {
               <motion.button
                 {...buttonClick}
                 className="bg-gradient-to-bl from-orange-400 to-orange-600 px-4 py-2 rounded-xl text-black text-base font-semibold "
-                // onClick={() => dispatch(setCartOn())}
                 onClick={handleButtonClick}
               >
                 Đặt Hàng Ngay
@@ -158,13 +159,14 @@ const Product = ({ closeProduct }) => {
             </div>
           </div>
         </motion.div>
-        <div className="pt-12 w-full pb-6"> <ProductSlider data={selectedProduct}/></div>
-       
+        <div className="pt-12 w-full pb-6">
+          {" "}
+          <ProductSlider data={selectedProduct} />
+        </div>
       </div>
       {isCart && <Cart />}
       <Footer />
     </div>
-    
   );
 };
 

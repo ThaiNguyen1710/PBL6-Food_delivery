@@ -8,7 +8,7 @@ import SliderCard from "./SliderCard";
 
 const SliderProduct = (data) => {
   const products = useSelector((state) => state.products);
-  console.log(data)
+
   const [fruits, setFruits] = useState(null);
   useEffect(() => {
     setFruits(products?.filter((product) => product.user.store ===data.data.data.user.store));
