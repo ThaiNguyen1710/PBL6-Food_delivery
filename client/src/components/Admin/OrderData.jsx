@@ -9,8 +9,11 @@ import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 const OrderData = ({ index, data, admin }) => {
   const allUser = useSelector((state) => state.allUsers);
   const user = useSelector((state) => state.user);
+
+
+  
   const dispatch = useDispatch();
-  console.log(data);
+ 
   const store = allUser
     ? allUser.filter((store) => store.store === data.shippingAddress2)
     : [];
@@ -29,13 +32,13 @@ const OrderData = ({ index, data, admin }) => {
   const formattedDate = formatDate(data.dateOrdered);
 
   const [rated, setRated] = useState(
-    localStorage.getItem(`rated_${data._id}`) === "true"
+    sessionStorage.getItem(`rated_${data._id}`) === "true"
   );
-
+  
   const [rating, setRating] = useState(
-    localStorage.getItem(`rating_${data._id}`) || 0
+    sessionStorage.getItem(`rating_${data._id}`) || 0
   );
-
+  
   const handleRating = async (orderId, productId) => {
     try {
       for (const item of data.orderLists) {
@@ -56,7 +59,7 @@ const OrderData = ({ index, data, admin }) => {
       }
 
       setRated(true);
-      localStorage.setItem(`rated_${orderId}`, true);
+      sessionStorage.setItem(`rated_${orderId}`, true);
       const newDataForOrder = {
         isRate: true,
       };
@@ -116,7 +119,7 @@ const OrderData = ({ index, data, admin }) => {
                       key={star}
                       onClick={() => {
                         setRating(star);
-                        localStorage.setItem(`rating_${data._id}`, star);
+                        sessionStorage.setItem(`rating_${data._id}`, star);
                       }}
                       style={{
                         cursor: "pointer",
