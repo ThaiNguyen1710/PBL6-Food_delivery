@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { staggerFadeInOut } from "../../animations";
 import { FaDongSign, FaStar } from "react-icons/fa6";
 import { baseURL, ratingProduct, updatedOrder } from "../../api";
@@ -10,10 +10,8 @@ const OrderData = ({ index, data, admin }) => {
   const allUser = useSelector((state) => state.allUsers);
   const user = useSelector((state) => state.user);
 
-
-  
   const dispatch = useDispatch();
- 
+
   const store = allUser
     ? allUser.filter((store) => store.store === data.shippingAddress2)
     : [];
@@ -32,13 +30,11 @@ const OrderData = ({ index, data, admin }) => {
   const formattedDate = formatDate(data.dateOrdered);
 
   const [rated, setRated] = useState(
-    sessionStorage.getItem(`rated_${data._id}`) === "true"
+    false
   );
-  
-  const [rating, setRating] = useState(
-    sessionStorage.getItem(`rating_${data._id}`) || 0
-  );
-  
+
+  const [rating, setRating] = useState(0);
+
   const handleRating = async (orderId, productId) => {
     try {
       for (const item of data.orderLists) {
@@ -59,9 +55,11 @@ const OrderData = ({ index, data, admin }) => {
       }
 
       setRated(true);
-      sessionStorage.setItem(`rated_${orderId}`, true);
+      setRating(rating)
+
       const newDataForOrder = {
         isRate: true,
+        ratings: rating,
       };
       const updatedOrderData = await updatedOrder(orderId, newDataForOrder);
       console.log(updatedOrderData);
@@ -69,6 +67,11 @@ const OrderData = ({ index, data, admin }) => {
       console.log(error);
     }
   };
+ 
+  useEffect(() => {
+   
+    console.log("Rating changed:", rating);
+  }, [rating]);
 
   return (
     <motion.div
@@ -107,8 +110,8 @@ const OrderData = ({ index, data, admin }) => {
           <div>
             {data.isRate ? (
               <div className="flex justify-center items-center gap-1 text-base font-normal">
-                Đã đánh giá: 
-                <p className=" font-bold text-headingColor">{rating}{" "}</p>
+                Đã đánh giá:
+                <p className=" font-bold text-headingColor">{data.ratings} </p>
                 <FaStar className="text-orange-400 text-base font-normal" />
               </div>
             ) : (
@@ -119,7 +122,6 @@ const OrderData = ({ index, data, admin }) => {
                       key={star}
                       onClick={() => {
                         setRating(star);
-                        sessionStorage.setItem(`rating_${data._id}`, star);
                       }}
                       style={{
                         cursor: "pointer",

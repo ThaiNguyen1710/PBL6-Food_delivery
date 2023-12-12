@@ -3,10 +3,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllOrders, getAllProducts, getAllUsers } from "../../api";
 import { setAllProducts } from "../../context/actions/productAction";
 import { CChart } from "@coreui/react-chartjs";
-import { budget, confirmOrders, totalUser } from "../../assets";
-import { FaDongSign } from "react-icons/fa6";
+import { budget, confirmOrders, menu,  } from "../../assets";
+import { FaDongSign, FaStar, FaUserCheck } from "react-icons/fa6";
 import { setOrders } from "../../context/actions/orderAction";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
+import { motion } from "framer-motion";
 
 const StoreHome = () => {
   const products = useSelector((state) => state.products);
@@ -55,6 +56,29 @@ const StoreHome = () => {
   const productStore = products
     ? products.filter((item) => item.user.id === user.user.userId)
     : [];
+    const ratedProducts = productStore
+    ? productStore.filter((product) => product.numRated !== 0)
+    : [];
+
+  let ratedStore = 0;
+  let totalRatings = 0;
+  let numRated = 0;
+  if (productStore.length > 0) {
+    productStore.forEach((product) => {
+      numRated += product.numRated;
+    });
+  }
+  if (ratedProducts.length > 0) {
+    let totalPoints = 0;
+
+    ratedProducts.forEach((product) => {
+      totalRatings++;
+
+      totalPoints += product.ratings;
+    });
+
+    ratedStore = totalPoints / totalRatings;
+  }
 
  
   const categoryCounts = {};
@@ -90,7 +114,24 @@ const StoreHome = () => {
 
   return (
     <div className="flex items-start justify-center flex-col pt-12 w-full  gap-8 h-full">
+         <div className="pt-6 flex items-center gap-1">
+                  <p className="text-xl font-semibold">
+                    {parseFloat(ratedStore).toFixed(1)}
+                  </p>
+                  <FaStar className="w-6 h-6 text-yellow-400" />
+                  <motion.button
+                    
+                    className=" flex  items-center  gap-1 bg-gradient-to-bl from-orange-400 to-orange-600 px-2 py-1 rounded-xl text-black text-base font-semibold "
+                  >
+                    <FaUserCheck className="w-8 h-8 text-slate-100" />
+                   {numRated} + 
+                  </motion.button>
+             
+                </div>
       <div className="items-start justify-start  gap-32 flex pt-12">
+      
+   
+       
         <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
           <img
             alt=""
@@ -126,7 +167,7 @@ const StoreHome = () => {
         <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
           <img
             alt=""
-            src={totalUser}
+            src={menu}
             className="w-20 h-20 object-contain items-center justify-center "
           />
           <div className="relative ">

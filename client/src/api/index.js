@@ -254,7 +254,7 @@ export const updatedOrder = async (order_id,newData) => {
       newData
     
     );
-    return res.data.data;
+    return res.data;
   } catch (err) {
     return null;
   }
