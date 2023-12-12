@@ -61,16 +61,15 @@ const StoreInformation = () => {
       };
 
       const updatedUserData = await editUser(userId, newData);
-      console.log(updatedUserData);
+     
 
-      if (updatedUserData && updatedUserData.data) {
+      if (updatedUserData) {
         dispatch(setUserDetail(updatedUserData.data));
         dispatch(alertSuccess("User information updated successfully"));
       } else {
         throw new Error("Failed to update user information");
       }
     } catch (error) {
-      console.error("Error updating user information:", error);
       dispatch(dispatch(alertSuccess("Cập nhật thành công  ")));
       setTimeout(() => {
         dispatch(alertNULL());
@@ -97,7 +96,7 @@ const StoreInformation = () => {
 
         formData.append("imgStore", imageDownloadURL);
 
-        // Gửi FormData lên server
+        
         PostUser(userId, formData)
           .then((res) => {
             if (res && res.data) {

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editUser, getAllUsers } from "../../api";
+import { baseURL, editUser, getAllUsers } from "../../api";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import DataTable from "./DataTable";
 import { avatar } from "../../assets";
@@ -56,7 +56,7 @@ const DBUsers = () => {
             field: "photoURL",
             render: (rowData) => (
               <img
-                src={rowData.photoURL ? rowData.photoURL : avatar}
+                src={baseURL+rowData.image ?baseURL+rowData.image : avatar}
                 className="w-32 h-16 object-contain rounded-md"
                 alt=""
               />

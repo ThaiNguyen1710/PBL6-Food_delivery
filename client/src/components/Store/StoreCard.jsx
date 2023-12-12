@@ -5,8 +5,32 @@ import { baseURL } from "../../api";
 import { useNavigate } from "react-router-dom";
 import { buttonClick } from "../../animations";
 import { motion } from "framer-motion";
+import { useSelector } from "react-redux";
 
 const StoreCard = ({ data }) => {
+  const product = useSelector((state) => state.products);
+  const productStore = product
+    ? product.filter((products) => products.user.id === data.id)
+    : [];
+
+  const ratedProducts = productStore
+    ? productStore.filter((product) => product.numRated !== 0)
+    : [];
+
+  let ratedStore = 0;
+  let totalRatings = 0;
+  if (ratedProducts.length > 0) {
+    let totalPoints = 0;
+
+    ratedProducts.forEach((product) => {
+      totalRatings++;
+
+      totalPoints += product.ratings;
+    });
+
+    ratedStore = totalPoints / totalRatings;
+  }
+
   const currentDate = new Date();
   const hours = currentDate.getHours().toString().padStart(2, "0");
   const minutes = currentDate.getMinutes().toString().padStart(2, "0");
@@ -31,7 +55,7 @@ const StoreCard = ({ data }) => {
     >
       {isClosed ? (
         <>
-          {/* Nếu đóng cửa, hiển thị phần tử này */}
+          
           <div className="closed-overlay">
             <div className="font-semibold absolute top-1/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
               <motion.button
@@ -45,37 +69,37 @@ const StoreCard = ({ data }) => {
               alt=""
               src={baseURL + data.imgStore}
               className="w-full h-150 object-contain cursor-pointer opacity-50"
-            
             />
           </div>
         </>
       ) : (
         <>
-          {/* Nếu không đóng cửa, hiển thị phần tử này */}
           <img
             alt=""
             src={baseURL + data.imgStore}
             className="w-full h-150 object-contain cursor-pointer"
-           
           />
         </>
       )}
 
       <div className="w-full px-2 items-start justify-center">
-        <p className="text-xl text-headingColor font-semibold">{data.store}</p>
+        <p className="text-xl text-headingColor font-semibold">{data.store} </p>
         <p className="text-sm font-normal text-textColor">{data.address}</p>
       </div>
       <div className="w-full h-[1px] rounded-md bg-gray-500"></div>
       <div className="w-full flex">
         <div className="w-32 flex items-center gap-1">
-          <p className="text-xl font-semibold">5</p>
+          <p className="text-xl font-semibold">
+            {parseFloat(ratedStore).toFixed(1)}
+            
+          </p>
           <FaStar className="w-6 h-6 text-yellow-400" />
         </div>
         <div className="w-full flex items-center justify-end gap-1">
           {isClosed ? (
             <>
               <div className="flex w-full">
-                {/* <p className="text-red-500 font-semibold">Đóng Cửa</p> */}
+               
                 <p className="text-red-500 font-semibold">
                   Đặt hàng vào ngày mai lúc: {data.openAt}
                 </p>

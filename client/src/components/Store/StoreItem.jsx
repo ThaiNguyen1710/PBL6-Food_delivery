@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
-import { FaDongSign } from "react-icons/fa6";
+import { FaDongSign, FaStar } from "react-icons/fa6";
 import {
   baseURL,
   deleteAProduct,
@@ -99,8 +99,9 @@ const StoreItem = () => {
       };
 
       const updatedProduct = await editProduct(productId, newData);
+      console.log(updatedProduct)
 
-      if (updatedProduct && updatedProduct.data) {
+      if (updatedProduct) {
         dispatch(setAllProducts(updatedProduct.data));
         dispatch(alertSuccess("User information updated successfully"));
       } else {
@@ -116,6 +117,8 @@ const StoreItem = () => {
       }, 3000);
     }
   };
+  
+  
 
   return (
     <div className="flex justify-center items-center gap-4 pt-6 w-full">
@@ -196,7 +199,12 @@ const StoreItem = () => {
             title: <p className="font-semibold text-xl">Rating</p>,
             field: "ratings",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.ratings}</p>
+              <div className="flex justify-center items-center gap-1 text-base font-normal">
+        
+              <p className="text-textColor font-medium ">{parseFloat(rowData.ratings).toFixed(1)}</p>
+              <FaStar className="text-orange-400 text-base font-normal" />
+            </div>
+             
             ),
           },
         ]}

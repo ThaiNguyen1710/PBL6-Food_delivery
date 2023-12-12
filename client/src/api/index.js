@@ -247,15 +247,27 @@ export const getAllOrders = async () => {
   }
 };
 
-export const updatedOrderSts = async (order_id, status) => {
+export const updatedOrder = async (order_id,newData) => {
   try {
     const res = await axios.put(
       `${baseURL}/pbl6/order/${order_id}`,
-      null,
-      { params: { status: status } }
+      newData
+    
     );
     return res.data.data;
   } catch (err) {
     return null;
+  }
+};
+
+
+//rating
+export const ratingProduct = async (orderData) => {
+  try {
+    const response = await axios.post(`${baseURL}/pbl6/rated`, orderData);
+    return response.data; 
+  } catch (error) {
+    console.log(error);
+    throw error; 
   }
 };

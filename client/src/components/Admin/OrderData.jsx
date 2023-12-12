@@ -1,13 +1,16 @@
 import { motion } from "framer-motion";
-import React from "react";
+import React, { useState } from "react";
 import { staggerFadeInOut } from "../../animations";
-import { FaDongSign } from "react-icons/fa6";
-import { baseURL } from "../../api";
-import { useSelector } from "react-redux";
+import { FaDongSign, FaStar } from "react-icons/fa6";
+import { baseURL, ratingProduct, updatedOrder } from "../../api";
+import { useDispatch, useSelector } from "react-redux";
+import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 
 const OrderData = ({ index, data, admin }) => {
   const allUser = useSelector((state) => state.allUsers);
-
+  const user = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+  console.log(data);
   const store = allUser
     ? allUser.filter((store) => store.store === data.shippingAddress2)
     : [];
@@ -25,6 +28,45 @@ const OrderData = ({ index, data, admin }) => {
 
   const formattedDate = formatDate(data.dateOrdered);
 
+  const [rated, setRated] = useState(
+    localStorage.getItem(`rated_${data._id}`) === "true"
+  );
+
+  const [rating, setRating] = useState(
+    localStorage.getItem(`rating_${data._id}`) || 0
+  );
+
+  const handleRating = async (orderId, productId) => {
+    try {
+      for (const item of data.orderLists) {
+        const orderDataWithRating = {
+          order: orderId,
+          product: item.product.id,
+          quantity: rating,
+          user: user.user.userId,
+          comment: "Default comment",
+        };
+        const ratedData = await ratingProduct(orderDataWithRating);
+        if (!ratedData) {
+          dispatch(alertSuccess("Đánh giá thành công!"));
+          setTimeout(() => {
+            dispatch(alertNULL());
+          }, 3000);
+        }
+      }
+
+      setRated(true);
+      localStorage.setItem(`rated_${orderId}`, true);
+      const newDataForOrder = {
+        isRate: true,
+      };
+      const updatedOrderData = await updatedOrder(orderId, newDataForOrder);
+      console.log(updatedOrderData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <motion.div
       {...staggerFadeInOut(index)}
@@ -36,9 +78,9 @@ const OrderData = ({ index, data, admin }) => {
           <p className="flex items-center gap-1 text-textColor">
             Thanh toán:{" "}
             {data?.isPay ? (
-              <p className=" font-bold text-teal-400">PayPal</p>
+              <span className=" font-bold text-teal-400">PayPal</span>
             ) : (
-              <p className="font-bold text-emerald-500">Tiền Mặt</p>
+              <span className="font-bold text-emerald-500">Tiền Mặt</span>
             )}
           </p>
           <p className="flex items-center gap-1 text-textColor">
@@ -58,32 +100,52 @@ const OrderData = ({ index, data, admin }) => {
           >
             {data?.status}
           </p>
-          {/* {admin && (
-            <div className="flex items-center justify-center gap-2">
-              <p className="text-lg font-semibold text-headingColor">Mark As</p>
-              <motion.p
-                {...buttonClick}
-                onClick={() => handleClick(data._id, "Preparing")}
-                className={`text-orange-500 text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md cursor-pointer`}
-              >
-                Preparing
-              </motion.p>
-              <motion.p
-                {...buttonClick}
-                onClick={() => handleClick(data._id, "Cancelled")}
-                className={`text-red-500 text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md cursor-pointer`}
-              >
-                Cancelled
-              </motion.p>
-              <motion.p
-                {...buttonClick}
-                onClick={() => handleClick(data._id, "Delivered")}
-                className={`text-emerald-500 text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md cursor-pointer`}
-              >
-                Delivered
-              </motion.p>
-            </div>
-          )} */}
+
+          <div>
+            {data.isRate ? (
+              <div className="flex justify-center items-center gap-1 text-base font-normal">
+                Đã đánh giá: 
+                <p className=" font-bold text-headingColor">{rating}{" "}</p>
+                <FaStar className="text-orange-400 text-base font-normal" />
+              </div>
+            ) : (
+              <div className="not-rated-content">
+                <div className=" justify-center items-center text-xl ">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      onClick={() => {
+                        setRating(star);
+                        localStorage.setItem(`rating_${data._id}`, star);
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        color: star <= rating ? "orange" : "gray",
+                      }}
+                    >
+                      ★
+                    </span>
+                  ))}
+                </div>
+                {!rated && (
+                  <motion.button
+                    onClick={() =>
+                      handleRating(data._id, data.orderLists[0].product.id)
+                    }
+                    className="text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md text-orange-400"
+                  >
+                    Đánh giá
+                  </motion.button>
+                )}
+                {rated && (
+                  <div className="flex justify-center items-center gap-1 text-base font-normal">
+                    Đã đánh giá: {rating}{" "}
+                    <FaStar className="text-orange-400 text-base font-normal" />
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="flex items-center justify-start flex-wrap w-full">

@@ -14,8 +14,10 @@ import Footer from "./Footer";
 import { IoShieldCheckmark } from "react-icons/io5";
 import { TbMinusVertical } from "react-icons/tb";
 import { gradientStyle } from "../utils/styles";
+import { FaUserCheck } from "react-icons/fa";
 
 import StoreSection from "./Store/StoreSection";
+import { FaStar } from "react-icons/fa6";
 
 const StoreDetail = ({ closeStore }) => {
   const { id } = useParams();
@@ -26,6 +28,33 @@ const StoreDetail = ({ closeStore }) => {
   const selectedStore = allUser
     ? allUser.filter((store) => store.id === id)
     : [];
+  const productStore = product
+    ? product.filter((products) => products.user.id === selectedStore?.[0]?.id)
+    : [];
+
+  const ratedProducts = productStore
+    ? productStore.filter((product) => product.numRated !== 0)
+    : [];
+
+  let ratedStore = 0;
+  let totalRatings = 0;
+  let numRated = 0;
+  if (productStore.length > 0) {
+    productStore.forEach((product) => {
+      numRated += product.numRated;
+    });
+  }
+  if (ratedProducts.length > 0) {
+    let totalPoints = 0;
+
+    ratedProducts.forEach((product) => {
+      totalRatings++;
+
+      totalPoints += product.ratings;
+    });
+
+    ratedStore = totalPoints / totalRatings;
+  }
 
   const productList = product ? product.filter((item) => item.id === id) : [];
   const selectedProduct = productList.length > 0 ? productList[0] : null;
@@ -39,6 +68,8 @@ const StoreDetail = ({ closeStore }) => {
   const minutes = currentDate.getMinutes().toString().padStart(2, "0");
 
   const currentTime = `${hours}:${minutes}`;
+
+ 
 
   return (
     <div className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
@@ -79,10 +110,23 @@ const StoreDetail = ({ closeStore }) => {
                 <p className="text-xl text-gray-500 font-normal">
                   {selectedStore?.[0]?.address}
                 </p>
-               
+                <div className="pt-6 flex items-center gap-1">
+                  <p className="text-xl font-semibold">
+                    {parseFloat(ratedStore).toFixed(1)}
+                  </p>
+                  <FaStar className="w-6 h-6 text-yellow-400" />
+                  <motion.button
+                    {...buttonClick}
+                    className=" flex  items-center  gap-1 bg-gradient-to-bl from-orange-400 to-orange-600 px-2 py-1 rounded-xl text-black text-base font-semibold "
+                  >
+                    <FaUserCheck className="w-8 h-8 text-slate-100" />
+                   {numRated} +
+                  </motion.button>
+                  <p className="text-lg font-normal ">{" "}đánh giá trên 6Food</p>
+                </div>
               </div>
               <div className="gap-12 pb-8">
-                <p className="text-xl font-normal flex items-center">
+                <div className="text-xl font-normal flex items-center">
                   {currentTime >= selectedStore?.[0]?.openAt &&
                   currentTime <= selectedStore?.[0]?.closeAt ? (
                     <>
@@ -97,10 +141,11 @@ const StoreDetail = ({ closeStore }) => {
                     <MdAccessTimeFilled className="w-10 h-8 text-red-500" />
                   )}
                   {selectedStore?.[0]?.openAt} : {selectedStore?.[0]?.closeAt}
-                </p>
+                </div>
                 <p className="text-xl font-medium pb-6">
                   {userProduct?.[0]?.address}
                 </p>
+
                 <div className="w-[80%] h-[1px] rounded-md bg-gray-500 "></div>
                 <div className=" w-full gap-6 flex items-center">
                   <motion.button
