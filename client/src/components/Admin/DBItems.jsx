@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import DataTable from "./DataTable";
 import { useDispatch, useSelector } from "react-redux";
-import { FaDongSign } from "react-icons/fa6";
+import { FaDongSign, FaStar } from "react-icons/fa6";
 import {
   baseURL,
   deleteAProduct,
@@ -147,6 +147,14 @@ const DBItems = () => {
           {
             title: <p className="font-semibold text-xl">Rating</p>,
             field: "ratings",
+            render: (rowData) => (
+              <div className="flex justify-center items-center gap-1 text-base font-normal">
+        
+              <p className="text-textColor font-medium ">{parseFloat(rowData.ratings).toFixed(1)}</p>
+              <FaStar className="text-orange-400 text-base font-normal" />
+            </div>
+             
+            ),
           },
         ]}
         data={products}

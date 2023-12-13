@@ -11,11 +11,12 @@ const DBStore = () => {
   const allUsers = useSelector((state) => state.allUsers);
   const product = useSelector((state) => state.products);
 
-  const [isBlock, setIsBlock] = useState("");
   const dispatch = useDispatch();
   const isStore = allUsers
     ? allUsers.filter((store) => store?.store !== null)
     : [];
+
+    console.log(isStore)
 
   useEffect(() => {
     if (!allUsers) {

@@ -84,13 +84,19 @@ const Header = () => {
         </NavLink>
       ) : (
         <NavLink
-          className={({ isActive }) =>
-            isActive ? isActiveStyles : isNotActiveStyles
+        className={({ isActive }) =>
+          isActive ? isActiveStyles : isNotActiveStyles
+        }
+        to={"/menu"}
+        onClick={() => {
+          const homeSlider = document.getElementById("homeSlider");
+          if (homeSlider) {
+            homeSlider.scrollIntoView({ behavior: "smooth" });
           }
-          to={"/menu"}
-        >
-          Khám Phá
-        </NavLink>
+        }}
+      >
+        Khám Phá
+      </NavLink>
       )
     ) : null}
 

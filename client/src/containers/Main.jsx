@@ -9,17 +9,16 @@ import {
   ListStore,
 } from "../components";
 import { useDispatch, useSelector } from "react-redux";
-import {  getAllProducts, getAllUsers } from "../api";
+import { getAllProducts, getAllUsers } from "../api";
 import { setAllProducts } from "../context/actions/productAction";
 import { setAllUserDetail } from "../context/actions/allUsersAction";
 import { useNavigate } from "react-router-dom";
-
 
 const Main = () => {
   const products = useSelector((state) => state.products);
   const allUsers = useSelector((state) => state.allUsers);
   const user = useSelector((state) => state.user);
- 
+
   const isCart = useSelector((state) => state.isCart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -35,14 +34,12 @@ const Main = () => {
         dispatch(setAllUserDetail(data));
       });
     }
-    
+
     if (user && user.user) {
       if (user.user.isAdmin === true) {
         navigate("/dashboard/home", { replace: true });
-      } 
-     
+      }
     }
-    
   });
 
   return (
@@ -50,13 +47,21 @@ const Main = () => {
       <Header />
       <div className="w-full flex flex-col items-start justify-center mt-32 px-6 md:px-24 2xl:px-40 gap-2 pb-24 ">
         <Home />
-        <ListStore/>
-        <FilterSection />
-    
+        <div id="listStore">
+          {" "}
+          <ListStore />
+        </div>
+        <div id="filterSection" className="w-full h-[1px] rounded-md bg-gray-500  "></div>
+        
+          <FilterSection />
+        
+
         <HomeSlider />
       </div>
       {isCart && <Cart />}
-      <Footer />
+      <div id="homeSlider">
+        <Footer />
+      </div>
     </main>
   );
 };

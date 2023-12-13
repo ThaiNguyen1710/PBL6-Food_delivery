@@ -32,7 +32,7 @@ const SliderCard = ({ data, index }) => {
       const addedItem = await addNewItemToCart(newData);
 
       if (addedItem) {
-        dispatch(alertDanger("Failed to add to cart"));
+        dispatch(alertDanger("Hãy đăng nhập!"));
         setTimeout(() => {
           dispatch(alertNULL());
         }, 3000);
@@ -47,7 +47,10 @@ const SliderCard = ({ data, index }) => {
         }
       }
     } catch (error) {
-      dispatch(alertDanger("Failed to add to cart"));
+      dispatch(alertDanger("Hãy Đăng Nhập!"));
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
     }
   };
 

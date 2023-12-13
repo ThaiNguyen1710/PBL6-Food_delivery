@@ -36,7 +36,9 @@ const Slider = () => {
         centeredSlides={false}
         spaceBetween={30}
         grabCursor={true}
+        
         className="mySwiper"
+        
       >
         {randomProducts &&
           randomProducts.map((data, i) => (

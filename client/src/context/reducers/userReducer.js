@@ -1,8 +1,8 @@
-const initialState = {
-  user: { userId: '', name: '', email: '', /* ...other fields... */ },
-  // other initial state properties...
-};
-const userReducer = (state = initialState, action)=>{
+// const initialState = {
+//   user: { userId: '', name: '', email: '', /* ...other fields... */ },
+//   // other initial state properties...
+// };
+const userReducer = (state = null, action)=>{
     switch(action.type){
         case "GET_USER":
             return state

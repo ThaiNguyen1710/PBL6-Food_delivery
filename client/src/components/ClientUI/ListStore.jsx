@@ -8,6 +8,8 @@ import StoreCard from "../Store/StoreCard";
 import { useSelector } from "react-redux";
 import { MdSearch } from "react-icons/md";
 import { BsToggles2 } from "react-icons/bs";
+import { NavLink } from "react-router-dom";
+import { isActiveStyles, isNotActiveStyles } from "../../utils/styles";
 
 const ListStore = () => {
   const allUser = useSelector((state) => state.allUsers);
@@ -22,7 +24,6 @@ const ListStore = () => {
     setSelectedDistrict(event.target.value);
   };
 
-
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
@@ -31,21 +32,20 @@ const ListStore = () => {
     const searchString = searchTerm.toLowerCase();
     const storeAddress = store.address ? store.address.toLowerCase() : "";
     const storeName = store.store ? store.store.toLowerCase() : "";
-    const selected = selectedDistrict.toLowerCase(); 
-  
-  
+    const selected = selectedDistrict.toLowerCase();
+
     const isMatchingDistrict = !selected || storeAddress.includes(selected);
 
     const isMatchingSearch =
       storeName.includes(searchString) || storeAddress.includes(searchString);
-  
+
     return isMatchingDistrict && isMatchingSearch;
   });
 
   const showAllStores = !selectedDistrict && !searchTerm;
 
   return (
-    <motion.div className="w-full flex pt-12 gap-12">
+    <motion.div className="w-full flex pt-12 gap-12 pb-6">
       <motion.div className="w-[25%] h-300 bg-white rounded-lg px-2 py-2 items-start justify-center">
         <div className="w-full gap-2 flex pb-2 ">
           <img alt="" src={logo2} className="w-10 h-10 object-contain" />
@@ -57,11 +57,26 @@ const ListStore = () => {
 
         <div className=" flex flex-col items-start px-2 justify-center gap-6 pt-6">
           <motion.div
-            className=" cursor-pointer flex gap-4 text-textColor  "
+            className=" cursor-pointer flex gap-4 justify-center items-center text-textColor  "
             {...buttonClick}
           >
-            <div className="items-start justify-center gap-24 flex">
-              <p className="text-xl  font-semibold">Khu vực</p>
+            <div className=" flex items-center gap-9 justify-center">
+              {/* <p className="text-xl  font-semibold">Khu vực</p> */}
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? isActiveStyles : isNotActiveStyles
+                }
+                to={"/listStore"}
+                onClick={() => {
+                  const homeSlider = document.getElementById("listStore");
+                  if (homeSlider) {
+                    homeSlider.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+                Khám Phá
+              
+              </NavLink>
               <FaArrowRight className="text-xl text-end" />
             </div>
           </motion.div>
@@ -70,8 +85,23 @@ const ListStore = () => {
             className=" cursor-pointer flex gap-4 text-textColor  "
             {...buttonClick}
           >
-            <div className="items-start justify-center gap-20 flex">
-              <p className="text-xl  font-semibold">Danh Mục</p>
+            <div className="items-center justify-center gap-8  flex">
+              {/* <p className="text-xl  font-semibold">Khu vực</p> */}
+              <NavLink
+                className={({ isActive }) =>
+                  isActive ? isActiveStyles : isNotActiveStyles
+                }
+                to={"/filterSection"}
+                onClick={() => {
+                  const homeSlider = document.getElementById("filterSection");
+                  if (homeSlider) {
+                    homeSlider.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+              >
+               Danh Mục
+              
+              </NavLink>
               <FaArrowRight className="text-xl text-end" />
             </div>
           </motion.div>

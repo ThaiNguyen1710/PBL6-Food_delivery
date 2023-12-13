@@ -45,9 +45,9 @@ const StoreHome = () => {
     }, 0);
   };
 
-  const preparingCount = countStatus("Pending");
-  const cancelledCount = countStatus("Shipping");
-  const deliveredCount = countStatus("Done");
+  const pendingCount = countStatus("Pending");
+  const shippingCount = countStatus("Shipping");
+  const doneCount = countStatus("Done");
 
   const numberPaypal = orderStore?orderStore.filter(order => order.isPay === true).length:[]
   const numberMoney =  orderStore? orderStore.length -numberPaypal :0;
@@ -214,7 +214,7 @@ const StoreHome = () => {
               labels: ["Pending", "Shipping", "Done", "PayPal", "Money"],
               datasets: [
                 {
-                  data: [preparingCount, deliveredCount, cancelledCount, numberPaypal, numberMoney],
+                  data: [pendingCount,shippingCount , doneCount, numberPaypal, numberMoney],
                   backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56", "#1255e6","#45e31e"],
                 },
               ],
