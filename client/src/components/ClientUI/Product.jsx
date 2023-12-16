@@ -96,8 +96,9 @@ const Product = ({ closeProduct }) => {
               <div className="flex justify-start">
                 <NavLink to={"/"}>
                   <BiChevronsLeft className="text-[50px] text-black" />
+                  <p className="font-semibold text-3xl text-white mt-2"> Back</p>
                 </NavLink>
-                <p className="font-semibold text-3xl text-white mt-2"> Back</p>
+                
               </div>
             </motion.button>
 

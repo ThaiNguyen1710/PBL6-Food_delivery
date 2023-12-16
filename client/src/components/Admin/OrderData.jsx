@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, {useState } from "react";
 import { staggerFadeInOut } from "../../animations";
 import { FaDongSign, FaStar } from "react-icons/fa6";
 import { baseURL, ratingProduct, updatedOrder } from "../../api";
@@ -68,10 +68,7 @@ const OrderData = ({ index, data, admin }) => {
     }
   };
  
-  useEffect(() => {
-   
-    console.log("Rating changed:", rating);
-  }, [rating]);
+
 
   return (
     <motion.div
@@ -83,7 +80,7 @@ const OrderData = ({ index, data, admin }) => {
         <div className="flex items-center gap-4">
           <p className="flex items-center gap-1 text-textColor">
             Thanh toán:{" "}
-            {data?.isPay ? (
+            {data?.payed ? (
               <span className=" font-bold text-teal-400">PayPal</span>
             ) : (
               <span className="font-bold text-emerald-500">Tiền Mặt</span>

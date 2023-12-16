@@ -215,7 +215,7 @@ const StoreHome = () => {
               datasets: [
                 {
                   data: [pendingCount,shippingCount , doneCount, numberPaypal, numberMoney],
-                  backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56", "#1255e6","#45e31e"],
+                  backgroundColor: ["#FFCE56","#FF6384" , "#4BC0C0", "#1255e6","#45e31e"],
                 },
               ],
             }}

@@ -1,7 +1,5 @@
 import { motion } from "framer-motion";
 import React from "react";
-import Slider from "./Slider";
-import { useSelector } from "react-redux";
 import SliderProduct from "./SliderProduct";
 
 const ProductSlider = (data) => {
