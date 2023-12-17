@@ -12,11 +12,7 @@ import { FiUpload } from "react-icons/fi";
 import { PostUser, editUser, getAllUsers } from "../../api";
 
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
-import {
-  GetUserDetail,
-  setUserDetail,
-} from "../../context/actions/userActions";
-import { FcOpenedFolder } from "react-icons/fc";
+
 
 const StoreInformation = () => {
   const user = useSelector((state) => state.user);
@@ -34,11 +30,7 @@ const StoreInformation = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!user) {
-      GetUserDetail().then((data) => {
-        dispatch(setUserDetail(data));
-      });
-    }
+    
     if (!allUsers) {
       getAllUsers().then((data) => {
         dispatch(setAllUserDetail(data));
@@ -56,25 +48,29 @@ const StoreInformation = () => {
         name: userName || user.user.name,
         store: storeName || user.user.store,
         address: userAddress || user.user.address,
-        openAt: openAt !== undefined ? openAt : user.user.openAt,
-        closeAt: closeAt !== undefined ? closeAt : user.user.closeAt,
+        openAt: openAt ||  user.user.openAt,
+        closeAt: closeAt ||  user.user.closeAt,
       };
 
       const updatedUserData = await editUser(userId, newData);
      
 
       if (updatedUserData) {
-        dispatch(setUserDetail(updatedUserData.data));
-        dispatch(alertSuccess("User information updated successfully"));
+        getAllUsers().then((data) => {
+          dispatch(setAllUserDetail(data));
+        });
+        dispatch(dispatch(alertSuccess("Cập nhật thành công  ")));
+        setTimeout(() => {
+          dispatch(alertNULL());
+         
+        }, 3000);
+      
       } else {
         throw new Error("Failed to update user information");
       }
     } catch (error) {
-      dispatch(dispatch(alertSuccess("Cập nhật thành công  ")));
-      setTimeout(() => {
-        dispatch(alertNULL());
-        window.location.reload();
-      }, 3000);
+ 
+   
     }
     setUserName("");
     setStoreName("");
@@ -105,6 +101,9 @@ const StoreInformation = () => {
                 dispatch(alertNULL());
               }, 3000);
               setImageDownloadURL(null);
+              getAllUsers().then((data) => {
+                dispatch(setAllUserDetail(data));
+              });
             } else {
               console.log(
                 "Received null or incomplete response when uploading the image."

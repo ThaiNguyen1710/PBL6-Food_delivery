@@ -32,11 +32,7 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!user) {
-      GetUserDetail().then((data) => {
-        dispatch(setUserDetail(data));
-      });
-    }
+   
     if (!allUsers) {
       getAllUsers().then((data) => {
         dispatch(setAllUserDetail(data));
@@ -62,25 +58,24 @@ const Profile = () => {
       console.log(updatedUserData)
       if (updatedUserData ) {
         getAllUsers().then((data) => {
-          dispatch(setUserDetail(data));
+          dispatch(setAllUserDetail(data));
         });
-        dispatch(alertSuccess("User information updated successfully"));
+        dispatch(alertSuccess("Cập nhật thành công  "))
+        setTimeout(() => {
+          dispatch(alertNULL());
+    
+        }, 3000);
+        setUserName("")
+        setUserPhone("")
+        setUserAddress("")
+        setUserEmail("")
       } else {
         throw new Error("Failed to update user information");
       }
     } catch (error) {
       console.error("Error updating user information:", error);
-      dispatch(
-        dispatch(alertSuccess("Cập nhật thành công  "))
-      );
-      setTimeout(() => {
-        dispatch(alertNULL());
   
-      }, 3000);
-      setUserName("")
-      setUserPhone("")
-      setUserAddress("")
-      setUserEmail("")
+     
     }
   };
   const uploadImage = () => {
@@ -96,14 +91,16 @@ const Profile = () => {
 
         formData.append("image", imageDownloadURL);
 
-        // Gửi FormData lên server
+   
         PostUser(userId, formData)
           .then((res) => {
-            if (res && res.data) {
-              dispatch(alertSuccess("Image uploaded successfully!"));
+            if (res ) {
+              dispatch(alertSuccess("Cập nhật thành công!"));
               setTimeout(() => {
                 dispatch(alertNULL());
-                window.location.reload()
+                getAllUsers().then((data) => {
+                  dispatch(setAllUserDetail(data));
+                });
               }, 3000);
               setImageDownloadURL(null);
             } else {

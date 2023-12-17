@@ -16,7 +16,7 @@ const DBStore = () => {
     ? allUsers.filter((store) => store?.store !== null)
     : [];
 
-    console.log(isStore)
+  console.log(isStore);
 
   useEffect(() => {
     if (!allUsers) {
@@ -28,30 +28,27 @@ const DBStore = () => {
 
   const blockStore = async (rowData) => {
     try {
-      const userId = rowData.id; 
+      const userId = rowData.id;
       const newData = {
         isStore: !rowData.isStore,
       };
 
       const updatedUserData = await editUser(userId, newData);
 
-      if (updatedUserData && updatedUserData.data) {
-       
-        dispatch(setUserDetail(updatedUserData.data));
-        dispatch(alertSuccess("User information updated successfully"));
+      if (updatedUserData) {
+        getAllUsers().then((data) => {
+          dispatch(setAllUserDetail(data));
+        });
+        dispatch(alertSuccess("Cập nhật thành công  "));
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
       } else {
         throw new Error("Failed to update user information");
       }
     } catch (error) {
       console.error("Error updating user information:", error);
-      dispatch(alertSuccess("Cập nhật thành công  "));
-      setTimeout(() => {
-        dispatch(alertNULL());
-        window.location.reload()
-      }, 3000);
-      
     }
- 
   };
   return (
     <div className="flex justify-center items-center gap-4 pt-6 w-full">
@@ -62,7 +59,11 @@ const DBStore = () => {
             field: "photoURL",
             render: (rowData) => (
               <img
-                src={baseURL+rowData.imgStore ?baseURL+ rowData.imgStore : avatar}
+                src={
+                  baseURL + rowData.imgStore
+                    ? baseURL + rowData.imgStore
+                    : avatar
+                }
                 className="w-32 h-16 object-contain rounded-md"
                 alt=""
               />
@@ -110,18 +111,18 @@ const DBStore = () => {
             field: "isStore",
             render: (rowData) => (
               <select
-              value={rowData.isStore}
-              onChange={() => blockStore(rowData)}
-              className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
-              style={{ color: rowData.isStore === true ? "blue" : "red" }}
-            >
+                value={rowData.isStore}
+                onChange={() => blockStore(rowData)}
+                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
+                style={{ color: rowData.isStore === true ? "blue" : "red" }}
+              >
                 <option value="true" className="font-semibold text-blue-500">
                   True
                 </option>
                 <option value="false" className="font-semibold text-red-500">
                   False
                 </option>
-            </select>
+              </select>
             ),
           },
         ]}

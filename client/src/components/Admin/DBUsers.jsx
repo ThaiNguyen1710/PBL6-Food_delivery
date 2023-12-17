@@ -27,21 +27,23 @@ const DBUsers = () => {
 
       const updatedUserData = await editUser(userId, newData);
 
-      if (updatedUserData && updatedUserData.data) {
+      if (updatedUserData) {
        
-        dispatch(setUserDetail(updatedUserData.data));
-        dispatch(alertSuccess("User information updated successfully"));
+        getAllUsers().then((data) => {
+          dispatch(setAllUserDetail(data));
+        });
+        dispatch(alertSuccess("Cập nhật thành công  "));
+        setTimeout(() => {
+          dispatch(alertNULL());
+ 
+        }, 3000);
+        
       } else {
         throw new Error("Failed to update user information");
       }
     } catch (error) {
       console.error("Error updating user information:", error);
-      dispatch(alertSuccess("Cập nhật thành công  "));
-      setTimeout(() => {
-        dispatch(alertNULL());
-        window.location.reload()
-      }, 3000);
-      
+    
     }
  
   };
