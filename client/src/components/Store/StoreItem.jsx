@@ -63,17 +63,15 @@ const StoreItem = () => {
         selectedProduct.id,
         selectedProduct
       );
+      console.log(updatedProduct);
 
       if (updatedProduct) {
-        const updatedProducts = products.map((product) =>
-          product.id === updatedProduct.id ? updatedProduct : product
-        );
-
-        dispatch(setAllProducts(updatedProducts));
+        getAllProducts().then((data) => {
+          dispatch(setAllProducts(data));
+        });
 
         setIsEditModalOpen(false);
 
-        console.log(updatedProduct);
         dispatch(alertSuccess("Product Updated"));
         setTimeout(() => {
           dispatch(alertNULL());
@@ -91,34 +89,38 @@ const StoreItem = () => {
       console.error("Error updating product:", error);
     }
   };
+
   const blockProduct = async (rowData) => {
     try {
       const productId = rowData.id;
-      const newData = {
-        isFeatured: !rowData.isFeatured,
-      };
 
-      const updatedProduct = await editProduct(productId, newData);
-      console.log(updatedProduct)
+      const newIsFeatured = rowData.isFeatured ? false : true;
+
+      const updatedProduct = await editProduct(productId, {
+        isFeatured: newIsFeatured,
+      });
 
       if (updatedProduct) {
-        dispatch(setAllProducts(updatedProduct.data));
-        dispatch(alertSuccess("User information updated successfully"));
+        getAllProducts().then((data) => {
+          dispatch(setAllProducts(data));
+        });
+        dispatch(alertSuccess("Product information updated successfully"));
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
       } else {
-        throw new Error("Failed to update user information");
+        throw new Error("Failed to update product information");
       }
     } catch (error) {
-      console.error("Error updating user information:", error);
-      dispatch(alertSuccess("Cập nhật thành công  "));
- 
+      console.error("Error updating product information:", error);
+      dispatch(alertSuccess("Cập nhật thông tin sản phẩm không thành công"));
+
       setTimeout(() => {
         dispatch(alertNULL());
         // window.location.reload();
       }, 3000);
     }
   };
-  
-  
 
   return (
     <div className="flex justify-center items-center gap-4 pt-6 w-full">
@@ -146,14 +148,18 @@ const StoreItem = () => {
             title: <p className="font-semibold text-xl">Category</p>,
             field: "category.name",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.category.name}</p>
+              <p className="text-textColor font-medium ">
+                {rowData.category.name}
+              </p>
             ),
           },
           {
             title: <p className="font-semibold text-xl">Description</p>,
             field: "description",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.description}</p>
+              <p className="text-textColor font-medium ">
+                {rowData.description}
+              </p>
             ),
           },
           {
@@ -178,20 +184,19 @@ const StoreItem = () => {
             field: "isFeatured",
             render: (rowData) => (
               <select
-                value={rowData.isFeatured ? "Available" : "Sold Out"}
+                value={rowData.isFeatured ? "Sold Out" : "Available"}
                 onChange={(e) => blockProduct(rowData, e.target.value)}
                 className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
                 style={{
-                  color: rowData.isFeatured ? "red" : "blue"
+                  color: rowData.isFeatured ? "blue" : "red",
                 }}
               >
-                   <option value="true" className="font-semibold text-blue-500">
-                  {rowData.isFeatured ? "Sold Out" : "Available"}
-                </option>
-                <option value="false" className="font-semibold text-red-500">
+                <option value="true" className="font-semibold text-blue-500">
                   {rowData.isFeatured ? "Available" : "Sold Out"}
                 </option>
-             
+                <option value="false" className="font-semibold text-red-500">
+                  {rowData.isFeatured ? "Sold Out" : "Available"}
+                </option>
               </select>
             ),
           },
@@ -200,16 +205,20 @@ const StoreItem = () => {
             field: "ratings",
             render: (rowData) => (
               <div className="flex justify-center items-center gap-1 text-base font-normal">
-        
-              <p className="text-textColor font-medium ">{parseFloat(rowData.ratings).toFixed(1)}</p>
-              <FaStar className="text-orange-400 text-base font-normal" />
-            </div>
-             
+                <p className="text-textColor font-medium ">
+                  {parseFloat(rowData.ratings).toFixed(1)}
+                </p>
+                <FaStar className="text-orange-400 text-base font-normal" />
+              </div>
             ),
           },
         ]}
         data={filteredProducts}
-        title={<p className="font-semibold text-red-400 text-3xl">List of Products</p>}
+        title={
+          <p className="font-semibold text-red-400 text-3xl">
+            List of Products
+          </p>
+        }
         actions={[
           {
             icon: "edit",

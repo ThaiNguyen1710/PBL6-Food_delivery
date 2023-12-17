@@ -141,7 +141,7 @@ export const editProduct = async (productId, data) => {
       data
     );
      
-    return res.data.data;
+    return res.data;
   } catch (err) {
     return null;
   }

@@ -60,8 +60,10 @@ const Profile = () => {
      
       const updatedUserData = await editUser(userId, newData);
       console.log(updatedUserData)
-      if (updatedUserData && updatedUserData.data) {
-        dispatch(setUserDetail(updatedUserData.data));
+      if (updatedUserData ) {
+        getAllUsers().then((data) => {
+          dispatch(setUserDetail(data));
+        });
         dispatch(alertSuccess("User information updated successfully"));
       } else {
         throw new Error("Failed to update user information");
@@ -73,7 +75,7 @@ const Profile = () => {
       );
       setTimeout(() => {
         dispatch(alertNULL());
-        window.location.reload()
+  
       }, 3000);
       setUserName("")
       setUserPhone("")
@@ -150,7 +152,7 @@ const Profile = () => {
     
       <div className="flex justify-center items-start w-full pt-24">
         <div className="w-[50%] text-center flex "><p className="text-3xl font-semibold text-orange-500 ">
-        Thông tin cửa hàng
+        Thông tin cá nhân
       </p></div>
       
           <label className="flex flex-col items-center justify-center h-full cursor-pointer mr-4">

@@ -20,9 +20,10 @@ const StoreHeader = () => {
 
   const [openNotify, setOpenNotify] = useState(false);
 
-  const storeOwner = allUser && user && user.user && user.user.userId
-  ? allUser.filter((store) => store.id === user.user.userId)
-  : [];
+  const storeOwner =
+    allUser && user && user.user && user.user.userId
+      ? allUser.filter((store) => store.id === user.user.userId)
+      : [];
 
   const orderStore = order
     ? order.filter((order) => order.shippingAddress2 === storeOwner?.[0]?.store)
@@ -30,8 +31,6 @@ const StoreHeader = () => {
   const orderPending = orderStore
     ? orderStore.filter((pending) => pending.status === "Pending")
     : [];
-
-  
 
   const toggleNotify = () => {
     setOpenNotify((prevState) => !prevState);
@@ -69,11 +68,26 @@ const StoreHeader = () => {
           />
           <BsToggles2 className="text-gray-400 text-2xl" />
         </div>
-        <motion.div
+        {openNotify?( <motion.div
+          {...buttonClick}
+          onClick={toggleNotify}
+          className="flex justify-center items-center bg-sky-300 gap-3 w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
+        >
+         
+          <BsFillBellFill className="text-2xl text-slate-100" />
+          {orderPending?.length > 0 && (
+            <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-4 -right-2 ">
+              <p className="text-primary text-base font-semibold">
+                {orderPending.length}
+              </p>
+            </div>
+          )}
+        </motion.div>):( <motion.div
           {...buttonClick}
           onClick={toggleNotify}
           className="flex justify-center items-center bg-cardOverlay gap-3 w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
         >
+         
           <BsFillBellFill className="text-2xl text-gray-400" />
           {orderPending?.length > 0 && (
             <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-4 -right-2 ">
@@ -82,46 +96,52 @@ const StoreHeader = () => {
               </p>
             </div>
           )}
-        </motion.div>
+        </motion.div>)}
+       
         {openNotify && (
-  <div
-    className="bg-white w-96 p-4 rounded-md shadow-md overflow-y-scroll max-h-96 fixed z-10"
-    style={{ top: "80px", right: "100px" }}
-  >
-    {orderPending.length > 0 ? (
-      orderPending.map((order) => (
-        <div key={order.id} className="mb-2 cursor-pointer hover:bg-slate-200 hover:rounded-lg" onClick={() => handleOrderClick()}>
-          <p className="text-lg font-semibold">
-            {new Date(order.dateOrdered).toLocaleString()} - {order.user.name}
-          </p>
-          <div className="flex justify-start px-3 items-center gap-2">
-            <div className="rounded-md shadow-md overflow-hidden w-14 h-14 cursor-pointer">
-              <motion.img
-                className="w-full h-full object-cover"
-                src={foodMenu}
-                whileHover={{ scale: 1.15 }}
-                referrerPolicy="no-referrer"
-              ></motion.img>
-            </div>
-            <ul>
-              {order.orderLists.map((item) => (
-                <li key={item.id}>
-                  {item.product.name} - Số lượng: {item.quantity}
-                </li>
-              ))}
-            </ul>
+          <div
+            className="bg-white w-96 p-4 rounded-md shadow-md overflow-y-scroll max-h-96 fixed z-10"
+            style={{ top: "80px", right: "100px" }}
+          >
+            {orderPending.length > 0 ? (
+              orderPending.map((order) => (
+                <div
+                  key={order.id}
+                  className="mb-2 cursor-pointer hover:bg-slate-200 hover:rounded-lg"
+                  onClick={() => handleOrderClick()}
+                >
+                  <p className="text-lg font-semibold">
+                    {new Date(order.dateOrdered).toLocaleString()} -{" "}
+                    {order.user.name}
+                  </p>
+                  <div className="flex justify-start px-3 items-center gap-2">
+                    <div className="rounded-md shadow-md overflow-hidden w-14 h-14 cursor-pointer">
+                      <motion.img
+                        className="w-full h-full object-cover"
+                        src={foodMenu}
+                        whileHover={{ scale: 1.15 }}
+                        referrerPolicy="no-referrer"
+                      ></motion.img>
+                    </div>
+                    <ul>
+                      {order.orderLists.map((item) => (
+                        <li key={item.id}>
+                          {item.product.name} - Số lượng: {item.quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <p className="mt-2 mb-2">
+                    Địa chỉ: {order.shippingAddress1} - {order.phone}
+                  </p>
+                  <hr />
+                </div>
+              ))
+            ) : (
+              <p>No orders</p>
+            )}
           </div>
-          <p className="mt-2 mb-2">
-            Địa chỉ: {order.shippingAddress1} - {order.phone}
-          </p>
-          <hr />
-        </div>
-      ))
-    ) : (
-      <p>No orders</p>
-    )}
-  </div>
-)}
+        )}
         <div className="flex items-center justify-center gap-4">
           <div className="rounded-md  shadow-md overflow-hidden w-10 h-10 cursor-pointer ">
             <motion.img

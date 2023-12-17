@@ -7,9 +7,10 @@ import { getAllCartItems, validateUserJWTToken } from "./api";
 import { setUserDetail } from "./context/actions/userActions";
 import { motion } from "framer-motion";
 import { fadeInOut } from "./animations";
-import { Alert, CheckOutSuccess, MainLoader, Product, Profile, UserOrder } from "./components";
+import {  Alert, CheckOutSuccess, MainLoader, Product, Profile, UserOrder } from "./components";
 import { setCartItems } from "./context/actions/cartAction";
 import StoreDetail from "./components/StoreDetail";
+import Contact from "./containers/Contact";
 
 const App = () => {
   
@@ -58,6 +59,7 @@ const App = () => {
         <Route path="/checkout-success" element={<CheckOutSuccess />} />
         <Route path="/user-orders" element={<UserOrder />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/contact/*" element={<Contact />} />
         <Route path="/my-store/*" element={<Store />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/store/:id" element={<StoreDetail />} />

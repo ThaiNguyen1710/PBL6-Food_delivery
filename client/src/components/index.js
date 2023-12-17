@@ -4,8 +4,14 @@ export {default as Alert} from "./Alert"
 export {default as Header} from "./Header"
 export {default as Cart} from "./Cart"
 export {default as Footer} from "./Footer"
+
 export {default as StoreDetail} from "./StoreDetail"
 
+export {default as AboutUs} from "./Contact/AboutUs"
+export {default as ContactLeftSection} from "./Contact/ContactLeftSection"
+export {default as ContactRightSection} from "./Contact/ContactRightSection"
+export {default as RegisStore} from "./Contact/RegisStore"
+export {default as ContactHeader} from "./Contact/ContactHeader"
 
 
 export {default as DBLeftSection} from "./Admin/DBLeftSection"

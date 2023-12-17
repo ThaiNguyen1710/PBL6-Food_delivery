@@ -1,64 +1,55 @@
-import React, { useEffect, useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import { logo, avatar, logo2, shoppingStore } from "../assets";
-import {
-  gradientStyle,
-  isActiveStyles,
-  isNotActiveStyles,
-} from "../utils/styles";
 import { motion } from "framer-motion";
-import { buttonClick, slideTop } from "../animations";
-import { MdShoppingCart, MdLogout } from "react-icons/md";
+import React, { useEffect, useState } from "react";
+import { BsFillBellFill, BsToggles2 } from "react-icons/bs";
+import { MdLogout, MdSearch, MdShoppingCart } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
-// import { getAuth } from "firebase/auth";
-// import { app } from "../config/firebase.config";
-import { setUserDetail, setUserNull } from "../context/actions/userActions";
-import { setCartOn } from "../context/actions/displayCartAction";
-import { baseURL } from "../api";
+import { buttonClick, slideTop } from "../../animations";
+import { avatar, foodMenu, logo2, shoppingStore } from "../../assets";
 
-const Header = () => {
-  const user = useSelector((state) => state.user);
-  const allUser = useSelector((state) => state.allUsers);
-  const cart = useSelector((state) => state.cart);
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { setUserDetail } from "../../context/actions/userActions";
+import { baseURL } from "../../api";
+import { gradientStyle, isActiveStyles, isNotActiveStyles } from "../../utils/styles";
+import { setCartOn } from "../../context/actions/displayCartAction";
 
-  const [isMenu, setIsMenu] = useState(false);
-
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const signOut = () => {
-    localStorage.removeItem("token");
-    dispatch(setUserDetail(null));
-    navigate("/login", { replace: true });
-  };
-
-  const [userCart, setUserCart] = useState([]);
-  const [userLogin, setUserLogin] = useState([]);
-
-
-
-  useEffect(() => {
-    if (cart && user && user.user && user.user.userId) {
-      const filteredCart = cart.filter(
-        (item) => item.user.id === user.user.userId
-      );
-      setUserCart(filteredCart);
-    }
-    if ( user && user.user && user.user.userId) {
-      const filteredUser = allUser?allUser.filter((userLogin)=>userLogin.id === user.user.userId):[]
-      setUserLogin(filteredUser);
-    }
-  }, [cart, user]);
+const ContactHeader = () => {
+    const user = useSelector((state) => state.user);
+    const allUser = useSelector((state) => state.allUsers);
+    const cart = useSelector((state) => state.cart);
+  
+    const [isMenu, setIsMenu] = useState(false);
+  
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+  
+    const signOut = () => {
+      localStorage.removeItem("token");
+      dispatch(setUserDetail(null));
+      navigate("/login", { replace: true });
+    };
+  
+    const [userCart, setUserCart] = useState([]);
+    const [userLogin, setUserLogin] = useState([]);
+  
+  
+  
+    useEffect(() => {
+      if (cart && user && user.user && user.user.userId) {
+        const filteredCart = cart.filter(
+          (item) => item.user.id === user.user.userId
+        );
+        setUserCart(filteredCart);
+      }
+      if ( user && user.user && user.user.userId) {
+        const filteredUser = allUser?allUser.filter((userLogin)=>userLogin.id === user.user.userId):[]
+        setUserLogin(filteredUser);
+      }
+    }, [cart, user]);
 
   return (
-    <header className="fixed backdrop-blur-md z-50 inset-x-0 top-0 flex justify-between items-center px-12 md:px-20 py-6 ">
-      <NavLink to={"/"} className="flex items-center justify-center gap-4">
-        <img src={logo2} className="w-16 " alt="" />
-        <p className="font-semibold text-3xl" style={gradientStyle}>
-          6Food
-        </p>
-      </NavLink>
+    <div className="w-full flex items-center justify-end gap-3 ">
 
+    
       <nav className="flex justify-center items-center  gap-4">
         <ul className="hidden md:flex justify-center items-center ">
           <NavLink
@@ -205,8 +196,9 @@ const Header = () => {
           </>
         )}
       </nav>
-    </header>
+
+    </div>
   );
 };
 
-export default Header;
+export default ContactHeader;

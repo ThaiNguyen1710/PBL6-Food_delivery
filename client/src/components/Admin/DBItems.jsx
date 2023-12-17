@@ -14,7 +14,7 @@ import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 import { motion } from "framer-motion";
 import { buttonClick, slideIn } from "../../animations";
 import { BiChevronsLeft } from "react-icons/bi";
-import { statuses } from "../../utils/styles";
+
 
 const DBItems = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);

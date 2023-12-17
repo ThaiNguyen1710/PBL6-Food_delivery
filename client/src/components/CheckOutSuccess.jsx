@@ -20,7 +20,7 @@ import {
   alertNULL,
   alertSuccess,
 } from "../context/actions/alertActions";
-import { getOrders, setOrders } from "../context/actions/orderAction";
+import {  setOrders } from "../context/actions/orderAction";
 import { BsCashCoin } from "react-icons/bs";
 import { paypal } from "../assets";
 import { setCartItems } from "../context/actions/cartAction";
