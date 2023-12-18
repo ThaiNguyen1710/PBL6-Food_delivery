@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { statuses } from "../../utils/styles";
-import Spinner from "../Spinner";
 import { FcOpenedFolder } from "react-icons/fc";
 import { FaDongSign } from "react-icons/fa6";
 
@@ -14,7 +12,8 @@ import {
 import { motion } from "framer-motion";
 import { buttonClick } from "../../animations";
 import { MdDelete } from "react-icons/md";
-import { PostCreate, addNewCategory, getAllCategory } from "../../api";
+import { PostCreate, addNewCategory, getAllCategory, getAllProducts } from "../../api";
+import { setAllProducts } from "../../context/actions/productAction";
 
 
 const StoreAddItem = () => {
@@ -22,8 +21,7 @@ const StoreAddItem = () => {
   // const [category, setCategory] = useState(null);
   const [idCategory, setIdCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(null);
+
   const [imageDownloadURL, setImageDownloadURL] = useState(null);
   const [information, setInformation] = useState("");
   const [isNewCategory, setIsNewCategory] = useState(false);
@@ -122,6 +120,9 @@ const StoreAddItem = () => {
         .then((res) => {
           if (res && res.data) {
             dispatch(alertSuccess("Added Product!"));
+            getAllProducts().then((data) => {
+              dispatch(setAllProducts(data));
+            });
             setTimeout(() => {
               dispatch(alertNULL());
             }, 3000);
@@ -241,78 +242,49 @@ const StoreAddItem = () => {
         />
       </div>
       <div className="w-[60%] bg-card backdrop-blur-md h-300 rounded-md border-2 border-dotted border-gray-300 cursor-pointer">
-        {isLoading ? (
-          <div className="flex flex-col justify-center px-24 w-full h-full items-center text-xl gap-3">
-            <Spinner />
-            {Math.round(progress > 0) && (
-              <div className="w-full flex flex-col items-center justify-center gap-2">
-                <div className="flex justify-between w-full">
-                  <span className="text-base font-medium text-textColor">
-                    Progress
-                  </span>
-                  <span className="text-sm font-medium text-textColor">
-                    {Math.round(progress) > 0 && (
-                      <>{`${Math.round(progress)}%`}</>
-                    )}
-                  </span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div
-                    className="bg-red-600 h-2.5 rounded-full transition-all duration-300 ease-in-out"
-                    style={{ width: `${Math.round(progress)}%` }}
-                  ></div>
-                </div>
-              </div>
-            )}
+  {imageDownloadURL && typeof imageDownloadURL !== 'string' ? (
+    <div className="relative w-full h-full overflow-hidden rounded-md">
+      <img
+        src={URL.createObjectURL(imageDownloadURL)}
+        className="h-full w-full object-cover"
+        alt="Uploaded"
+      />
+      <button
+        onClick={() => setImageDownloadURL(null)}
+        type="button"
+        className="absolute top-3 right-3 p-3 rounded-full bg-red-300 text-xl cursor-pointer outline-none hover:shadow-md duration-500 transition-all ease-in-out"
+      >
+        <MdDelete className="" />
+      </button>
+    </div>
+  ) : (
+    <>
+      {!imageDownloadURL ? (
+        <label>
+          <div className="flex flex-col items-center justify-center h-full w-full cursor-pointer">
+            <p className="text-6xl font-bold">
+              <FcOpenedFolder className="" />
+            </p>
+            <p className="items-center justify-center flex font-semibold text-textColor">
+              Click to upload image!
+            </p>
           </div>
-        ) : (
-          <>
-            {!imageDownloadURL ? (
-              <>
-                <label>
-                  <div className="flex flex-col items-center justify-center h-full w-full cursor-pointer">
-                    {/* <div className="flex flex-col items-center justify-center h-full w-full cursor-pointer"> */}
-                    <p className="text-6xl font-bold">
-                      <FcOpenedFolder className="" />
-                    </p>
-                    <p className="items-center justify-center flex font-semibold text-textColor">
-                      Click to upload image!
-                    </p>
-                    {/* </div> */}
-                  </div>
-                  <input
-                    type="file"
-                    name="upload-image"
-                    accept="image/*"
-                    onChange={(event) =>
-                      setImageDownloadURL(event.target.files[0])
-                    }
-                    className="w-0 h-0"
-                  ></input>
-                </label>
-              </>
-            ) : (
-              <>
-                <div className="relative w-full h-full overflow-hidden rounded-md">
-                  <motion.img
-                    whileHover={{ scale: 1.15 }}
-                    src={imageDownloadURL}
-                    className="h-full w-full object-cover"
-                  />
-                  <motion.button
-                    {...buttonClick}
-                    type="button"
-                    className="absolute top-3 right-3 p-3 rounded-full bg-red-300 text-xl cursor-pointer outline-none hover: shadow-md duration-500 transition-all ease-in-out"
-                    // onClick={() => deleteImageFromFirebase(imageDownloadURL)}
-                  >
-                    <MdDelete className="" />
-                  </motion.button>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </div>
+          <input
+            type="file"
+            name="upload-image"
+            accept="image/*"
+            onChange={(event) =>
+              setImageDownloadURL(event.target.files[0])
+            }
+            className="w-0 h-0"
+          ></input>
+        </label>
+      ) : (
+        <p>No image selected</p>
+      )}
+    </>
+  )}
+</div>
       <motion.button
         onClick={saveNewData}
         {...buttonClick}

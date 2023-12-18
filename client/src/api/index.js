@@ -2,8 +2,8 @@ import axios from "axios";
 
 export const baseURL =
   "https://pbl-6-nine.vercel.app";
-  // export const baseURL =
-  // "https://pbl6-lssz.onrender.com";
+  export const baseURL1 =
+  "https://pbl-6-ver2.vercel.app";
 
 
   //user
@@ -94,6 +94,13 @@ export const PostCreate = (formData) => {
 };
 export const PostUser = (id,formData) => {
   return  axios.put(`${baseURL}/pbl6/user/${id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+};
+export const PostContact = (formData) => {
+  return axios.put(`${baseURL1}/pbl6/user`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }

@@ -11,13 +11,11 @@ import { buttonClick } from "../../animations";
 import { PostUser, editUser, getAllUsers } from "../../api";
 
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
-import {
-  GetUserDetail,
-  setUserDetail,
-} from "../../context/actions/userActions";
+
 import Header from "../Header";
 import Footer from "../Footer";
 import { FiUpload } from "react-icons/fi";
+import { MdDelete } from "react-icons/md";
 
 const Profile = () => {
   const user = useSelector((state) => state.user);
@@ -32,7 +30,6 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-   
     if (!allUsers) {
       getAllUsers().then((data) => {
         dispatch(setAllUserDetail(data));
@@ -40,42 +37,39 @@ const Profile = () => {
     }
   }, []);
   if (!user || !allUsers) {
-    return null; 
+    return null;
   }
   const saveNewData = async () => {
     try {
       const userId = user.user.userId;
-      console.log(userId)
-      
+      console.log(userId);
+
       const newData = {
         name: userName || user.user.name,
         phone: userPhone || user.user.phone,
         address: userAddress || user.user.address,
         email: userEmail || user.user.email,
       };
-     
+
       const updatedUserData = await editUser(userId, newData);
-      console.log(updatedUserData)
-      if (updatedUserData ) {
+      console.log(updatedUserData);
+      if (updatedUserData) {
         getAllUsers().then((data) => {
           dispatch(setAllUserDetail(data));
         });
-        dispatch(alertSuccess("Cập nhật thành công  "))
+        dispatch(alertSuccess("Cập nhật thành công  "));
         setTimeout(() => {
           dispatch(alertNULL());
-    
         }, 3000);
-        setUserName("")
-        setUserPhone("")
-        setUserAddress("")
-        setUserEmail("")
+        setUserName("");
+        setUserPhone("");
+        setUserAddress("");
+        setUserEmail("");
       } else {
         throw new Error("Failed to update user information");
       }
     } catch (error) {
       console.error("Error updating user information:", error);
-  
-     
     }
   };
   const uploadImage = () => {
@@ -91,10 +85,9 @@ const Profile = () => {
 
         formData.append("image", imageDownloadURL);
 
-   
         PostUser(userId, formData)
           .then((res) => {
-            if (res ) {
+            if (res) {
               dispatch(alertSuccess("Cập nhật thành công!"));
               setTimeout(() => {
                 dispatch(alertNULL());
@@ -146,17 +139,35 @@ const Profile = () => {
   return (
     <div className="flex items-center justify-center flex-col pt-6 px-24 w-full gap-3 ">
       <Header />
-    
-      <div className="flex justify-center items-start w-full pt-24">
-        <div className="w-[50%] text-center flex "><p className="text-3xl font-semibold text-orange-500 ">
-        Thông tin cá nhân
-      </p></div>
-      
-          <label className="flex flex-col items-center justify-center h-full cursor-pointer mr-4">
-            <div className="text-2xl font-bold">
-              <FiUpload className="" />
+
+      <div className="flex justify-center items-center w-full pt-24">
+        <div className="  items-center justify-center  fixed right-12 top-40">
+          <label className="flex flex-col items-center justify-center h-full cursor-pointer mr-4 relative">
+            <div className="rounded-full overflow-hidden w-24 h-24 bg-gray-200 relative flex items-center justify-center">
+              {imageDownloadURL && typeof imageDownloadURL !== "string" ? (
+                <motion.img
+                  src={URL.createObjectURL(imageDownloadURL)}
+                  className="h-full w-full object-cover"
+                  alt="Uploaded"
+                  whileHover={{ scale: 1.15 }}
+                  referrerPolicy="no-referrer"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-2xl text-gray-400">
+                  <FiUpload className="" />
+                </div>
+              )}
+              {imageDownloadURL && typeof imageDownloadURL !== "string" && (
+                <motion.button
+                  onClick={() => setImageDownloadURL(null)}
+                  {...buttonClick}
+                  className="absolute top-0 right-2 p-2 bg-red-500 text-white rounded-full cursor-pointer"
+                >
+                  <MdDelete className="" />
+                </motion.button>
+              )}
             </div>
-            <p className="flex font-semibold text-textColor">
+            <p className="flex font-semibold text-textColor mt-2">
               Cập nhật ảnh đại diện!
             </p>
             <input
@@ -164,18 +175,25 @@ const Profile = () => {
               name="upload-image"
               accept="image/*"
               onChange={(event) => setImageDownloadURL(event.target.files[0])}
-              className="w-0 h-0"
+              className="w-0 h-0 absolute inset-0 opacity-0"
             ></input>
+
+            <motion.button
+              onClick={uploadImage}
+              {...buttonClick}
+              className="border w-24 h-11 rounded-md shadow-md bg-orange-300"
+            >
+              <p className="font-semibold text-black text-xl ">Save</p>
+            </motion.button>
           </label>
-          <motion.button
-            onClick={uploadImage}
-            {...buttonClick}
-            className="border w-24 h-11 rounded-md shadow-md bg-orange-300"
-          >
-            <p className="font-semibold text-black text-xl ">Save</p>
-          </motion.button>
         </div>
-      <div className="border border-gray-300 rounded-md p-4 w-[80%] flex flex-col items-start  font-semibold justify-center gap-4">
+        <div className="w-[50%] text-center flex ">
+          <p className="text-3xl font-semibold text-orange-500 ">
+            Thông tin cá nhân
+          </p>
+        </div>
+      </div>
+      <div className="border border-gray-300 rounded-md p-4 w-[75%] flex flex-col items-start  font-semibold justify-center gap-4">
         <p className="text-xl text-start text-red-400 font-semibold ">Tên </p>
 
         <InputValueField
@@ -219,7 +237,7 @@ const Profile = () => {
       >
         <p className="font-semibold text-card text-xl ">Lưu Thay Đổi</p>
       </motion.button>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

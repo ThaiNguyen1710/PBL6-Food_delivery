@@ -21,16 +21,22 @@ import {
   incrementItemQuantity,
 } from "../api";
 import { setCartItems } from "../context/actions/cartAction";
-import axios from "axios";
+
 import { useNavigate } from "react-router-dom";
 const Cart = () => {
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+  const allUser = useSelector((state) => state.allUsers);
+
   const [total, setTotal] = useState(0);
   const [totalQuantity, setTotalQuantity] = useState(0);
   const [userCart, setUserCart] = useState([]);
   const user = useSelector((state) => state.user);
   const navigate = useNavigate();
+
+  const stores = allUser
+    ? allUser.filter((store) => store.isStore === true)
+    : [];
 
   useEffect(() => {
     let total = 0;
@@ -52,6 +58,20 @@ const Cart = () => {
     }
   }, [cart, user]);
 
+  const storeCarts = [];
+
+  stores.forEach((store) => {
+    const storeCart = {
+      store,
+      cartItems: userCart.filter(
+        (cartItem) => cartItem.product.user.id === store.id
+      ),
+    };
+    storeCarts.push(storeCart);
+  });
+
+  console.log(storeCarts);
+
   const clearAllItems = () => {
     clearAllCart(user?.user?.userId).then((data) => {
       dispatch(alertSuccess("Clear all success"));
@@ -67,21 +87,6 @@ const Cart = () => {
   };
   const checkOut = () => {
     navigate(`/checkout-success`); // Navigate to the specific product page
-  };
-  const handleCheckOut = () => {
-    const data = {
-      user: user,
-      cart: cart,
-      total: total,
-    };
-    axios
-      .post(`${baseURL}/api/products/create-checkout-session`, { data })
-      .then((res) => {
-        if (res.data.url) {
-          window.location.href = res.data.url;
-        }
-      })
-      .catch((err) => console.log(err));
   };
 
   return (
@@ -145,11 +150,8 @@ const Cart = () => {
           </>
         )}
       </div>
-      
     </motion.div>
-    
   );
-  
 };
 
 export const CartItemCard = ({ index, data }) => {
@@ -166,11 +168,11 @@ export const CartItemCard = ({ index, data }) => {
     );
     setItemTotal(itemTotal);
 
-      const filterItem = cart? cart.filter((item)=>item.product.user === allUser.id):[]
-      setItemCart(filterItem)
-
+    const filterItem = cart
+      ? cart.filter((item) => item.product.user === allUser.id)
+      : [];
+    setItemCart(filterItem);
   }, [cart]);
-
 
   const decrementCart = (productId) => {
     if (productId) {
@@ -186,8 +188,7 @@ export const CartItemCard = ({ index, data }) => {
                 }, 3000);
               }
             });
-          } 
-          
+          }
         })
         .catch(() => {
           dispatch(alertDanger("Failed to update the cart"));
@@ -195,8 +196,8 @@ export const CartItemCard = ({ index, data }) => {
             dispatch(alertNULL());
           }, 3000);
         });
-    } 
-    if (data.quantity===1) {
+    }
+    if (data.quantity === 1) {
       clearItem(productId)
         .then((data) => {
           if (!data) {
@@ -209,8 +210,7 @@ export const CartItemCard = ({ index, data }) => {
                 }, 3000);
               }
             });
-          } 
-          
+          }
         })
         .catch(() => {
           dispatch(alertDanger("Failed to update the cart"));
@@ -218,11 +218,11 @@ export const CartItemCard = ({ index, data }) => {
             dispatch(alertNULL());
           }, 3000);
         });
-    } 
+    }
   };
   const incrementCart = (productId) => {
     if (productId) {
-      incrementItemQuantity( productId)
+      incrementItemQuantity(productId)
         .then((data) => {
           if (!data) {
             dispatch(alertSuccess("Updated the cart"));
@@ -254,7 +254,6 @@ export const CartItemCard = ({ index, data }) => {
       }, 3000);
     }
   };
-
 
   return (
     <motion.div
