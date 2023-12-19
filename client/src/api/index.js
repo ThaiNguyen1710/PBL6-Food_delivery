@@ -30,17 +30,16 @@ export const loginUser = async (email, password) => {
   }
 };
 
-export const signUpUser =async (data) => {
+export const signUpUser = async (data) => {
   try {
     const res = await axios.post(`${baseURL}/pbl6/user/register`, data);
 
-    return res.data; 
+    return res.data;
   } catch (err) {
-    console.error( err);
+    console.error('Error in signUpUser:', err.response.data); // Log ra lỗi từ server response
     return null;
   }
 }
- 
 export const editUser = async (userId, data) => {
   try {
     const res = await axios.put(`${baseURL}/pbl6/user/${userId}`, data);

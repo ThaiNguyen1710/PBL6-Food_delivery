@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { BiLogOutCircle } from "react-icons/bi";
-import { loginUser, signUpUser } from "../api";
+import { getAllUsers, loginUser, signUpUser } from "../api";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,8 +16,10 @@ import {
   alertDanger,
   alertInfo,
   alertNULL,
+  alertWarning,
 } from "../context/actions/alertActions";
 import { gradientStyle } from "../utils/styles";
+import { setAllUserDetail } from "../context/actions/allUsersAction";
 
 const Login = () => {
   const [userEmail, setUserEmail] = useState("");
@@ -41,12 +43,9 @@ const Login = () => {
 
   useEffect(() => {
     if (user) {
-      
       navigate("/", { replace: true });
-      window.location.reload()
+      window.location.reload();
     }
- 
-    
   }, [user]);
   const loginWithGoogle = async () => {};
 
@@ -81,22 +80,18 @@ const Login = () => {
         email: userEmail,
         password: password,
       };
-
       const res = await signUpUser(userData);
-
-   
-
-      if (res && res.data) {
-        const token = res.data.token;
+      console.log(res);
+      if (res) {
+        const token = res.token;
         localStorage.setItem("token", token);
-        
-        dispatch(setUserDetail(res.data));
-        navigate("/", { replace: true });
+
+        navigate("/profile", { replace: true });
       } else {
         console.log("Đăng ký không thành công.");
       }
     } catch (error) {
-      console.error("Lỗi khi đăng ký:", error);
+      console.error("Lỗi khi đăng ký:", error); // Log lỗi từ phía client
     }
   };
 
@@ -104,11 +99,11 @@ const Login = () => {
     if (userEmail !== "" && password !== "") {
       try {
         const res = await loginUser(userEmail, password);
-     
+  
         if (res && res.data) {
           const token = res.data.token;
           localStorage.setItem("token", token);
-        
+  
           dispatch(setUserDetail(res.data));
           navigate("/", { replace: true });
         } else {
@@ -116,9 +111,39 @@ const Login = () => {
         }
       } catch (error) {
         console.error("Lỗi khi đăng nhập:", error);
+  
+        if (error.response && error.response.status === 400) {
+          const errorMessage = error.response.data;
+  
+          if (errorMessage === "The user not found") {
+            dispatch(alertWarning("Email chưa đăng ký!"));
+          } else if (errorMessage === "Password is wrong!") {
+            dispatch(alertWarning("Mật khẩu sai!"));
+          } 
+          else {
+            console.log("Lỗi không xác định từ server.");
+          }
+        }
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
       }
+    } else {
+      // Kiểm tra và hiển thị cảnh báo nếu thông tin bị thiếu
+      if (userEmail === "" && password === "") {
+        dispatch(alertWarning("Vui lòng nhập email và mật khẩu!"));
+      } else if (userEmail === "") {
+        dispatch(alertWarning("Vui lòng nhập địa chỉ email!"));
+      } else if (password === "") {
+        dispatch(alertWarning("Vui lòng nhập mật khẩu!"));
+      }
+  
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
     }
   };
+  
 
   return (
     <div className="w-screen h-screen relative overflow-auto  bg-lighttextGray gap-4">
@@ -235,11 +260,11 @@ const Login = () => {
 
               {isSignUp && (
                 <LoginInput
-                  placeHolder={"Xác nhận mật khẩu"}
+                  placeHolder={"Hãy nhập tên!"}
                   icon={<FaLock className="text-xl text-textColor" />}
-                  inputState={confirm_password}
-                  inputStateFunc={setConfirm_password}
-                  type={showPassword ? "text" : "password"}
+                  inputState={userName}
+                  inputStateFunc={setUserName}
+                  type="text"
                   isSignUp={isSignUp}
                   icon2={<BsFillEyeSlashFill onClick={toggleShowPassword} />}
                 />
