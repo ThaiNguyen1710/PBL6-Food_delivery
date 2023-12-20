@@ -7,15 +7,15 @@ import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { BiLogOutCircle } from "react-icons/bi";
-import { getAllUsers, loginUser, signUpUser } from "../api";
+import { editUser, getAllUsers, loginUser, signUpUser } from "../api";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { setUserDetail } from "../context/actions/userActions";
 import {
   alertDanger,
-  alertInfo,
   alertNULL,
+  alertSuccess,
   alertWarning,
 } from "../context/actions/alertActions";
 import { gradientStyle } from "../utils/styles";
@@ -28,7 +28,7 @@ const Login = () => {
   const [confirm_password, setConfirm_password] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isForgot, setIsForgot] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState("");
+
   const [newPassword, setNewPassword] = useState("");
   const [confirm_newPassword, setConfirm_newPassword] = useState("");
   const [userName, setUserName] = useState("");
@@ -39,6 +39,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
+  const allUser = useSelector((state) => state.allUsers);
   const alert = useSelector((state) => state.alert);
 
   useEffect(() => {
@@ -47,63 +48,81 @@ const Login = () => {
       window.location.reload();
     }
   }, [user]);
-  const loginWithGoogle = async () => {};
-
-  // const loginWithGoogle = async () => {
-  //   await signInWithPopup(firebaseAuth, provider).then((userCred) => {
-  //     firebaseAuth.onAuthStateChanged((cred) => {
-  //       if (cred) {
-  //         cred.getIdToken().then((token) => {
-  //           validateUserJWTToken(token).then((data) => {
-  //             if (data.user_id === process.env.REACT_APP_ADMIN) {
-  //               dispatch(setUserDetail(data));
-  //               navigate("/dashboard/home", { replace: true });
-  //             } else {
-  //               dispatch(setUserDetail(data));
-  //               navigate("/", { replace: true });
-  //             }
-  //           });
-  //         });
-  //       }
-  //     });
-  //   });
-  // };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const signUpWithEmailPass = async () => {
-    try {
-      const userData = {
-        name: userName,
-        email: userEmail,
-        password: password,
-      };
-      const res = await signUpUser(userData);
-      console.log(res);
-      if (res) {
-        const token = res.token;
-        localStorage.setItem("token", token);
+  const loginWithGoogle = async () => {};
 
-        navigate("/profile", { replace: true });
-      } else {
-        console.log("Đăng ký không thành công.");
+  //SIGN UP
+
+  const signUpWithEmailPass = async () => {
+    if (userEmail !== "" && password !== "" && confirm_password !== "") {
+      try {
+        if (password === confirm_password) {
+          const userData = {
+            name: userEmail,
+            email: userEmail,
+            password: password,
+          };
+          const res = await signUpUser(userData);
+  
+          if (res) {
+            getAllUsers().then((data) => {
+              dispatch(setAllUserDetail(data));
+            });
+            dispatch(alertSuccess("Đăng ký thành công! Hãy đăng nhập!  "));
+            setIsSignUp(false);
+            setPassword("")
+            setConfirm_password("")
+            setTimeout(() => {
+              dispatch(alertNULL());
+            }, 3000);
+          } else {
+            dispatch(alertDanger("Email đã được đăng ký "));
+  
+            setTimeout(() => {
+              dispatch(alertNULL());
+            }, 3000);
+          }
+        }else {
+          dispatch(alertWarning("Mật khẩu không khớp!"));
+          setTimeout(() => {
+            dispatch(alertNULL());
+          }, 3000);
+        }
+       
+      } catch (error) {
+        console.error("Lỗi khi đăng ký:", error);
       }
-    } catch (error) {
-      console.error("Lỗi khi đăng ký:", error); // Log lỗi từ phía client
+    } else {
+      if (userEmail === "" && password === "" && confirm_password === "") {
+        dispatch(alertWarning("Vui lòng nhập email và mật khẩu!"));
+      } else if (userEmail === "") {
+        dispatch(alertWarning("Vui lòng nhập địa chỉ email!"));
+      } else if (password === "") {
+        dispatch(alertWarning("Vui lòng nhập mật khẩu!"));
+      } else if (confirm_password === "") {
+        dispatch(alertWarning("Vui lòng xác nhận mật khẩu!"));
+      }
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
     }
   };
+
+  //SIGN IN
 
   const signInWithEmailPass = async () => {
     if (userEmail !== "" && password !== "") {
       try {
         const res = await loginUser(userEmail, password);
-  
+
         if (res && res.data) {
           const token = res.data.token;
           localStorage.setItem("token", token);
-  
+
           dispatch(setUserDetail(res.data));
           navigate("/", { replace: true });
         } else {
@@ -111,16 +130,15 @@ const Login = () => {
         }
       } catch (error) {
         console.error("Lỗi khi đăng nhập:", error);
-  
+
         if (error.response && error.response.status === 400) {
           const errorMessage = error.response.data;
-  
+
           if (errorMessage === "The user not found") {
             dispatch(alertWarning("Email chưa đăng ký!"));
           } else if (errorMessage === "Password is wrong!") {
             dispatch(alertWarning("Mật khẩu sai!"));
-          } 
-          else {
+          } else {
             console.log("Lỗi không xác định từ server.");
           }
         }
@@ -129,7 +147,6 @@ const Login = () => {
         }, 3000);
       }
     } else {
-      // Kiểm tra và hiển thị cảnh báo nếu thông tin bị thiếu
       if (userEmail === "" && password === "") {
         dispatch(alertWarning("Vui lòng nhập email và mật khẩu!"));
       } else if (userEmail === "") {
@@ -137,13 +154,80 @@ const Login = () => {
       } else if (password === "") {
         dispatch(alertWarning("Vui lòng nhập mật khẩu!"));
       }
-  
+
       setTimeout(() => {
         dispatch(alertNULL());
       }, 3000);
     }
   };
-  
+
+  //FORGOT PASS
+
+  const forgotPass = async () => {
+    if (userEmail !== "" && newPassword !== "" && confirm_newPassword !== "") {
+      try {
+        const userId = allUser
+          ? allUser.filter((id) => id.email === userEmail)
+          : [];
+        if (userId.length === 1) {
+          if (newPassword === confirm_newPassword) {
+            const newData = {
+              password: newPassword,
+            };
+
+            const updatedUserData = await editUser(userId?.[0]?.id, newData);
+
+            if (updatedUserData) {
+              getAllUsers().then((data) => {
+                dispatch(setAllUserDetail(data));
+              });
+              dispatch(alertSuccess("Cập nhật thành công! Hãy đăng nhập!  "));
+              setIsForgot(false);
+              setNewPassword("");
+              setTimeout(() => {
+                dispatch(alertNULL());
+              }, 3000);
+            } else {
+              throw new Error("Failed to update user information");
+            }
+          } else {
+            dispatch(alertWarning("Mật khẩu không khớp!"));
+            setTimeout(() => {
+              dispatch(alertNULL());
+            }, 3000);
+          }
+        } else {
+          dispatch(alertWarning("Email chưa đăng ký!"));
+          setTimeout(() => {
+            dispatch(alertNULL());
+          }, 3000);
+        }
+      } catch (error) {
+        console.error("Error updating user information:", error);
+      }
+    } else {
+      if (
+        userEmail === "" &&
+        newPassword === "" &&
+        confirm_newPassword === ""
+      ) {
+        dispatch(alertWarning("Vui lòng nhập email và mật khẩu!"));
+      } else if (userEmail === "") {
+        dispatch(alertWarning("Vui lòng nhập địa chỉ email!"));
+      } else if (newPassword === "") {
+        dispatch(alertWarning("Vui lòng nhập mật khẩu mới!"));
+      } else if (confirm_newPassword === "") {
+        dispatch(alertWarning("Vui lòng xác nhận mật khẩu!"));
+      }
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
+    }
+  };
+
+  const isForgotPass = async () => {
+    setIsForgot(true);
+  };
 
   return (
     <div className="w-screen h-screen relative overflow-auto  bg-lighttextGray gap-4">
@@ -152,7 +236,7 @@ const Login = () => {
           <div className="flex flex-col items-center bg-cardOverlay  md:w-auto h-auto z-10 backdrop-blur-md   ">
             <div className="w-screen h-[5px] bg-green-300" />
 
-            <NavLink to={"/login"} className="flex items-center gap-3">
+            <NavLink to={"/"} className="flex items-center gap-3">
               <img src={logo2} className="w-16" alt="" />
               <p className="flex font-bold text-3xl" style={gradientStyle}>
                 6Food
@@ -207,10 +291,10 @@ const Login = () => {
 
               <motion.button
                 {...buttonClick}
-                // onClick={forgotPass}
+                onClick={forgotPass}
                 className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
               >
-                Reset Password
+                Đặt Mới Mật Khẩu
               </motion.button>
             </div>
           </div>
@@ -219,16 +303,15 @@ const Login = () => {
         <>
           <div className="flex flex-col items-center bg-cardOverlay  md:w-auto h-auto z-10 backdrop-blur-md   ">
             <div className="w-screen h-[5px] bg-green-300" />
-
-            <div className="flex items-center gap-6">
+            <NavLink to={"/"} className="flex items-center gap-3">
               <img src={logo2} className="w-16" alt="" />
-              <p className="flex font-bold text-3xl " style={gradientStyle}>
+              <p className="flex font-bold text-3xl" style={gradientStyle}>
                 6Food
               </p>
-            </div>
+            </NavLink>
           </div>
           {/* container box */}
-          <div className="  mt-3 flex flex-col  bg-cardOverlay w-[80%] md:w-508 h-510 z-10 backdrop-blur-md p-4 px-4 py-1 mx-auto  gap-2.5">
+          <div className="  mt-8 flex flex-col  bg-cardOverlay w-[80%] md:w-508 h-[70%] z-10 backdrop-blur-md p-4 px-4 py-1 mx-auto  gap-2.5">
             {/* Welcome text  */}
             <p className="text-xl text-center font-semibold text-headingColor">
               Chào Mừng!{" "}
@@ -260,10 +343,10 @@ const Login = () => {
 
               {isSignUp && (
                 <LoginInput
-                  placeHolder={"Hãy nhập tên!"}
+                  placeHolder={"Xác nhận mật khẩu!"}
                   icon={<FaLock className="text-xl text-textColor" />}
-                  inputState={userName}
-                  inputStateFunc={setUserName}
+                  inputState={confirm_password}
+                  inputStateFunc={setConfirm_password}
                   type="text"
                   isSignUp={isSignUp}
                   icon2={<BsFillEyeSlashFill onClick={toggleShowPassword} />}
@@ -317,7 +400,7 @@ const Login = () => {
               <motion.button
                 {...buttonClick}
                 className="text-red-500 cursor-pointer underline hover:text-red-700 "
-                // onClick={forgotPass}
+                onClick={isForgotPass}
               >
                 Quên mật khẩu?
               </motion.button>
@@ -331,7 +414,7 @@ const Login = () => {
 
             <motion.div
               {...buttonClick}
-              className="flex justify-start items-center bg-cardOverlay w-[80%] backdrop-blur-md cursor-pointer px-4 py-2 mx-auto rounded-3xl gap-10 "
+              className="mt-4 flex justify-start items-center bg-cardOverlay w-[80%] backdrop-blur-md cursor-pointer px-4 py-2 mx-auto rounded-3xl gap-10 "
               onClick={loginWithGoogle}
             >
               <FcGoogle className="text-3xl " />
@@ -341,7 +424,7 @@ const Login = () => {
                 </p>
               </div>
             </motion.div>
-            <motion.div
+            {/* <motion.div
               {...buttonClick}
               className=" flex justify-start items-center bg-cardOverlay w-[80%] backdrop-blur-md cursor-pointer px-4 py-2 mx-auto rounded-3xl gap-10"
               // onClick={loginWithPhone}
@@ -352,9 +435,9 @@ const Login = () => {
                   Đăng Nhập Bằng Số Điện Thoại
                 </p>
               </div>
-            </motion.div>
+            </motion.div> */}
           </div>
-          <div className=" mt-1 flex flex-col items-center w-[80%] md:w-508 h-auto z-20 backdrop-blur-md p-4 px-4 py-2 mx-auto  gap-1">
+          <div className=" mt-2 flex flex-col items-center w-[80%] md:w-508 h-auto z-20 backdrop-blur-md p-4 px-4 py-2 mx-auto  gap-1">
             <p className="flex text-xl font-medium text-headingColor">
               THEO DÕI CHÚNG TÔI TRÊN{" "}
             </p>
