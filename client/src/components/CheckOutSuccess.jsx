@@ -207,13 +207,13 @@ const CheckOutSuccess = () => {
                   {order?.[0]?.product?.user?.address}
                 </p>
 
-                <div className="w-[70%] h-[1px] rounded-md bg-gray-500 "></div>
+         
                 {order.map((item, index) => (
                   <img
                     key={index}
                     alt={`Sản phẩm ${index}`}
                     src={baseURL + item.product.image}
-                    className="w-[50%] h-225 object-contain flex"
+                    className="w-[40%] h-225 object-contain flex"
                   />
                 ))}
               </div>
@@ -302,7 +302,7 @@ const CheckOutSuccess = () => {
         </div>
         {isCart && <Cart />}
       </div>
-      <Footer />
+
     </main>
   );
 };

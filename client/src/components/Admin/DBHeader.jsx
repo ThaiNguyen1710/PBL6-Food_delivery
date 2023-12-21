@@ -4,11 +4,10 @@ import { BsFillBellFill, BsToggles2 } from "react-icons/bs";
 import { MdLogout, MdSearch } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { buttonClick } from "../../animations";
-import { avatar } from "../../assets";
-import { getAuth } from "firebase/auth";
-import { app } from "../../config/firebase.config";
+import { adminAvatar } from "../../assets";
+
 import { useNavigate } from "react-router-dom";
-import { setUserDetail, setUserNull } from "../../context/actions/userActions";
+import { setUserDetail } from "../../context/actions/userActions";
 
 const DBHeader = () => {
   const user = useSelector((state) => state.user);
@@ -55,7 +54,7 @@ const DBHeader = () => {
           <div className="rounded-md  shadow-md overflow-hidden w-10 h-10 cursor-pointer ">
             <motion.img
               className="w-full h-full object-cover"
-              src={avatar}
+              src={adminAvatar}
               whileHover={{ scale: 1.15 }}
               referrerPolicy="no-referrer"
             ></motion.img>

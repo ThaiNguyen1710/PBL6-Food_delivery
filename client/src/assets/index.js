@@ -1,5 +1,6 @@
 export {default as logo2 } from "./images/logo2.png"
 export {default as logo } from "./images/logo.png"
+export {default as adminAvatar} from './images/adminAvatar.jpg'
 export {default as avatar } from "./images/avatar.png"
 export {default as faceLogo } from "./images/faceLogo.png"
 export {default as igLogo } from "./images/igLogo.png"

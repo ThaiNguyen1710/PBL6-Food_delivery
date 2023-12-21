@@ -49,7 +49,7 @@ const StoreHome = () => {
   const shippingCount = countStatus("Shipping");
   const doneCount = countStatus("Done");
 
-  const numberPaypal = orderStore?orderStore.filter(order => order.isPay === true).length:[]
+  const numberPaypal = orderStore?orderStore.filter(order => order.payed === true).length:[]
   const numberMoney =  orderStore? orderStore.length -numberPaypal :0;
 
 

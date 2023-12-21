@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { faceLogo, igLogo, logo, logo2 } from "../assets";
+import { faceLogo, igLogo,  logo2 } from "../assets";
 import { LoginInput } from "../components";
 import { FaEnvelope, FaLock } from "react-icons/fa";
-import { FcGoogle, FcIphone } from "react-icons/fc";
+import { FcGoogle } from "react-icons/fc";
 import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
 import { BsFillEyeSlashFill } from "react-icons/bs";
@@ -31,7 +31,7 @@ const Login = () => {
 
   const [newPassword, setNewPassword] = useState("");
   const [confirm_newPassword, setConfirm_newPassword] = useState("");
-  const [userName, setUserName] = useState("");
+
 
   // const provider = new GoogleAuthProvider();
 
@@ -40,14 +40,14 @@ const Login = () => {
 
   const user = useSelector((state) => state.user);
   const allUser = useSelector((state) => state.allUsers);
-  const alert = useSelector((state) => state.alert);
+
 
   useEffect(() => {
     if (user) {
       navigate("/", { replace: true });
       window.location.reload();
     }
-  }, [user]);
+  });
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
@@ -228,6 +228,7 @@ const Login = () => {
   const isForgotPass = async () => {
     setIsForgot(true);
   };
+ 
 
   return (
     <div className="w-screen h-screen relative overflow-auto  bg-lighttextGray gap-4">
@@ -254,6 +255,7 @@ const Login = () => {
             </p>
             <motion.button
               {...buttonClick}
+      
               onClick={() => setIsForgot(false)}
               className="flex justify-center items-center  w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
             >
@@ -329,6 +331,7 @@ const Login = () => {
                 inputStateFunc={setUserEmail}
                 type="email"
                 isSignUp={isSignUp}
+             
               />
 
               <LoginInput
@@ -350,6 +353,7 @@ const Login = () => {
                   type="text"
                   isSignUp={isSignUp}
                   icon2={<BsFillEyeSlashFill onClick={toggleShowPassword} />}
+                  
                 />
               )}
 
@@ -382,6 +386,8 @@ const Login = () => {
                 <motion.button
                   {...buttonClick}
                   onClick={signInWithEmailPass}
+                
+               
                   className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
                 >
                   Đăng Nhập
