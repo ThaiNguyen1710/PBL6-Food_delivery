@@ -59,15 +59,7 @@ const StoreHeader = () => {
         )}
       </p>
       <div className="flex justify-center items-center gap-4">
-        <div className="flex items-center justify-center bg-cardOverlay gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md">
-          <MdSearch className="text-gray-400 text-2xl" />
-          <input
-            type="text"
-            placeholder="Search Here"
-            className="border-none outline-none font-medium bg-transparent text-base text-textColor"
-          />
-          <BsToggles2 className="text-gray-400 text-2xl" />
-        </div>
+        
         {openNotify?( <motion.div
           {...buttonClick}
           onClick={toggleNotify}

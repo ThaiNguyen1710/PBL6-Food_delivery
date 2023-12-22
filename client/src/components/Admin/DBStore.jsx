@@ -117,10 +117,10 @@ const DBStore = () => {
                 style={{ color: rowData.isStore === true ? "blue" : "red" }}
               >
                 <option value="true" className="font-semibold text-blue-500">
-                  True
+                  Activity
                 </option>
                 <option value="false" className="font-semibold text-red-500">
-                  False
+                  Block
                 </option>
               </select>
             ),

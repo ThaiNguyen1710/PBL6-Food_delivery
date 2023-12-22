@@ -42,7 +42,35 @@ const ListStore = () => {
     return isMatchingDistrict && isMatchingSearch;
   });
 
-  const showAllStores = !selectedDistrict && !searchTerm;
+
+
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const storesPerPage = 4;
+
+  const indexOfLastStore = currentPage * storesPerPage;
+  const indexOfFirstStore = indexOfLastStore - storesPerPage;
+  const currentStores = filteredStoresBySearch.slice(
+    indexOfFirstStore,
+    indexOfLastStore
+  );
+
+
+    const totalPages = Math.ceil(filteredStoresBySearch.length / storesPerPage);
+
+    const handlePagination = (page) => {
+      setCurrentPage(page);
+    };
+  
+    const prevPage = () => {
+      setCurrentPage((prev) => Math.max(prev - 1, 1));
+    };
+  
+    const nextPage = () => {
+      setCurrentPage((prev) =>
+        Math.min(prev + 1, Math.ceil(filteredStoresBySearch.length / storesPerPage))
+      );
+    };
 
   return (
     <motion.div className="w-full flex pt-12 gap-12 pb-6">
@@ -148,19 +176,49 @@ const ListStore = () => {
             </select>
           </div>
         </div>
-        <div className="flex flex-wrap justify-center gap-4  py-4">
-          {showAllStores ? (
-            isStore.map((store, index) => (
-              <StoreCard key={index} data={store} />
-            ))
-          ) : filteredStoresBySearch.length > 0 ? (
-            filteredStoresBySearch.map((store, index) => (
-              <StoreCard key={index} data={store} />
-            ))
-          ) : (
-            <p>No matching stores found</p>
-          )}
-        </div>
+        <div className="flex flex-wrap justify-center gap-4 py-4">
+        {currentStores.length > 0 ? (
+          currentStores.map((store, index) => (
+            <StoreCard key={index} data={store} />
+          ))
+        ) : (
+          <p>No matching stores found</p>
+        )}
+      </div>
+
+      {/* Nút chuyển trang */}
+      <div className="flex items-center justify-center gap-4 pb-2">
+        <motion.button
+          onClick={prevPage}
+          disabled={currentPage === 1}
+          className="text-xl font-semibold cursor-pointer hover:text-red-400 "
+          {...buttonClick}
+        >
+          Prev
+        </motion.button>
+
+        {Array.from({ length: totalPages }, (_, i) => (
+          <motion.button
+            key={i + 1}
+            onClick={() => handlePagination(i + 1)}
+            className={`${
+              currentPage === i + 1 ? "bg-gray-300  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md" : "bg-cardOverlay text-black  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
+            } px-3 py-1 rounded-md`}
+            {...buttonClick}
+          >
+            {i + 1}
+          </motion.button>
+        ))}
+
+        <motion.button
+          onClick={nextPage}
+          disabled={currentPage === totalPages}
+          className="text-xl font-semibold cursor-pointer hover:text-red-400 "
+          {...buttonClick}
+        >
+          Next
+        </motion.button>
+      </div>
       </div>
     </motion.div>
   );
