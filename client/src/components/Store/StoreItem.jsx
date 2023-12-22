@@ -162,13 +162,13 @@ const StoreItem = () => {
               </p>
             ),
           },
-          {
-            title: <p className="font-semibold text-xl">Store Owner</p>,
-            field: "user.name",
-            render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.user.name}</p>
-            ),
-          },
+          // {
+          //   title: <p className="font-semibold text-xl">Store Owner</p>,
+          //   field: "user.name",
+          //   render: (rowData) => (
+          //     <p className="text-textColor font-medium ">{rowData.user.name}</p>
+          //   ),
+          // },
           {
             title: <p className="font-semibold text-xl">Price</p>,
             field: "price",
@@ -200,6 +200,12 @@ const StoreItem = () => {
               </select>
             ),
           },
+          {title: <p className="font-semibold text-xl">Sales</p>,
+          field: "rowData.numRated",
+          render: (rowData) => (
+            <p className="text-textColor font-medium ">{rowData.numRated}+</p>
+          ),
+        },
           {
             title: <p className="font-semibold text-xl">Rating</p>,
             field: "ratings",

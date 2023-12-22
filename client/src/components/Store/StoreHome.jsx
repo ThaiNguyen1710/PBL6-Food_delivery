@@ -56,6 +56,9 @@ const StoreHome = () => {
   const productStore = products
     ? products.filter((item) => item.user.id === user.user.userId)
     : [];
+
+
+    console.log(productStore)
     const ratedProducts = productStore
     ? productStore.filter((product) => product.numRated !== 0)
     : [];
@@ -181,9 +184,9 @@ const StoreHome = () => {
         </div>
       </div>
 
-      <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-40 h-full">
+      <div className="grid w-full grid-cols-1 md:grid-cols-3 gap-20 h-full">
         <div className="flex items-center justify-center ">
-          <div className="w-508 md:w-656">
+          <div className="w-full md:w-full">
             <CChart
               type="bar"
               data={{
@@ -220,6 +223,9 @@ const StoreHome = () => {
               ],
             }}
           />
+        </div>
+        <div className="flex items-center justify-center w-full h-340  px-4 py-3 bg-cardOverlay  outline-none rounded-md  border shadow-md border-gray-600">
+          <p>Best Seller</p>
         </div>
       </div>
     </div>

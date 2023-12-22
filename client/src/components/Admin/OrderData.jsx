@@ -157,8 +157,8 @@ const OrderData = ({ index, data, admin }) => {
           </h1>
         </div>
       </div>
-      <div className="flex items-center justify-start flex-wrap w-full">
-        <div className="flex items-center justify-center gap-4">
+      <motion.div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="flex items-center justify-start gap-4">
           {data?.orderLists &&
             data.orderLists.map((item, j) => (
               <motion.div
@@ -211,7 +211,7 @@ const OrderData = ({ index, data, admin }) => {
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 };
