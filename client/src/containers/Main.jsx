@@ -43,9 +43,10 @@ const Main = () => {
   });
 
   return (
-    <main className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
-      <Header />
-      <div className="w-full flex flex-col items-start justify-center mt-32 px-6 md:px-24 2xl:px-40 gap-2 pb-24 ">
+    <main className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary ">
+           <Header />
+      <div className="w-full flex flex-col items-start justify-center mt-32 px-6 md:px-24 2xl:px-40 ms:px-12 gap-2 pb-24 ">
+
         <Home />
         <div id="listStore">
           {" "}

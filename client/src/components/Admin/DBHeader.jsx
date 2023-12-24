@@ -15,7 +15,7 @@ const DBHeader = () => {
 
 
   const regisStore =allUser? allUser.filter((regis)=>regis.store !== null && regis.isStore === false):[]
-console.log(regisStore)
+
 
   const dispatch = useDispatch();
   const navigate = useNavigate();

@@ -51,7 +51,7 @@ const Header = () => {
   }, [cart, user]);
 
   return (
-    <header className="fixed backdrop-blur-md z-50 inset-x-0 top-0 flex justify-between items-center px-12 md:px-20 py-2 ">
+    <header className="fixed backdrop-blur-md z-50 inset-x-0 top-0 flex justify-between items-center px-12 md:px-20 sm:px-1 py-2 ">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={logo2} className="w-16 " alt="" />
         <p className="font-semibold text-3xl" style={gradientStyle}>
@@ -60,7 +60,7 @@ const Header = () => {
       </NavLink>
 
       <nav className="flex justify-center items-center  gap-4">
-        <ul className="hidden md:flex justify-center items-center ">
+        <ul className="hidden md:flex justify-center items-center sm:flex">
           <NavLink
             className={({ isActive }) =>
               isActive ? isActiveStyles : isNotActiveStyles

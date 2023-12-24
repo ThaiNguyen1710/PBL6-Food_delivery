@@ -41,13 +41,13 @@ const Home = () => {
           src={heroBg}
           className="absolute top-0 left-0 w-full h-full md:w-full md:h-full"
         />
-        <div className="w-full md:w-656  grid grid-cols-1 md:grid-cols-3 items-center justify-start  gap-4 gap-y-14">
+        <div className="w-full md:w-656  grid grid-cols-1 md:grid-cols-3 sm:grid-cols-3 items-center justify-start  gap-4 gap-y-14">
           {randomData &&
             randomData.map((data, i) => (
               <motion.div
                 {...staggerFadeInOut(i)}
                 key={i}
-                className=" w-16 h-36 md:h-auto md:w-auto p-4  bg-cardOverlay backdrop-blur-md rounded-3xl flex flex-col items-center justify-center drop-shadow-lg"
+                className=" w-16 h-36 md:h-auto md:w-auto p-4 sm:w-auto  bg-cardOverlay backdrop-blur-md rounded-3xl flex flex-col items-center justify-center drop-shadow-lg"
               >
                 <img
                   src={data.product_image}

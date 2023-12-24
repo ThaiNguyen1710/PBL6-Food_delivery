@@ -86,7 +86,9 @@ const Cart = () => {
     });
   };
   const checkOut = () => {
-    navigate(`/checkout-success`); // Navigate to the specific product page
+    dispatch(setCartOff());
+    navigate(`/checkout-success`); 
+    
   };
 
   return (

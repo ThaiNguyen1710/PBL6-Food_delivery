@@ -94,11 +94,17 @@ const StoreItem = () => {
     try {
       const productId = rowData.id;
 
-      const newIsFeatured = rowData.isFeatured ? false : true;
 
-      const updatedProduct = await editProduct(productId, {
-        isFeatured: newIsFeatured,
-      });
+      
+   
+
+      const newData={
+        isFeatured: String(!rowData.isFeatured),
+      }
+      const updatedProduct = await editProduct(productId, newData);
+      console.log(productId)
+      console.log(newData)
+      console.log(updatedProduct)
 
       if (updatedProduct) {
         getAllProducts().then((data) => {
@@ -184,18 +190,16 @@ const StoreItem = () => {
             field: "isFeatured",
             render: (rowData) => (
               <select
-                value={rowData.isFeatured ? "Sold Out" : "Available"}
-                onChange={(e) => blockProduct(rowData, e.target.value)}
+                value={rowData.isFeatured  }
+                onChange={() => blockProduct(rowData)}
                 className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
-                style={{
-                  color: rowData.isFeatured ? "blue" : "red",
-                }}
+                style={{ color: rowData.isFeatured === true ? "blue" : "red" }}
               >
                 <option value="true" className="font-semibold text-blue-500">
-                  {rowData.isFeatured ? "Available" : "Sold Out"}
+                 Available
                 </option>
                 <option value="false" className="font-semibold text-red-500">
-                  {rowData.isFeatured ? "Sold Out" : "Available"}
+                  Sold Out
                 </option>
               </select>
             ),

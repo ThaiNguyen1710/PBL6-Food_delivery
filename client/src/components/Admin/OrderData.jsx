@@ -80,7 +80,7 @@ const OrderData = ({ index, data, admin }) => {
         <div className="flex items-center gap-4">
           <p className="flex items-center gap-1 text-textColor">
             Thanh toán:{" "}
-            {data?.payed ? (
+            {data?.isPay ? (
               <span className=" font-bold text-teal-400">PayPal</span>
             ) : (
               <span className="font-bold text-emerald-500">Tiền Mặt</span>
