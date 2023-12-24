@@ -17,3 +17,8 @@ export {default as qrCode} from './images/qrcode_6food.vercel.app.png'
 export {default as menu} from './images/menu.png'
 export {default as foodMenu} from './images/menufood.png'
 export {default as bestSeller} from './images/best-seller.png'
+export {default as overView} from './images/overView.png'
+export {default as storeList} from './images/store (1).png'
+export {default as userList} from './images/user-group.png'
+export {default as shipped} from './images/shipped.png'
+

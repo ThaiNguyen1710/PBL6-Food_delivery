@@ -27,6 +27,7 @@ export {default as DataTable} from "./Admin/DataTable"
 export {default as OrderData} from "./Admin/OrderData"
 export {default as DBShipper} from "./Admin/DBShipper"  
 export {default as DBStore} from "./Admin/DBStore"
+export {default as ListStoreConfirm} from "./Admin/ListStoreConfirm"
 
 export {default as Spinner} from "./Spinner"
 

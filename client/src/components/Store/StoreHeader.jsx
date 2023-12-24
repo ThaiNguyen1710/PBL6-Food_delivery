@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import React, { useState } from "react";
-import { BsFillBellFill, BsToggles2 } from "react-icons/bs";
-import { MdLogout, MdSearch } from "react-icons/md";
+import { BsFillBellFill} from "react-icons/bs";
+import { MdLogout } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import { buttonClick } from "../../animations";
 import { avatar, foodMenu } from "../../assets";
@@ -59,37 +59,38 @@ const StoreHeader = () => {
         )}
       </p>
       <div className="flex justify-center items-center gap-4">
-        
-        {openNotify?( <motion.div
-          {...buttonClick}
-          onClick={toggleNotify}
-          className="flex justify-center items-center bg-sky-300 gap-3 w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
-        >
-         
-          <BsFillBellFill className="text-2xl text-slate-100" />
-          {orderPending?.length > 0 && (
-            <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-4 -right-2 ">
-              <p className="text-primary text-base font-semibold">
-                {orderPending.length}
-              </p>
-            </div>
-          )}
-        </motion.div>):( <motion.div
-          {...buttonClick}
-          onClick={toggleNotify}
-          className="flex justify-center items-center bg-cardOverlay gap-3 w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
-        >
-         
-          <BsFillBellFill className="text-2xl text-gray-400" />
-          {orderPending?.length > 0 && (
-            <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-4 -right-2 ">
-              <p className="text-primary text-base font-semibold">
-                {orderPending.length}
-              </p>
-            </div>
-          )}
-        </motion.div>)}
-       
+        {openNotify ? (
+          <motion.div
+            {...buttonClick}
+            onClick={toggleNotify}
+            className="flex justify-center items-center bg-sky-300 gap-3 w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
+          >
+            <BsFillBellFill className="text-2xl text-slate-100" />
+            {orderPending?.length > 0 && (
+              <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-4 -right-2 ">
+                <p className="text-primary text-base font-semibold">
+                  {orderPending.length}
+                </p>
+              </div>
+            )}
+          </motion.div>
+        ) : (
+          <motion.div
+            {...buttonClick}
+            onClick={toggleNotify}
+            className="flex justify-center items-center bg-cardOverlay gap-3 w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
+          >
+            <BsFillBellFill className="text-2xl text-gray-400" />
+            {orderPending?.length > 0 && (
+              <div className="rounded-full bg-red-500 w-6 h-6 flex items-center justify-center absolute -top-4 -right-2 ">
+                <p className="text-primary text-base font-semibold">
+                  {orderPending.length}
+                </p>
+              </div>
+            )}
+          </motion.div>
+        )}
+
         {openNotify && (
           <div
             className="bg-white w-96 p-4 rounded-md shadow-md overflow-y-scroll max-h-96 fixed z-10"

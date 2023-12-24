@@ -41,7 +41,7 @@ const UserOrder = () => {
         dispatch(setOrders(data));
       });
     }
-  }, [orders]);
+  });
 
 
   const handleFilterByDateAndCustomer = () => {

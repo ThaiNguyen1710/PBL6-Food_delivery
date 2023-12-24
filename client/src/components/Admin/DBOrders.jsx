@@ -45,7 +45,7 @@ const DBOrders = () => {
       );
     });
 
-    const filteredOrdersByCustomer = filteredOrdersByDate.filter((order) => {
+    const filterOrders = filteredOrdersByDate.filter((order) => {
       const matchedShippingAddress = order.user.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -63,7 +63,7 @@ const DBOrders = () => {
       return matchedShippingAddress || matchedPrice;
     });
 
-    return filteredOrdersByCustomer;
+    return filterOrders;
   };
 
  

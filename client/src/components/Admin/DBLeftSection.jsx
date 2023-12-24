@@ -1,12 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { faceLogo, igLogo,logo2 } from "../../assets";
-import { gradientStyle, isActiveStyles, isNotActiveStyles } from "../../utils/styles";
+import { faceLogo, igLogo,logo2, overView, shipped, storeList, userList } from "../../assets";
+import { gradientStyle, isActiveList, isNotActiveList,  } from "../../utils/styles";
 import { motion } from "framer-motion";
 
 const DBLeftSection = () => {
   return (
-    <div className="h-full py-2 flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-300 gap-3 overflow-auto">
+    <div className="h-full py-2   flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-300 gap-3 overflow-auto">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={logo2} className="w-20 " alt="" />
         <p className=" font-semibold text-5xl "style={gradientStyle}>6Food</p>
@@ -14,28 +14,62 @@ const DBLeftSection = () => {
 
       <hr />
 
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-1 px-2 py-2">
+        <div className="flex w-full gap-1  items-center" >
+        <img src={overView} className="w-8 h-8 object-contain " alt="" />
+        <p className="text-xl font-bold text-headingColor">Over View</p>
+        </div>
+       
         <NavLink
           className={({ isActive }) =>
             isActive
-              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
-              : isNotActiveStyles
+              ? `${isActiveList} px-4 py-2 border-red-500 border-l-4`
+              : isNotActiveList
           }
           to={"/dashboard/home"}
         >
           Home
         </NavLink>
+        <div className="flex w-full gap-3  items-center" >
+        <img src={storeList} className="w-8 h-8 object-contain " alt="" />
+        <p className="text-xl font-bold text-headingColor">Store</p>
+        </div>
         <NavLink
           className={({ isActive }) =>
             isActive
-              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
-              : isNotActiveStyles
+            ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+            : isNotActiveList
+          }
+          to={"/dashboard/store"}
+        >
+          Store
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+            ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+            : isNotActiveList
+          }
+          to={"/dashboard/store-confirm"}
+        >
+          Store wait confirm
+        </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+            isActive
+              ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+              : isNotActiveList
           }
           to={"/dashboard/orders"}
         >
+          
           Orders
         </NavLink>
-        <NavLink
+        <div className="flex w-full gap-3  items-center" >
+        <img src={userList} className="w-8 h-8 object-contain " alt="" />
+        <p className="text-xl font-bold text-headingColor">User</p>
+        </div>
+        {/* <NavLink
           className={({ isActive }) =>
             isActive
               ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
@@ -44,7 +78,7 @@ const DBLeftSection = () => {
           to={"/dashboard/items"}
         >
           Items
-        </NavLink>
+        </NavLink> */}
         {/* <NavLink
           className={({ isActive }) =>
             isActive
@@ -57,29 +91,23 @@ const DBLeftSection = () => {
         </NavLink> */}
         <NavLink
           className={({ isActive }) =>
-            isActive
-              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
-              : isNotActiveStyles
+          isActive
+          ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+          : isNotActiveList
           }
           to={"/dashboard/users"}
         >
           Users
         </NavLink>
+        <div className="flex w-full gap-3  items-center" >
+        <img src={shipped} className="w-8 h-8 object-contain " alt="" />
+        <p className="text-xl font-bold text-headingColor">Shipper</p>
+        </div>
         <NavLink
           className={({ isActive }) =>
-            isActive
-              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
-              : isNotActiveStyles
-          }
-          to={"/dashboard/store"}
-        >
-          Store
-        </NavLink>
-        <NavLink
-          className={({ isActive }) =>
-            isActive
-              ? `${isActiveStyles} px-4 py-2 border-red-500 border-l-8`
-              : isNotActiveStyles
+          isActive
+          ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+          : isNotActiveList
           }
           to={"/dashboard/shipper"}
         >

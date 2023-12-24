@@ -140,11 +140,12 @@ const StoreInformation = () => {
               dispatch(alertSuccess("Image uploaded successfully!"));
               setTimeout(() => {
                 dispatch(alertNULL());
+                getAllUsers().then((data) => {
+                  dispatch(setAllUserDetail(data));
+                });
               }, 3000);
               setImageDownloadURL(null);
-              getAllUsers().then((data) => {
-                dispatch(setAllUserDetail(data));
-              });
+            
             } else {
               console.log(
                 "Received null or incomplete response when uploading the image."
@@ -191,11 +192,13 @@ const StoreInformation = () => {
         <div className=" top-24 left-80 fixed items-center justify-center  ">
           <label className="flex flex-col items-center justify-center h-full cursor-pointer mr-4 relative gap-2">
             <div className="rounded-lg overflow-hidden w-44 h-24 bg-gray-200 relative ">
-              {imageDownloadURL && typeof imageDownloadURL !== "string" ? (
-                <img
+            {imageDownloadURL && typeof imageDownloadURL !== "string" ? (
+                <motion.img
                   src={URL.createObjectURL(imageDownloadURL)}
                   className="h-full w-full object-cover"
                   alt="Uploaded"
+                  whileHover={{ scale: 1.15 }}
+                  referrerPolicy="no-referrer"
                 />
               ) : (
                 <div className="flex items-center justify-center h-full text-2xl text-gray-400">
@@ -206,21 +209,15 @@ const StoreInformation = () => {
                 <motion.button
                   onClick={() => setImageDownloadURL(null)}
                   {...buttonClick}
-                  className="absolute top-0 right-0 p-2 bg-red-500 text-white rounded-bl-lg cursor-pointer "
+                  className="absolute top-0 right-2 p-2 bg-red-500 text-white rounded-full cursor-pointer"
                 >
                   <MdDelete className="" />
                 </motion.button>
               )}
             </div>
-            <motion.button
-              onClick={uploadImage}
-              {...buttonClick}
-              className="border w-full h-11 rounded-md shadow-md bg-orange-300 "
-            >
-              <p className="font-normal text-gray-500 text-xl ">
-                Cập nhật ảnh bìa!
-              </p>
-            </motion.button>
+            <p className="flex font-semibold text-textColor mt-2">
+              Cập nhật ảnh đại diện!
+            </p>
             <input
               type="file"
               name="upload-image"
@@ -228,6 +225,14 @@ const StoreInformation = () => {
               onChange={(event) => setImageDownloadURL(event.target.files[0])}
               className="w-0 h-0 absolute inset-0 opacity-0"
             ></input>
+
+            <motion.button
+              onClick={uploadImage}
+              {...buttonClick}
+              className="border w-24 h-11 rounded-md shadow-md bg-orange-300"
+            >
+              <p className="font-semibold text-black text-xl ">Save</p>
+            </motion.button>
           </label>
         </div>
         <div className="w-[50%] text-center flex ">

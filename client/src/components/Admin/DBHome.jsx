@@ -13,14 +13,15 @@ const DBHome = () => {
   const orders = useSelector((state) => state.orders);
   const users = useSelector((state) => state.allUsers);
   const dispatch = useDispatch();
+  
 
   const category = products
     ? [
         ...new Set(
           products
-            .filter((item) => item && item.category && item.category.name) // Lọc các phần tử không null hoặc không undefined
+            .filter((item) => item && item.category && item.category.name) 
             .map((item) => item.category.name)
-            .filter((name) => name !== "length") // Loại bỏ các phần tử có giá trị 'length'
+            .filter((name) => name !== "length")
         ),
       ]
     : [];
@@ -48,18 +49,16 @@ const DBHome = () => {
       }
     });
   }
-  const isStore = users
-  ? users.filter((store) => store?.isStore === true)
-  : [];
+  const isStore = users ? users.filter((store) => store?.isStore === true) : [];
 
   const totalRevenue = orders
-  ? orders.reduce((total, order) => total + (order.totalPrice * 1000 || 0), 0)
-  : 0;
+    ? orders.reduce((total, order) => total + (order.totalPrice * 1000 || 0), 0)
+    : 0;
 
-
-  const numberPaypal = orders?orders.filter(order => order.isPay === true).length:[]
-  const numberMoney =  orders? orders.length -numberPaypal :0;
-  
+  const numberPaypal = orders
+    ? orders.filter((order) => order.isPay === true).length
+    : [];
+  const numberMoney = orders ? orders.length - numberPaypal : 0;
 
   useEffect(() => {
     if (!products) {
@@ -77,12 +76,13 @@ const DBHome = () => {
         dispatch(setAllUserDetail(data));
       });
     }
-  }, []);
+  });
+
  
 
 
   return (
-    <div className="flex items-start justify-center flex-col pt-12 w-full  gap-8 h-full">
+    <div className="flex items-start justify-center flex-col pt-12 w-full   gap-8 h-full">
       <div className="items-start justify-start  gap-16 flex pt-12">
         <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
           <img
@@ -110,7 +110,7 @@ const DBHome = () => {
               Total Revenue
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
-            {totalRevenue.toLocaleString("vi-VN")}
+              {totalRevenue.toLocaleString("vi-VN")}
               <FaDongSign className="text-red-400" />
             </p>
           </div>
@@ -181,16 +181,71 @@ const DBHome = () => {
               labels: ["Pending", "Shipping", "Done", "PayPal", "Money"],
               datasets: [
                 {
-                  data: [preparingCount, deliveredCount, cancelledCount, numberPaypal, numberMoney],
-                  backgroundColor: ["#FF6384", "#4BC0C0", "#FFCE56", "#1255e6","#45e31e"],
+                  data: [
+                    preparingCount,
+                    deliveredCount,
+                    cancelledCount,
+                    numberPaypal,
+                    numberMoney,
+                  ],
+                  backgroundColor: [
+                    "#FF6384",
+                    "#4BC0C0",
+                    "#FFCE56",
+                    "#1255e6",
+                    "#45e31e",
+                  ],
                 },
               ],
             }}
           />
         </div>
+        <CChart
+        type='line'
+        data={{
+          labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+          datasets: [
+            {
+              label: '2019',
+              backgroundColor: 'rgba(179,181,198,0.2)',
+              borderColor: 'rgba(179,181,198,1)',
+              pointBackgroundColor: 'rgba(179,181,198,1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(179,181,198,1)',
+              tooltipLabelColor: 'rgba(179,181,198,1)',
+              data: [65, 59, 90, 81, 56, 55, 40]
+            },
+            {
+              label: '2020',
+              backgroundColor: 'rgba(255,99,132,0.2)',
+              borderColor: 'rgba(255,99,132,1)',
+              pointBackgroundColor: 'rgba(255,99,132,1)',
+              pointBorderColor: '#fff',
+              pointHoverBackgroundColor: '#fff',
+              pointHoverBorderColor: 'rgba(255,99,132,1)',
+              tooltipLabelColor: 'rgba(255,99,132,1)',
+              data: [28, 48, 40, 19, 96, 27, 100]
+            }
+          ],
+        }}  
+        options={{
+          aspectRatio: 1.5,
+          tooltips: {
+            enabled: true
+          }
+        }}
+      />
+
       </div>
+      
+      
     </div>
   );
 };
+
+
+
+
 
 export default DBHome;

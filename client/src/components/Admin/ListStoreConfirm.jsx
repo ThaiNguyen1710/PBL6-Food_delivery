@@ -7,16 +7,16 @@ import { avatar } from "../../assets";
 
 import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 
-const DBStore = () => {
+const ListStoreConfirm = () => {
   const allUsers = useSelector((state) => state.allUsers);
 
 
   const dispatch = useDispatch();
   const isStore = allUsers
-    ? allUsers.filter((store) => store?.closeAt !== null)
+    ? allUsers.filter((store) => store?.store !== null &&store.isStore===false)
     : [];
 
-  console.log(isStore);
+
 
   useEffect(() => {
     if (!allUsers) {
@@ -26,7 +26,7 @@ const DBStore = () => {
     }
   });
 
-  const blockStore = async (rowData) => {
+  const acceptStore = async (rowData) => {
     try {
       const userId = rowData.id;
       const newData = {
@@ -54,21 +54,10 @@ const DBStore = () => {
     <div className="flex justify-center items-center gap-4 pt-6 w-full">
       <DataTable
         columns={[
-          {
-            title: <p className="font-semibold text-xl">Avatar</p>,
-            field: "photoURL",
-            render: (rowData) => (
-              <img
-                src={
-                  baseURL + rowData.imgStore
-                    ? baseURL + rowData.imgStore
-                    : avatar
-                }
-                className="w-32 h-16 object-contain rounded-md"
-                alt=""
-              />
-            ),
-          },
+         
+
+
+          
           {
             title: <p className="font-semibold text-xl">Name</p>,
             field: "store",
@@ -93,34 +82,28 @@ const DBStore = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Open At</p>,
-            field: "openAt",
+            title: <p className="font-semibold text-xl">Phone</p>,
+            field: "phone",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.openAt}</p>
+              <p className="text-textColor font-medium ">{rowData.phone}</p>
             ),
           },
+         
           {
-            title: <p className="font-semibold text-xl">Close At</p>,
-            field: "closeAt",
-            render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.closeAt}</p>
-            ),
-          },
-          {
-            title: <p className="font-semibold text-xl">Block</p>,
+            title: <p className="font-semibold text-xl">Accept</p>,
             field: "isStore",
             render: (rowData) => (
               <select
                 value={rowData.isStore}
-                onChange={() => blockStore(rowData)}
+                onChange={() => acceptStore(rowData)}
                 className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
                 style={{ color: rowData.isStore === true ? "blue" : "red" }}
               >
                 <option value="true" className="font-semibold text-blue-500">
-                  Activity
+                  Accept
                 </option>
                 <option value="false" className="font-semibold text-red-500">
-                  Block
+                Opposite
                 </option>
               </select>
             ),
@@ -128,11 +111,11 @@ const DBStore = () => {
         ]}
         data={isStore}
         title={
-          <p className="font-semibold text-red-400 text-3xl">List of Stores</p>
+          <p className="font-semibold text-red-400 text-3xl">List of Stores Wait Confirm</p>
         }
       />
     </div>
   );
 };
 
-export default DBStore;
+export default ListStoreConfirm;

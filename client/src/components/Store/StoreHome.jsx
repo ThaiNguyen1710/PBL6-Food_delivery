@@ -144,7 +144,7 @@ const StoreHome = () => {
         dispatch(setAllUserDetail(data));
       });
     }
-  }, []);
+  });
 
   return (
     <div className="flex items-start justify-center flex-col pt-12 w-full  gap-8 h-full">
