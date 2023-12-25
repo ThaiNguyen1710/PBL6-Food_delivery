@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const baseURL = "https://pbl-6-nine.vercel.app";
-export const baseURL1 = "https://pbl-6-ver2.vercel.app";
+export const baseURL1 = "https://pbl6-lssz.onrender.com";
 
 //user
 
@@ -40,6 +40,35 @@ export const signUpUser = async (data) => {
     return null;
   }
 };
+
+
+
+export const sendOtp = async (data) => {
+  try {
+    const res = await axios.post(`${baseURL}/pbl6/user/startRegistration`, data);
+
+    return res.data;
+  } catch (err) {
+    console.error("Error in signUpUser:", err.response.data); 
+    return null;
+  }
+};
+
+
+export const completeOtp = async (data) => {
+  try {
+    const res = await axios.post(`${baseURL}/pbl6/user/completeRegistration`, data);
+      console.log("dataapi",data)
+    return res.data;
+
+  } catch (err) {
+    console.error("Error in completeOTP:", err.response.data);
+    return null;
+  }
+};
+
+
+
 export const editUser = async (userId, data) => {
   try {
     const res = await axios.put(`${baseURL}/pbl6/user/${userId}`, data);
@@ -160,7 +189,7 @@ export const getAllCartItems = async (products, users) => {
         users: users ? users.join(",") : undefined,
       },
     });
-    return res.data; // Trả về dữ liệu được trả về từ backend sau khi lấy các mục trong giỏ hàng
+    return res.data; 
   } catch (error) {
     return null;
   }

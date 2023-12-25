@@ -12,7 +12,7 @@ import { MdShoppingCart, MdLogout } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 // import { getAuth } from "firebase/auth";
 // import { app } from "../config/firebase.config";
-import { setUserDetail, setUserNull } from "../context/actions/userActions";
+import { setUserDetail } from "../context/actions/userActions";
 import { setCartOn } from "../context/actions/displayCartAction";
 import { baseURL } from "../api";
 
@@ -189,7 +189,7 @@ const Header = () => {
             </div>
             <div className="items-center justify-center  ">
                 
-          <p className="text-base text-headingColor font-semibold w-12 text-center h-full">{user?.user?.name}</p>
+          <p className="text-base text-headingColor font-semibold w-12 text-center h-full">{userLogin?.[0]?.name?userLogin?.[0]?.name:null}</p>
             </div>
           </>
         ) : (

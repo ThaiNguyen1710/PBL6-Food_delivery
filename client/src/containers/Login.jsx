@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { faceLogo, igLogo,  logo2 } from "../assets";
+import { faceLogo, igLogo, logo2 } from "../assets";
 import { LoginInput } from "../components";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
@@ -7,7 +7,14 @@ import { motion } from "framer-motion";
 import { buttonClick } from "../animations";
 import { BsFillEyeSlashFill } from "react-icons/bs";
 import { BiLogOutCircle } from "react-icons/bi";
-import { editUser, getAllUsers, loginUser, signUpUser } from "../api";
+import {
+  completeOtp,
+  editUser,
+  getAllUsers,
+  loginUser,
+  sendOtp,
+  signUpUser,
+} from "../api";
 
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,6 +29,12 @@ import { gradientStyle } from "../utils/styles";
 import { setAllUserDetail } from "../context/actions/allUsersAction";
 
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const user = useSelector((state) => state.user);
+  const allUser = useSelector((state) => state.allUsers);
+
   const [userEmail, setUserEmail] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
   const [password, setPassword] = useState("");
@@ -32,14 +45,26 @@ const Login = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirm_newPassword, setConfirm_newPassword] = useState("");
 
+  const [showOTP, setShowOTP] = useState(false);
+  const [otpValue, setOtpValue] = useState("");
+  const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
-  // const provider = new GoogleAuthProvider();
+  const [countdown, setCountdown] = useState(120);
+  const [resendOtp, setResendOtp] = useState(false);
+  useEffect(() => {
+    let intervalId;
+    if (showOTP && countdown > 0) {
+      intervalId = setInterval(() => {
+        setCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+    } else {
+      if (countdown === 0) {
+        setResendOtp(true);
+      }
+    }
 
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const user = useSelector((state) => state.user);
-  const allUser = useSelector((state) => state.allUsers);
+    return () => clearInterval(intervalId);
+  }, [countdown, showOTP, dispatch]);
 
 
   useEffect(() => {
@@ -57,42 +82,40 @@ const Login = () => {
 
   //SIGN UP
 
-  const signUpWithEmailPass = async () => {
+  const handleSendOtp = async () => {
     if (userEmail !== "" && password !== "" && confirm_password !== "") {
       try {
         if (password === confirm_password) {
           const userData = {
-            name: userEmail,
             email: userEmail,
             password: password,
+            name: userEmail,
           };
-          const res = await signUpUser(userData);
-  
-          if (res) {
-            getAllUsers().then((data) => {
-              dispatch(setAllUserDetail(data));
-            });
-            dispatch(alertSuccess("Đăng ký thành công! Hãy đăng nhập!  "));
-            setIsSignUp(false);
-            setPassword("")
-            setConfirm_password("")
+          const response = await sendOtp(userData);
+          console.log(response);
+          if (response && response.success) {
+            dispatch(alertSuccess("Gửi thành công OTP!"));
+            setShowOTP(true);
             setTimeout(() => {
               dispatch(alertNULL());
             }, 3000);
+
+
+            setResendOtp(false)
+            setCountdown(60);
           } else {
             dispatch(alertDanger("Email đã được đăng ký "));
-  
+
             setTimeout(() => {
               dispatch(alertNULL());
             }, 3000);
           }
-        }else {
+        } else {
           dispatch(alertWarning("Mật khẩu không khớp!"));
           setTimeout(() => {
             dispatch(alertNULL());
           }, 3000);
         }
-       
       } catch (error) {
         console.error("Lỗi khi đăng ký:", error);
       }
@@ -109,6 +132,43 @@ const Login = () => {
       setTimeout(() => {
         dispatch(alertNULL());
       }, 3000);
+    }
+  };
+
+  const handleConfirmOTP = async () => {
+    try {
+      const data = {
+        otp: otpValue,
+      };
+
+      console.log(data);
+      const otpConfirmation = await completeOtp(data);
+      console.log(otpConfirmation);
+
+      if (otpConfirmation && otpConfirmation.success) {
+        setRegistrationSuccess(true);
+        getAllUsers().then((data) => {
+          dispatch(setAllUserDetail(data));
+        });
+        dispatch(alertSuccess("Đăng ký thành công! Hãy đăng nhập!  "));
+
+        setShowOTP(false);
+        setOtpValue("")
+        setIsSignUp(false);
+        setUserEmail("")
+        setPassword("");
+        setConfirm_password("");
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+      } else {
+        // dispatch(alertDanger("OTP không phù hợp!"));
+        // setTimeout(() => {
+        //   dispatch(alertNULL());
+        // }, 3000);
+      }
+    } catch (error) {
+      console.error("Lỗi xác thực OTP:", error);
     }
   };
 
@@ -228,7 +288,6 @@ const Login = () => {
   const isForgotPass = async () => {
     setIsForgot(true);
   };
- 
 
   return (
     <div className="w-screen h-screen relative overflow-auto  bg-lighttextGray gap-4">
@@ -255,7 +314,6 @@ const Login = () => {
             </p>
             <motion.button
               {...buttonClick}
-      
               onClick={() => setIsForgot(false)}
               className="flex justify-center items-center  w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
             >
@@ -323,7 +381,7 @@ const Login = () => {
             </p>
 
             {/* input section */}
-            <div className="w-full flex flex-col items-center justify-center gap-4 px-4 md:px-12 py-1">
+            <div className="w-full flex flex-col items-center justify-center gap-3 px-4 md:px-12 py-1">
               <LoginInput
                 placeHolder={"Email "}
                 icon={<FaEnvelope className="text-xl text-textColor" />}
@@ -331,7 +389,6 @@ const Login = () => {
                 inputStateFunc={setUserEmail}
                 type="email"
                 isSignUp={isSignUp}
-             
               />
 
               <LoginInput
@@ -353,7 +410,6 @@ const Login = () => {
                   type="text"
                   isSignUp={isSignUp}
                   icon2={<BsFillEyeSlashFill onClick={toggleShowPassword} />}
-                  
                 />
               )}
 
@@ -374,32 +430,73 @@ const Login = () => {
                   <motion.button
                     {...buttonClick}
                     className="text-cartNumBg bg-transparent cursor-pointer underline"
-                    onClick={() => setIsSignUp(false)}
+                    onClick={() => {
+                      setIsSignUp(false);
+                      setShowOTP(false);
+                    }}
                   >
                     Đăng nhập
                   </motion.button>
                 </p>
               )}
 
-              {/* signin button */}
-              {!isSignUp ? (
-                <motion.button
-                  {...buttonClick}
-                  onClick={signInWithEmailPass}
-                
-               
-                  className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
-                >
-                  Đăng Nhập
-                </motion.button>
+              {showOTP ? (
+                <>
+                  {" "}
+                  <div className="w-full flex  items-center justify-between gap-4 px-4 md:px-2">
+                    <LoginInput
+                      placeHolder={"Nhập mã OTP"}
+                      // icon={<FaLock className="text-xl text-textColor" />}
+                      inputState={otpValue}
+                      inputStateFunc={setOtpValue}
+                      type="text"
+                      isSignUp={isSignUp}
+                    />
+
+                    <motion.button
+                      {...buttonClick}
+                      onClick={handleConfirmOTP}
+                      className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
+                    >
+                      Xác nhận OTP
+                    </motion.button>
+                  </div>
+                  <div className="w-full flex  items-center justify-start gap-2 px-4 md:px-2  ">
+                    <p>Xảy ra lỗi? Gửi lại OTP sau {countdown} s</p>
+
+                    {resendOtp ? (
+                      <motion.button
+                        onClick={handleSendOtp}
+                        {...buttonClick}
+                        className="text-cartNumBg bg-transparent cursor-pointer underline"
+                      >
+                        Gửi lại 
+                      </motion.button>
+                    ) : (
+                     <></>
+                    )}
+                  </div>
+                </>
               ) : (
-                <motion.button
-                  {...buttonClick}
-                  className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
-                  onClick={signUpWithEmailPass}
-                >
-                  Đăng Ký
-                </motion.button>
+                <div className="w-full flex flex-col items-center justify-center gap-4 px-4 md:px-12 py-1">
+                  {isSignUp ? (
+                    <motion.button
+                      {...buttonClick}
+                      onClick={handleSendOtp}
+                      className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
+                    >
+                      Gửi OTP
+                    </motion.button>
+                  ) : (
+                    <motion.button
+                      {...buttonClick}
+                      onClick={signInWithEmailPass}
+                      className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
+                    >
+                      Đăng Nhập
+                    </motion.button>
+                  )}
+                </div>
               )}
             </div>
             <div className="text-right font-medium items-center ">

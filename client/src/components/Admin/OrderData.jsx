@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import React, {useState } from "react";
+import React, { useState } from "react";
 import { staggerFadeInOut } from "../../animations";
 import { FaDongSign, FaStar } from "react-icons/fa6";
 import { baseURL, ratingProduct, updatedOrder } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
 import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
+import { delivery } from "../../assets";
 
 const OrderData = ({ index, data, admin }) => {
   const allUser = useSelector((state) => state.allUsers);
@@ -29,9 +30,7 @@ const OrderData = ({ index, data, admin }) => {
 
   const formattedDate = formatDate(data.dateOrdered);
 
-  const [rated, setRated] = useState(
-    false
-  );
+  const [rated, setRated] = useState(false);
 
   const [rating, setRating] = useState(0);
 
@@ -55,7 +54,7 @@ const OrderData = ({ index, data, admin }) => {
       }
 
       setRated(true);
-      setRating(rating)
+      setRating(rating);
 
       const newDataForOrder = {
         isRate: true,
@@ -67,8 +66,6 @@ const OrderData = ({ index, data, admin }) => {
       console.log(error);
     }
   };
- 
-
 
   return (
     <motion.div
@@ -105,48 +102,69 @@ const OrderData = ({ index, data, admin }) => {
           </p>
 
           <div>
-            {data.isRate ? (
-              <div className="flex justify-center items-center gap-1 text-base font-normal">
-                Đã đánh giá:
-                <p className=" font-bold text-headingColor">{data.ratings} </p>
-                <FaStar className="text-orange-400 text-base font-normal" />
-              </div>
-            ) : (
-              <div className="not-rated-content">
-                <div className=" justify-center items-center text-xl ">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <span
-                      key={star}
-                      onClick={() => {
-                        setRating(star);
-                      }}
-                      style={{
-                        cursor: "pointer",
-                        color: star <= rating ? "orange" : "gray",
-                      }}
-                    >
-                      ★
-                    </span>
-                  ))}
+            {data.status === "Pending" && (
+              <>
+                <div className="flex items-center justify-center ">
+                  <motion.img
+                    src={delivery}
+                    className="w-10 h-10 object-contain"
+                  />
+                  <p className="text-base font-semibold text-headingColor">
+                    Tài xế đang lấy đơn
+                  </p>
                 </div>
-                {!rated && (
-                  <motion.button
-                    onClick={() =>
-                      handleRating(data._id, data.orderLists[0].product.id)
-                    }
-                    className="text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md text-orange-400"
-                  >
-                    Đánh giá
-                  </motion.button>
-                )}
-                {rated && (
-                  <div className="flex justify-center items-center gap-1 text-base font-normal">
-                    Đã đánh giá: {rating}{" "}
-                    <FaStar className="text-orange-400 text-base font-normal" />
-                  </div>
-                )}
-              </div>
+              </>
             )}
+            {data.status === "Shipping" && (
+              <p className="text-base font-semibold text-headingColor">
+                Tài xế đang đến
+              </p>
+            )}
+            {data.status === "Done" &&
+              (data.isRate ? (
+                <div className="flex justify-center items-center gap-1 text-base font-normal">
+                  Đã đánh giá:
+                  <p className=" font-bold text-headingColor">
+                    {data.ratings}{" "}
+                  </p>
+                  <FaStar className="text-orange-400 text-base font-normal" />
+                </div>
+              ) : (
+                <div className="not-rated-content">
+                  <div className=" justify-center items-center text-xl ">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        onClick={() => {
+                          setRating(star);
+                        }}
+                        style={{
+                          cursor: "pointer",
+                          color: star <= rating ? "orange" : "gray",
+                        }}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                  {!rated && (
+                    <motion.button
+                      onClick={() =>
+                        handleRating(data._id, data.orderLists[0].product.id)
+                      }
+                      className="text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md text-orange-400"
+                    >
+                      Đánh giá
+                    </motion.button>
+                  )}
+                  {rated && (
+                    <div className="flex justify-center items-center gap-1 text-base font-normal">
+                      Đã đánh giá: {rating}{" "}
+                      <FaStar className="text-orange-400 text-base font-normal" />
+                    </div>
+                  )}
+                </div>
+              ))}
           </div>
         </div>
       </div>

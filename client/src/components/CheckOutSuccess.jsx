@@ -72,8 +72,12 @@ const CheckOutSuccess = () => {
   }
   const currentTime = Date.now();
   const estimatedTimes = [15, 20, 30];
-  const randomTime =
-    estimatedTimes[Math.floor(Math.random() * estimatedTimes.length)];
+  let randomTime;
+
+  
+  if (!randomTime) {
+      randomTime = estimatedTimes[Math.floor(Math.random() * estimatedTimes.length)];
+  }
 
   const deliveryTime = new Date(currentTime + randomTime * 60 * 1000);
 
@@ -133,7 +137,7 @@ const CheckOutSuccess = () => {
       };
 
       const createdOrder = await handleCheckOut(orderData);
-
+console.log(createdOrder)
       if (createdOrder) {
         dispatch(alertInfo("Đơn hàng đang được xử lý!"));
         await clearAllCart(user?.user?.userId);
@@ -153,6 +157,7 @@ const CheckOutSuccess = () => {
               const paymentResponse = await axios.post(
                 `${baseURL}/pbl6/paypal/${createdOrder.id}`
               );
+              console.log(paymentResponse)
               if (
                 paymentResponse.data.links &&
                 paymentResponse.data.links.length > 0

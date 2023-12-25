@@ -31,7 +31,7 @@ const DBOrders = () => {
 
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+  const currentOrders = orders? orders.slice(indexOfFirstOrder, indexOfLastOrder):[];
 
 
 
