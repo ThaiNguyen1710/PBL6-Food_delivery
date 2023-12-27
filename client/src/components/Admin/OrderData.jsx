@@ -1,20 +1,28 @@
 import { motion } from "framer-motion";
-import React, { useState } from "react";
-import { staggerFadeInOut } from "../../animations";
+import React, { useEffect, useState } from "react";
+import { buttonClick, staggerFadeInOut } from "../../animations";
 import { FaDongSign, FaStar } from "react-icons/fa6";
-import { baseURL, ratingProduct, updatedOrder } from "../../api";
+import { baseURL, getAllUsers, ratingProduct, updatedOrder } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
 import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
-import { delivery } from "../../assets";
+import { delivery, shipperCome } from "../../assets";
+import { setAllUserDetail } from "../../context/actions/allUsersAction";
 
 const OrderData = ({ index, data, admin }) => {
   const allUser = useSelector((state) => state.allUsers);
   const user = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
+  useEffect(() => {
+    if (!allUser) {
+      getAllUsers().then((data) => {
+        dispatch(setAllUserDetail(data));
+      });
+    }
+  });
 
   const store = allUser
-    ? allUser.filter((store) => store.store === data.shippingAddress2)
+    ? allUser.filter((store) => store.address === data.shippingAddress2)
     : [];
 
   const formatDate = (dateString) => {
@@ -34,6 +42,8 @@ const OrderData = ({ index, data, admin }) => {
 
   const [rating, setRating] = useState(0);
 
+  const [comment, setComment] = useState("");
+
   const handleRating = async (orderId, productId) => {
     try {
       for (const item of data.orderLists) {
@@ -42,9 +52,10 @@ const OrderData = ({ index, data, admin }) => {
           product: item.product.id,
           quantity: rating,
           user: user.user.userId,
-          comment: "Default comment",
+          comment: comment,
         };
         const ratedData = await ratingProduct(orderDataWithRating);
+        console.log(ratedData);
         if (!ratedData) {
           dispatch(alertSuccess("Đánh giá thành công!"));
           setTimeout(() => {
@@ -52,13 +63,14 @@ const OrderData = ({ index, data, admin }) => {
           }, 3000);
         }
       }
-
+      setComment(comment);
       setRated(true);
       setRating(rating);
 
       const newDataForOrder = {
         isRate: true,
         ratings: rating,
+        mess: comment,
       };
       const updatedOrderData = await updatedOrder(orderId, newDataForOrder);
       console.log(updatedOrderData);
@@ -70,7 +82,7 @@ const OrderData = ({ index, data, admin }) => {
   return (
     <motion.div
       {...staggerFadeInOut(index)}
-      className="w-full flex flex-col items-start justify-start px-3 py-2 border relative border-gray-300 bg-cardOverlay drop-shadow-md rounded-md gap-4"
+      className="w-full flex flex-col items-start justify-start px-3 py-2 border relative border-gray-300 bg-cardOverlay drop-shadow-md rounded-md gap-1"
     >
       <div className="w-full flex items-center justify-between">
         <h1 className="text-xl text-headingColor font-semibold">Order</h1>
@@ -100,83 +112,23 @@ const OrderData = ({ index, data, admin }) => {
           >
             {data?.status}
           </p>
-
-          <div>
-            {data.status === "Pending" && (
-              <>
-                <div className="flex items-center justify-center ">
-                  <motion.img
-                    src={delivery}
-                    className="w-10 h-10 object-contain"
-                  />
-                  <p className="text-base font-semibold text-headingColor">
-                    Tài xế đang lấy đơn
-                  </p>
-                </div>
-              </>
-            )}
-            {data.status === "Shipping" && (
-              <p className="text-base font-semibold text-headingColor">
-                Tài xế đang đến
-              </p>
-            )}
-            {data.status === "Done" &&
-              (data.isRate ? (
-                <div className="flex justify-center items-center gap-1 text-base font-normal">
-                  Đã đánh giá:
-                  <p className=" font-bold text-headingColor">
-                    {data.ratings}{" "}
-                  </p>
-                  <FaStar className="text-orange-400 text-base font-normal" />
-                </div>
-              ) : (
-                <div className="not-rated-content">
-                  <div className=" justify-center items-center text-xl ">
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <span
-                        key={star}
-                        onClick={() => {
-                          setRating(star);
-                        }}
-                        style={{
-                          cursor: "pointer",
-                          color: star <= rating ? "orange" : "gray",
-                        }}
-                      >
-                        ★
-                      </span>
-                    ))}
-                  </div>
-                  {!rated && (
-                    <motion.button
-                      onClick={() =>
-                        handleRating(data._id, data.orderLists[0].product.id)
-                      }
-                      className="text-base font-semibold capitalize border border-gray-300 px-2 py-[2px] rounded-md text-orange-400"
-                    >
-                      Đánh giá
-                    </motion.button>
-                  )}
-                  {rated && (
-                    <div className="flex justify-center items-center gap-1 text-base font-normal">
-                      Đã đánh giá: {rating}{" "}
-                      <FaStar className="text-orange-400 text-base font-normal" />
-                    </div>
-                  )}
-                </div>
-              ))}
-          </div>
         </div>
       </div>
       <div className="flex items-center justify-start flex-wrap w-full">
         <div className="flex items-center justify-start w-full gap-4">
           <h1 className="text-xl font-semibold text-red-500 -mt-2">
-            {data.shippingAddress2} {">>"} {store?.[0]?.address}
+            {store?.[0]?.store}
+            {">>"} {data.shippingAddress2}
           </h1>
         </div>
       </div>
-      <motion.div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="flex items-center justify-start gap-4">
+      <motion.div className="w-full flex gap-4 flex-wrap">
+        <div
+          className="flex md:w-300 flex-wrap items-center justify-start gap-4 px-4 py-2 col-1"
+          style={{
+            flex: "0 0 calc(35% - 10px)",
+          }}
+        >
           {data?.orderLists &&
             data.orderLists.map((item, j) => (
               <motion.div
@@ -187,7 +139,7 @@ const OrderData = ({ index, data, admin }) => {
                 <img
                   src={baseURL + item.product.image}
                   alt=""
-                  className="w-10 h-10 object-contain"
+                  className="w-10 h-10 object-contain "
                 />
                 <div className="flex items-start flex-col">
                   <p className="text-base font-semibold text-headingColor">
@@ -205,7 +157,7 @@ const OrderData = ({ index, data, admin }) => {
               </motion.div>
             ))}
         </div>
-        <div className="flex items-start justify-start flex-col gap-2 ml-auto w-full md:w-508">
+        <div className="flex items-start justify-center flex-col gap-2  w-full md:w-508">
           <h1 className="text-lg text-headingColor -mt-2">
             {data.user.name} - {data.phone}
           </h1>
@@ -229,9 +181,133 @@ const OrderData = ({ index, data, admin }) => {
             </p>
           </div>
         </div>
+        <div className="w-full h-auto md:w-225 justify-center items-center">
+          {data.status === "Pending" && (
+            <>
+              <div className="flex items-center justify-center ">
+                <motion.img
+                  src={delivery}
+                  className="w-16 h-20 object-contain"
+                />
+                <p className="text-base font-semibold text-headingColor">
+                  Tài xế đang lấy đơn
+                </p>
+              </div>
+            </>
+          )}
+          {data.status === "Shipping" && (
+             <div className="flex items-center justify-center ">
+             <motion.img
+               src={shipperCome}
+               className="w-24 h-30 object-contain"
+             />
+             <p className="text-base font-semibold text-headingColor">
+               Tài xế đang đến!
+             </p>
+           </div>
+          )}
+          {data.status === "Done" &&
+            (data.isRate ? (
+              <>
+                {" "}
+                <div className="flex justify-center items-center gap-1 text-base font-normal">
+                  Đã đánh giá:
+                  <p className=" font-bold text-headingColor">
+                    {data.ratings}{" "}
+                  </p>
+                  <FaStar className="text-orange-400 text-base font-normal" />
+                </div>
+                {data.mess !== "" && data.mess !== null ? (
+                  <div className="w-full px-4 py-3 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                    {data.mess}
+                  </div>
+                ) : (
+                  <>
+                    <div className="w-full px-4 py-3 bg-cardOverlay  text-gray-300 shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                      No Comment
+                    </div>
+                  </>
+                )}
+              </>
+            ) : (
+              <div className=" w-full gap-1 text-base font-normal">
+                <div className=" justify-center flex items-center text-xl ">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <div
+                      key={star}
+                      onClick={() => {
+                        setRating(star);
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        color: star <= rating ? "orange" : "gray",
+                      }}
+                    >
+                      ★
+                    </div>
+                  ))}
+                </div>
+                {!rated && (
+                  <>
+                    <div className="w-full  items-center justify-center gap-2">
+                      <InputContent
+                        type="text"
+                        placeholder={
+                          "Hãy đóng góp ý kiến của bạn cho cửa hàng!"
+                        }
+                        stateValue={comment}
+                        stateFunc={setComment}
+                      />
+                      <motion.button
+                        onClick={() =>
+                          handleRating(data._id, data.orderLists[0].product.id)
+                        }
+                        className="text-base font-semibold hover:bg-gray-200 hover:text-orange-300 border border-gray-300 px-2 py-[2px] rounded-md text-orange-400"
+                        {...buttonClick}
+                      >
+                        Đánh giá
+                      </motion.button>
+                    </div>
+                  </>
+                )}
+                {rated && (
+                  <>
+                    {" "}
+                    <div className="flex justify-center items-center gap-1 text-base font-normal">
+                      Đã đánh giá: {rating}{" "}
+                      <FaStar className="text-orange-400 text-base font-normal" />
+                    </div>
+                    {comment !== "" && comment !== null ? (
+                  <div className="w-full px-4 py-3 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                    {comment}
+                  </div>
+                ) : (
+                  <>
+                    <div className="w-full px-4 py-3 bg-cardOverlay  text-gray-300 shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                      No Comment
+                    </div>
+                  </>
+                )}
+                  </>
+                )}
+              </div>
+            ))}
+        </div>
       </motion.div>
     </motion.div>
   );
 };
-
+export const InputContent = ({ type, placeholder, stateValue, stateFunc }) => {
+  return (
+    <>
+      <textarea
+        rows={2}
+        placeholder={placeholder}
+        className="w-full px-4 py-3 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none" //
+        value={stateValue}
+        onChange={(e) => stateFunc(e.target.value)}
+      />
+    </>
+  );
+};
 export default OrderData;

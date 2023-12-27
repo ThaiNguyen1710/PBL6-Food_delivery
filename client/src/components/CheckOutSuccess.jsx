@@ -11,6 +11,7 @@ import {
   getAllCartItems,
   getAllOrders,
   handleCheckOut,
+  handleCheckOutByMoney,
 } from "../api";
 import { useDispatch, useSelector } from "react-redux";
 import { FaDongSign } from "react-icons/fa6";
@@ -20,7 +21,7 @@ import {
   alertNULL,
   alertSuccess,
 } from "../context/actions/alertActions";
-import {  setOrders } from "../context/actions/orderAction";
+import { setOrders } from "../context/actions/orderAction";
 import { BsCashCoin } from "react-icons/bs";
 import { paypal } from "../assets";
 import { setCartItems } from "../context/actions/cartAction";
@@ -44,6 +45,7 @@ const CheckOutSuccess = () => {
   const order = cart
     ? cart.filter((item) => item.user.id === user.user.userId)
     : [];
+ 
   useEffect(() => {
     let total = 0;
     let totalQuantity = 0;
@@ -74,9 +76,9 @@ const CheckOutSuccess = () => {
   const estimatedTimes = [15, 20, 30];
   let randomTime;
 
-  
   if (!randomTime) {
-      randomTime = estimatedTimes[Math.floor(Math.random() * estimatedTimes.length)];
+    randomTime =
+      estimatedTimes[Math.floor(Math.random() * estimatedTimes.length)];
   }
 
   const deliveryTime = new Date(currentTime + randomTime * 60 * 1000);
@@ -86,12 +88,12 @@ const CheckOutSuccess = () => {
       const orderData = {
         user: user.user.userId,
         shippingAddress1: order?.[0]?.user?.address,
-        shippingAddress2: order?.[0]?.product?.user?.store,
+        shippingAddress2: order?.[0]?.product?.user?.address,
         totalPrice: totalOrder,
         phone: order?.[0]?.user?.phone,
       };
 
-      const createdOrder = await handleCheckOut(orderData);
+      const createdOrder = await handleCheckOutByMoney(orderData);
 
       console.log(createdOrder);
 
@@ -131,13 +133,13 @@ const CheckOutSuccess = () => {
       const orderData = {
         user: user.user.userId,
         shippingAddress1: order?.[0]?.user?.address,
-        shippingAddress2: order?.[0]?.product?.user?.store,
+        shippingAddress2: order?.[0]?.product?.user?.address,
         totalPrice: totalOrder,
         phone: order?.[0]?.user?.phone,
       };
 
       const createdOrder = await handleCheckOut(orderData);
-console.log(createdOrder)
+      console.log(createdOrder);
       if (createdOrder) {
         dispatch(alertInfo("Đơn hàng đang được xử lý!"));
         await clearAllCart(user?.user?.userId);
@@ -157,7 +159,7 @@ console.log(createdOrder)
               const paymentResponse = await axios.post(
                 `${baseURL}/pbl6/paypal/${createdOrder.id}`
               );
-              console.log(paymentResponse)
+              console.log(paymentResponse);
               if (
                 paymentResponse.data.links &&
                 paymentResponse.data.links.length > 0
@@ -166,7 +168,7 @@ console.log(createdOrder)
                   (link) => link.method === "REDIRECT"
                 );
                 if (redirectLink) {
-                  window.open(redirectLink.href, '_blank');
+                  window.open(redirectLink.href, "_blank");
                 }
               }
             } catch (err) {
@@ -178,7 +180,6 @@ console.log(createdOrder)
       } else {
         throw new Error("Failed to update user information");
       }
-     
     } catch (error) {
       console.error("Error during checkout:", error);
     }
@@ -212,7 +213,6 @@ console.log(createdOrder)
                   {order?.[0]?.product?.user?.address}
                 </p>
 
-         
                 {order.map((item, index) => (
                   <img
                     key={index}
@@ -307,7 +307,6 @@ console.log(createdOrder)
         </div>
         {isCart && <Cart />}
       </div>
-
     </main>
   );
 };

@@ -299,8 +299,9 @@ const DBHome = () => {
                 {
                   data: [
                     preparingCount,
-                    deliveredCount,
+                
                     cancelledCount,
+                    deliveredCount,
                     numberPaypal,
                     numberMoney,
                   ],

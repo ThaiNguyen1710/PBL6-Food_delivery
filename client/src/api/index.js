@@ -241,6 +241,19 @@ export const clearAllCart = async (user_id) => {
   }
 };
 
+export const handleCheckOutByMoney = async (orderData) => {
+  try {
+    const response = await axios.post(
+      `${baseURL}/pbl6/order
+    `,
+      orderData
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};
 export const handleCheckOut = async (orderData) => {
   try {
     const response = await axios.post(
@@ -281,5 +294,25 @@ export const ratingProduct = async (orderData) => {
   } catch (error) {
     console.log(error);
     throw error;
+  }
+};
+
+//Shipper
+
+export const editShipper = async (shipperId, data) => {
+  try {
+    const res = await axios.put(`${baseURL}/pbl6/shipper/${shipperId}`, data);
+    return res.data;
+  } catch (err) {
+    console.error("Error in editUser function:", err);
+    return null;
+  }
+};
+export const getAllShipper = async () => {
+  try {
+    const res = await axios.get(`${baseURL}/pbl6/shipper`);
+    return res.data;
+  } catch (err) {
+    return null;
   }
 };

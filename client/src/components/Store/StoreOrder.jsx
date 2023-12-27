@@ -28,7 +28,7 @@ const StoreOrder = () => {
   const ordersPerPage = 3; 
 
   const orderStore = orders
-    ? orders.filter((order) => order.shippingAddress2 === user.user.store)
+    ? orders.filter((order) => order.shippingAddress2 === user.user.store||order.shippingAddress2 === user.user.address)
     : [];
 
   const indexOfLastOrder = currentPage * ordersPerPage;

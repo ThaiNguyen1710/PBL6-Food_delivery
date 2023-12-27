@@ -26,7 +26,7 @@ const StoreHeader = () => {
       : [];
 
   const orderStore = order
-    ? order.filter((order) => order.shippingAddress2 === storeOwner?.[0]?.store)
+    ? order.filter((order) => order.shippingAddress2 === storeOwner?.[0]?.store || order.shippingAddress2 === storeOwner?.[0]?.address)
     : [];
   const orderPending = orderStore
     ? orderStore.filter((pending) => pending.status === "Pending")

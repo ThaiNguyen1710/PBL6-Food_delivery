@@ -21,4 +21,5 @@ export {default as overView} from './images/overView.png'
 export {default as storeList} from './images/store (1).png'
 export {default as userList} from './images/user-group.png'
 export {default as shipped} from './images/shipped.png'
+export {default as shipperCome} from './images/Deliveryman Riding scooter.gif'
 

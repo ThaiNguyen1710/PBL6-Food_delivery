@@ -14,17 +14,16 @@ import { useSelector } from "react-redux";
 const ShopLeftSection = () => {
   const user = useSelector((state) => state.user);
   const allUser = useSelector((state) => state.allUsers);
-  const storeOwner = allUser && user && user.user
-  ? allUser.filter((store) => store.id === user.user.userId)
-  : [];
-
-  
+  const storeOwner =
+    allUser && user && user.user
+      ? allUser.filter((store) => store.id === user.user.userId)
+      : [];
 
   return (
-    <div className="h-full py-2 flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-300 gap-3 overflow-auto">
+    <div className="h-full py-2 flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-225 gap-3 overflow-auto">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
-        <img src={logo2} className="w-20 " alt="Please uploadImage!" />
-        <p className=" font-semibold text-5xl " style={gradientStyle}>
+        <img src={logo2} className="w-16 " alt="" />
+        <p className=" font-semibold text-4xl " style={gradientStyle}>
           6Food
         </p>
       </NavLink>

@@ -1,41 +1,116 @@
-import React from 'react'
-import DataTable from './DataTable'
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { baseURL, editShipper, editUser, getAllShipper, getAllUsers } from "../../api";
+import { setAllUserDetail } from "../../context/actions/allUsersAction";
+import DataTable from "./DataTable";
+import { avatar } from "../../assets";
 
+import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
+import { setAllShipper } from "../../context/actions/allShipperAction";
 const DBShipper = () => {
-    return (
-      <div className="flex justify-center items-center gap-4 pt-6 w-full">
+  const shipper = useSelector((state) => state.shipper);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!shipper) {
+      getAllShipper().then((data) => {
+        dispatch(setAllShipper(data));
+      });
+    }
+  }, []);
+
+  const blockShipper = async (rowData) => {
+    try {
+      const shipperId = rowData.id;
+      const newData = {
+        isFeatured: !rowData.isFeatured,
+      };
+
+      const updatedUserData = await editShipper(shipperId, newData);
+
+      if (updatedUserData) {
+        getAllShipper().then((data) => {
+          dispatch(setAllShipper(data));
+        });
+        dispatch(alertSuccess("Cập nhật thành công  "));
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+      } else {
+        throw new Error("Failed to update user information");
+      }
+    } catch (error) {
+      console.error("Error updating user information:", error);
+    }
+  };
+
+  return (
+    <div className="flex justify-center items-center gap-4 pt-6 w-full">
       <DataTable
         columns={[
           {
-            title: "Name",
+            title: <p className="font-semibold text-xl">Image</p>,
             field: "photoURL",
-           
+            render: (rowData) => (
+              <img
+                src={baseURL + rowData.image ? baseURL + rowData.image : avatar}
+                className="w-32 h-16 object-contain rounded-md"
+                alt=""
+              />
+            ),
           },
           {
-            title: "Image",
-            field: "",
+            title: <p className="font-semibold text-xl">Name</p>,
+            field: "name",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.name}</p>
+            ),
           },
           {
-            title: "Address",
-            field: "displayName",
-          },
-          {
-            title: "Status",
+            title: <p className="font-semibold text-xl">Email</p>,
             field: "email",
-          },
-         
-          {
-            title: "Phone",
-            field: "",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.email}</p>
+            ),
           },
           {
-            title: "Block",
-            field: "",
+            title: <p className="font-semibold text-xl">Phone</p>,
+            field: "phone",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.phone}</p>
+            ),
           },
-          
+          {
+            title: <p className="font-semibold text-xl">Address</p>,
+            field: "address",
+            render: (rowData) => (
+              <p className="text-textColor font-medium ">{rowData.address}</p>
+            ),
+          },
+          {
+            title: <p className="font-semibold text-xl">Block</p>,
+            field: "isFeatured",
+            render: (rowData) => (
+              <select
+                value={rowData.isFeatured}
+                onChange={() => blockShipper(rowData)}
+                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
+                style={{ color: rowData.isFeatured === true ? "blue" : "red" }}
+              >
+                <option value="true" className="font-semibold text-blue-500">
+                  Activity
+                </option>
+                <option value="false" className="font-semibold text-red-500">
+                  Block
+                </option>
+              </select>
+            ),
+          },
         ]}
-       data={"Will be completed soon!"}
-        title="List of Stores"
+        data={shipper}
+        title={
+          <p className="font-semibold text-red-400 text-3xl">List of Users</p>
+        }
         // actions={[
         //   {
         //     icon: "edit",
@@ -64,8 +139,7 @@ const DBShipper = () => {
         // ]}
       />
     </div>
-    )
-  }
-  
+  );
+};
 
-export default DBShipper
+export default DBShipper;
