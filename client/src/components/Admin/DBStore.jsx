@@ -16,7 +16,7 @@ const DBStore = () => {
     ? allUsers.filter((store) => store?.closeAt !== null)
     : [];
 
-  console.log(isStore);
+
 
   useEffect(() => {
     if (!allUsers) {

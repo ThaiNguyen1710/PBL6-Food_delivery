@@ -4,7 +4,7 @@ import { baseURL, editUser, getAllUsers } from "../../api";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import DataTable from "./DataTable";
 import { avatar } from "../../assets";
-import { setUserDetail } from "../../context/actions/userActions";
+
 import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 const DBUsers = () => {
   const allUsers = useSelector((state) => state.allUsers);
@@ -17,7 +17,7 @@ const DBUsers = () => {
         dispatch(setAllUserDetail(data));
       });
     }
-  }, []);
+  });
   const typeUser = async (rowData) => {
     try {
       const userId = rowData.id; 
@@ -47,6 +47,10 @@ const DBUsers = () => {
     }
  
   };
+
+  const user = allUsers? allUsers.filter((user)=>user.isStore===false && user.isAdmin===false ):[]
+
+  
   
 
   return (
@@ -137,7 +141,7 @@ const DBUsers = () => {
           },
        
         ]}
-        data={allUsers}
+        data={user}
         title={<p className="font-semibold text-red-400 text-3xl">List of Users</p>}
         // actions={[
         //   {

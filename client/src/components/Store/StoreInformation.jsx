@@ -189,7 +189,7 @@ const StoreInformation = () => {
   return (
     <div className="flex items-center justify-center flex-col pt-6 px-0 w-full gap-3 ">
       <div className="flex justify-center items-start w-full">
-        <div className=" top-24 left-80 fixed items-center justify-center  ">
+        <div className=" top-24 left-64 fixed items-center justify-center  ">
           <label className="flex flex-col items-center justify-center h-full cursor-pointer mr-4 relative gap-2">
             <div className="rounded-lg overflow-hidden w-44 h-24 bg-gray-200 relative ">
             {imageDownloadURL && typeof imageDownloadURL !== "string" ? (

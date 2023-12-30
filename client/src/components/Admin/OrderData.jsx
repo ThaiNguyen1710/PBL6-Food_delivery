@@ -9,6 +9,10 @@ import { delivery, shipperCome } from "../../assets";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 
 const OrderData = ({ index, data, admin }) => {
+
+
+
+  
   const allUser = useSelector((state) => state.allUsers);
   const user = useSelector((state) => state.user);
 
@@ -24,6 +28,7 @@ const OrderData = ({ index, data, admin }) => {
   const store = allUser
     ? allUser.filter((store) => store.address === data.shippingAddress2)
     : [];
+   
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -78,15 +83,20 @@ const OrderData = ({ index, data, admin }) => {
       console.log(error);
     }
   };
-
+  if (!data || !data.user || !data.user.name) {
+    return null; // Hoặc thêm một phần tử HTML tương ứng để hiển thị thông báo lỗi
+  }
   return (
     <motion.div
       {...staggerFadeInOut(index)}
-      className="w-full flex flex-col items-start justify-start px-3 py-2 border relative border-gray-300 bg-cardOverlay drop-shadow-md rounded-md gap-1"
+      className="w-full flex flex-col items-start justify-start px-2 py-1 border relative border-gray-300 bg-cardOverlay drop-shadow-md rounded-md gap-1"
     >
       <div className="w-full flex items-center justify-between">
-        <h1 className="text-xl text-headingColor font-semibold">Order</h1>
-        <div className="flex items-center gap-4">
+      <h1 className="text-lg font-semibold text-red-500 -mt-2">
+            {store?.[0]?.store}
+            {">>"} {data.shippingAddress2}
+          </h1>
+        <div className="flex items-center gap-3">
           <p className="flex items-center gap-1 text-textColor">
             Thanh toán:{" "}
             {data?.isPay ? (
@@ -115,18 +125,15 @@ const OrderData = ({ index, data, admin }) => {
         </div>
       </div>
       <div className="flex items-center justify-start flex-wrap w-full">
-        <div className="flex items-center justify-start w-full gap-4">
-          <h1 className="text-xl font-semibold text-red-500 -mt-2">
-            {store?.[0]?.store}
-            {">>"} {data.shippingAddress2}
-          </h1>
+        <div className="flex items-center justify-start w-full gap-3">
+         
         </div>
       </div>
-      <motion.div className="w-full flex gap-4 flex-wrap">
+      <motion.div className="w-full flex gap-2 flex-wrap">
         <div
-          className="flex md:w-300 flex-wrap items-center justify-start gap-4 px-4 py-2 col-1"
+          className="flex md:w-300 flex-wrap items-center justify-start gap-1 px-2 py-1 col-1"
           style={{
-            flex: "0 0 calc(35% - 10px)",
+            flex: "0 0 calc(35% - 8px)",
           }}
         >
           {data?.orderLists &&
@@ -139,13 +146,13 @@ const OrderData = ({ index, data, admin }) => {
                 <img
                   src={baseURL + item.product.image}
                   alt=""
-                  className="w-10 h-10 object-contain "
+                  className="w-6 h-6 object-contain "
                 />
                 <div className="flex items-start flex-col">
-                  <p className="text-base font-semibold text-headingColor">
+                  <p className="text-sm font-semibold text-headingColor">
                     {item.product.name}
                   </p>
-                  <p className="flex items-start gap-2">
+                  <p className="flex items-start gap-1 text-sm ">
                     {" "}
                     Quantity: {item.quantity}
                   </p>
@@ -157,25 +164,25 @@ const OrderData = ({ index, data, admin }) => {
               </motion.div>
             ))}
         </div>
-        <div className="flex items-start justify-center flex-col gap-2  w-full md:w-508">
-          <h1 className="text-lg text-headingColor -mt-2">
+        <div className="flex items-start justify-center flex-col gap-1  w-full md:w-508">
+          <h1 className="text-lg text-headingColor -mt-1">
             {data.user.name} - {data.phone}
           </h1>
           <div className="flex ">
-            <p className="text-base font-semibold text-headingColor -mt-2">
+            <p className="text-base font-semibold text-headingColor -mt-1">
               Giao hàng đến:
             </p>
-            <p className="text-base text-textColor -mt-2">
+            <p className="text-base text-textColor -mt-1">
               <span>&nbsp;</span>
               {data.shippingAddress1}
             </p>
           </div>
 
           <div className="flex ">
-            <p className="text-base font-semibold text-headingColor -mt-2">
+            <p className="text-base font-semibold text-headingColor -mt-1">
               Thời gian hoàn thành:
             </p>
-            <p className="text-base text-rose-600 -mt-2">
+            <p className="text-base text-rose-600 -mt-1">
               <span>&nbsp;</span>
               {formattedDate}
             </p>
@@ -218,12 +225,12 @@ const OrderData = ({ index, data, admin }) => {
                   <FaStar className="text-orange-400 text-base font-normal" />
                 </div>
                 {data.mess !== "" && data.mess !== null ? (
-                  <div className="w-full px-4 py-3 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                  <div className="w-full px-2 py-2 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
                     {data.mess}
                   </div>
                 ) : (
                   <>
-                    <div className="w-full px-4 py-3 bg-cardOverlay  text-gray-300 shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                    <div className="w-full px-2 py-2 bg-cardOverlay  text-gray-300 shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
                       No Comment
                     </div>
                   </>
@@ -278,12 +285,12 @@ const OrderData = ({ index, data, admin }) => {
                       <FaStar className="text-orange-400 text-base font-normal" />
                     </div>
                     {comment !== "" && comment !== null ? (
-                  <div className="w-full px-4 py-3 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                  <div className="w-full px-2 py-2 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
                     {comment}
                   </div>
                 ) : (
                   <>
-                    <div className="w-full px-4 py-3 bg-cardOverlay  text-gray-300 shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                    <div className="w-full px-2 py-2 bg-cardOverlay  text-gray-300 shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
                       No Comment
                     </div>
                   </>
@@ -303,7 +310,7 @@ export const InputContent = ({ type, placeholder, stateValue, stateFunc }) => {
       <textarea
         rows={2}
         placeholder={placeholder}
-        className="w-full px-4 py-3 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none" //
+        className="w-full px-2 py-2 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none" //
         value={stateValue}
         onChange={(e) => stateFunc(e.target.value)}
       />

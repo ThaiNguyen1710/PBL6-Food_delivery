@@ -10,7 +10,6 @@ import { BsToggles2 } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { buttonClick } from "../../animations";
 
-
 const UserOrder = () => {
   const user = useSelector((state) => state.user);
   const orders = useSelector((state) => state.orders);
@@ -18,20 +17,19 @@ const UserOrder = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
-
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 2; 
+  const ordersPerPage = 3;
+
+  const [isRate, setIsRate] = useState(false);
 
   const userOrders = orders
-  ? orders.filter((order) => order.user.id === user.user.userId)
-  : [];
+    ? orders.filter((order) => order.user.id === user.user.userId)
+    : [];
 
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   const currentOrders = userOrders.slice(indexOfFirstOrder, indexOfLastOrder);
-
-
 
   const dispatch = useDispatch();
 
@@ -52,8 +50,11 @@ const UserOrder = () => {
         (!endDate || orderDate <= new Date(endDate))
       );
     });
+    
 
     const filteredOrdersByCustomer = filteredOrdersByDate.filter((order) => {
+      const matchedPayed =
+      isRate === null || order.isRate === isRate;
       const matchedShippingAddress = order.shippingAddress2
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -68,7 +69,7 @@ const UserOrder = () => {
         return false;
       });
 
-      return matchedShippingAddress || matchedPrice;
+      return matchedPayed && (matchedShippingAddress || matchedPrice);
     });
 
     return filteredOrdersByCustomer;
@@ -81,12 +82,12 @@ const UserOrder = () => {
     setCurrentPage(pageNumber);
   };
 
-
   const filterOrders = orders ? handleFilterByDateAndCustomer() : [];
+  console.log(filterOrders)
   return (
     <main className="w-screen min-h-screen flex justify-start items-center flex-col bg-primary">
       <Header />
-      <div className="w-full flex flex-col items-start justify-center mt-32 px-6 md:px-24 2xl:px-40 gap-12 pb-2 ">
+      <div className="w-full flex flex-col items-start justify-center mt-24 px-4 md:px-24 2xl:px-40 gap-6 ">
         <div className="w-full justify-between items-center flex">
           <div className="flex items-center justify-center bg-cardOverlay gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md">
             <p className="text-base font-semibold"> Từ:</p>
@@ -106,6 +107,27 @@ const UserOrder = () => {
               className="border-none outline-none font-medium bg-transparent text-base text-textColor border shadow-md  "
             />
           </div>
+          <div className="flex items-center justify-center gap-4 ">
+            <motion.button
+              className={`${
+                isRate === false ? "bg-red-300" : "bg-gray-300"
+              } px-3 py-1 rounded-md w-150 hover:bg-red-200`}
+              {...buttonClick}
+              onClick={() => setIsRate(false)}
+            >
+              Chưa Đánh Giá
+            </motion.button>
+            <motion.button
+              className={`${
+                isRate === true ? "bg-red-300" : "bg-gray-300"
+              } px-3 py-1 rounded-md w-150 hover:bg-red-200`}
+              {...buttonClick}
+              onClick={() => setIsRate(true)}
+            >
+              Đã đánh giá
+            </motion.button>
+           
+          </div>
           <div className="flex items-center justify-center bg-cardOverlay gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md ">
             <MdSearch className="text-gray-400 text-2xl" />
             <input
@@ -119,38 +141,35 @@ const UserOrder = () => {
           </div>
         </div>
         {filterOrders.length > 0 ? (
-        <>
-          {filterOrders
-            .slice(
-              (currentPage - 1) * ordersPerPage,
-              currentPage * ordersPerPage
-            )
-            .map((item, i) => (
-              <OrderData key={i} index={i} data={item} admin={true} />
-            ))}
-        </>
-      ) : (
-        <>
-          {currentOrders.length > 0 ? (
-            <>
-              {currentOrders.map((item, i) => (
+          <>
+            {filterOrders
+              .slice(
+                (currentPage - 1) * ordersPerPage,
+                currentPage * ordersPerPage
+              )
+              .map((item, i) => (
                 <OrderData key={i} index={i} data={item} admin={true} />
               ))}
-            </>
-          ) : (
-            <>
-              <h1 className="text-[72px] text-headingColor font-bold ">
-                No Data
-              </h1>
-            </>
-          )}
-        </>
-      )}
-
-      {/* Nút chuyển trang */}
-      
-    </div>
-    <div className="flex items-center justify-center gap-4 ">
+          </>
+        ) : (
+          <>
+            {currentOrders.length > 0 ? (
+              <>
+                {currentOrders.map((item, i) => (
+                  <OrderData key={i} index={i} data={item} admin={true} />
+                ))}
+              </>
+            ) : (
+              <>
+                <h1 className="text-[72px] text-headingColor font-bold ">
+                  No Data
+                </h1>
+              </>
+            )}
+          </>
+        )}
+      </div>
+      <div className="flex items-center justify-center gap-4 ">
         <motion.button
           onClick={() => handlePagination(currentPage - 1)}
           disabled={currentPage === 1}
@@ -162,11 +181,16 @@ const UserOrder = () => {
         {Array.from(
           { length: Math.ceil(filterOrders.length / ordersPerPage) },
           (_, i) => (
-            <button key={i + 1} onClick={() => handlePagination(i + 1)}  className={`${
-              currentPage === i + 1 ? "bg-cardOverlay  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md" : "bg-gray-300 text-black  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
-            } px-3 py-1 rounded-md`}>
+            <button
+              key={i + 1}
+              onClick={() => handlePagination(i + 1)}
+              className={`${
+                currentPage === i + 1
+                  ? "bg-cardOverlay  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
+                  : "bg-gray-300 text-black  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
+              } px-3 py-1 rounded-md`}
+            >
               {i + 1}
-              
             </button>
           )
         )}

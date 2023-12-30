@@ -27,6 +27,9 @@ const StoreOrder = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 3; 
 
+
+  const [selectedStatus, setSelectedStatus] = useState("Pending");
+
   const orderStore = orders
     ? orders.filter((order) => order.shippingAddress2 === user.user.store||order.shippingAddress2 === user.user.address)
     : [];
@@ -47,6 +50,9 @@ const StoreOrder = () => {
     });
 
     const filteredOrdersByCustomer = filteredOrdersByDate.filter((order) => {
+
+      const matchedStatus =
+      selectedStatus === null || order.status === selectedStatus;
       const matchedShippingAddress = order.user.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -60,8 +66,7 @@ const StoreOrder = () => {
         }
         return false;
       });
-
-      return matchedShippingAddress || matchedPrice;
+      return matchedStatus && (matchedShippingAddress || matchedPrice);
     });
 
     return filteredOrdersByCustomer;
@@ -97,6 +102,45 @@ const StoreOrder = () => {
             onChange={(e) => setEndDate(e.target.value)}
             className="border-none outline-none font-medium bg-transparent text-base text-textColor border shadow-md  "
           />
+        </div>
+        <div className="flex items-center justify-center gap-4 ">
+          <motion.button
+            className={`${
+              selectedStatus === null ? "bg-red-300" : "bg-gray-300"
+            } px-3 py-1 rounded-md`}
+
+            {...buttonClick}
+            onClick={() => setSelectedStatus(null)}
+          >
+            All
+          </motion.button>
+          <motion.button
+            className={`${
+              selectedStatus === "Pending" ? "bg-red-300" : "bg-gray-300"
+            } px-3 py-1 rounded-md`}
+            {...buttonClick}
+            onClick={() => setSelectedStatus("Pending")}
+          >
+            Pending
+          </motion.button>
+          <motion.button
+            className={`${
+              selectedStatus === "Shipping" ? "bg-red-300" : "bg-gray-300"
+            } px-3 py-1 rounded-md`}
+            {...buttonClick}
+            onClick={() => setSelectedStatus("Shipping")}
+          >
+            Shipping
+          </motion.button>
+          <motion.button
+            className={`${
+              selectedStatus === "Done" ? "bg-red-300" : "bg-gray-300"
+            } px-3 py-1 rounded-md`}
+            {...buttonClick}
+            onClick={() => setSelectedStatus("Done")}
+          >
+            Done
+          </motion.button>
         </div>
         <div className="flex items-center justify-center bg-cardOverlay gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md ">
           <MdSearch className="text-gray-400 text-2xl" />

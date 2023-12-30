@@ -286,6 +286,15 @@ export const updatedOrder = async (order_id, newData) => {
   }
 };
 
+export const countUserOrder = async ( userId) => {
+  try {
+    const res = await axios.get(`${baseURL}/pbl6/order/${userId}` );
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
+
 //rating
 export const ratingProduct = async (orderData) => {
   try {
