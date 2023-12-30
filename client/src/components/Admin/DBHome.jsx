@@ -109,7 +109,7 @@ const DBHome = () => {
     labels: orderData ? orderData.map((data) => data.timestamp) : [],
     datasets: [
       {
-        label: "Total Price",
+        label: "Doanh Thu",
         backgroundColor: "rgba(179,181,198,0.2)",
         borderColor:"#FF6384",
         pointBackgroundColor: "rgba(179,181,198,1)",
@@ -155,7 +155,7 @@ const DBHome = () => {
           />
           <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
-              Total Orders
+             Tổng Đơn
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {orders?.length}
@@ -170,7 +170,7 @@ const DBHome = () => {
           />
           <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
-              Total Revenue
+               Doanh Thu
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {totalRevenue.toLocaleString("vi-VN")}
@@ -187,7 +187,7 @@ const DBHome = () => {
           />
           <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
-              Total Users
+             Người Dùng
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {users?.length}
@@ -202,7 +202,7 @@ const DBHome = () => {
           />
           <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
-              Total Stores
+              Cửa Hàng
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {isStore?.length}
@@ -222,7 +222,7 @@ const DBHome = () => {
           >
 
            
-            <option value="">Select Year</option>
+            <option value="">Chọn Năm</option>
             {Array.from({ length: 4 }, (_, index) => {
               const year = 2021 + index;
               return (
@@ -238,7 +238,7 @@ const DBHome = () => {
             value={selectedMonth || ""}
             className="border-none outline-none py-1 font-medium bg-transparent text-base text-textColor border shadow-md focus:border-red-400 "
           >
-            <option value="">Select Month</option>
+            <option value="">Chọn Tháng</option>
             {Array.from({ length: 12 }, (_, index) => {
               const month = index + 1;
               return (
@@ -272,7 +272,7 @@ const DBHome = () => {
                 labels: category,
                 datasets: [
                   {
-                    label: "Category Count",
+                    label: "Số loại sản phẩm",
                     backgroundColor: [
                       "#36A2EB",
                       "#FF6384",
@@ -294,7 +294,7 @@ const DBHome = () => {
           <CChart
             type="polarArea"
             data={{
-              labels: ["Pending", "Shipping", "Done", "PayPal", "Money"],
+              labels: ["Đang chờ", "Đang giao", "Hoàn Thành", "PayPal", "Tiền Mặt"],
               datasets: [
                 {
                   data: [

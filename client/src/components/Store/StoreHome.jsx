@@ -167,7 +167,7 @@ const StoreHome = () => {
           />
           <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
-              Total Orders
+              Tổng Đơn 
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {orderStore?.length}
@@ -182,7 +182,7 @@ const StoreHome = () => {
           />
           <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
-              Total Revenue
+              Doanh Thu
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {totalRevenue.toLocaleString("vi-VN")}
@@ -199,7 +199,7 @@ const StoreHome = () => {
           />
           <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
-              Total Product
+              Sản Phẩm
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {productStore?.length}
@@ -217,7 +217,7 @@ const StoreHome = () => {
                 labels: category,
                 datasets: [
                   {
-                    label: "Category Count",
+                    label: "Số loại sản phẩm",
                     backgroundColor: [
                       "#36A2EB",
                       "#FF6384",
@@ -238,7 +238,7 @@ const StoreHome = () => {
           <CChart
             type="polarArea"
             data={{
-              labels: ["Pending", "Shipping", "Done", "PayPal", "Money"],
+              labels: ["Đang chờ", "Đang giao", "Hoàn Thành", "PayPal", "Tiền mặt"],
               datasets: [
                 {
                   data: [

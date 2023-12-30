@@ -47,7 +47,7 @@ const ShopLeftSection = () => {
           }
           to={"/my-store/home"}
         >
-          Home
+          Trang chủ
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -57,7 +57,7 @@ const ShopLeftSection = () => {
           }
           to={"/my-store/information"}
         >
-          Information
+          Thông tin
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -67,7 +67,7 @@ const ShopLeftSection = () => {
           }
           to={"/my-store/order"}
         >
-          Orders
+          Đơn hàng
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -77,7 +77,7 @@ const ShopLeftSection = () => {
           }
           to={"/my-store/item"}
         >
-          Item
+          Sản phẩm
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -87,7 +87,7 @@ const ShopLeftSection = () => {
           }
           to={"/my-store/add-item"}
         >
-          Add New Item
+          Thêm sản phẩm
         </NavLink>
       </ul>
 

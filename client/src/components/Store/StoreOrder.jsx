@@ -112,7 +112,7 @@ const StoreOrder = () => {
             {...buttonClick}
             onClick={() => setSelectedStatus(null)}
           >
-            All
+            Tất cả
           </motion.button>
           <motion.button
             className={`${
@@ -121,7 +121,7 @@ const StoreOrder = () => {
             {...buttonClick}
             onClick={() => setSelectedStatus("Pending")}
           >
-            Pending
+            Đang chờ
           </motion.button>
           <motion.button
             className={`${
@@ -130,7 +130,7 @@ const StoreOrder = () => {
             {...buttonClick}
             onClick={() => setSelectedStatus("Shipping")}
           >
-            Shipping
+            Đang giao
           </motion.button>
           <motion.button
             className={`${
@@ -139,7 +139,7 @@ const StoreOrder = () => {
             {...buttonClick}
             onClick={() => setSelectedStatus("Done")}
           >
-            Done
+            Đã giao
           </motion.button>
         </div>
         <div className="flex items-center justify-center bg-cardOverlay gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md ">
@@ -148,7 +148,7 @@ const StoreOrder = () => {
             type="text"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Search Here"
+            placeholder="Tìm kiếm"
             className="border-none outline-none font-medium bg-transparent text-base text-textColor "
           />
           <BsToggles2 className="text-gray-400 text-2xl" />

@@ -59,7 +59,7 @@ const ListStoreConfirm = () => {
 
           
           {
-            title: <p className="font-semibold text-xl">Name</p>,
+            title: <p className="font-semibold text-xl">Tên</p>,
             field: "store",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.store}</p>
@@ -67,7 +67,7 @@ const ListStoreConfirm = () => {
           },
 
           {
-            title: <p className="font-semibold text-xl">Owner</p>,
+            title: <p className="font-semibold text-xl">Người đăng ký</p>,
             field: "name",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.name}</p>
@@ -75,14 +75,14 @@ const ListStoreConfirm = () => {
           },
 
           {
-            title: <p className="font-semibold text-xl">Address</p>,
+            title: <p className="font-semibold text-xl">Địa chỉ</p>,
             field: "address",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.address}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Phone</p>,
+            title: <p className="font-semibold text-xl">Số điện thoại</p>,
             field: "phone",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.phone}</p>
@@ -90,7 +90,7 @@ const ListStoreConfirm = () => {
           },
          
           {
-            title: <p className="font-semibold text-xl">Accept</p>,
+            title: <p className="font-semibold text-xl">Chấp nhận</p>,
             field: "isStore",
             render: (rowData) => (
               <select
@@ -100,10 +100,10 @@ const ListStoreConfirm = () => {
                 style={{ color: rowData.isStore === true ? "blue" : "red" }}
               >
                 <option value="true" className="font-semibold text-blue-500">
-                  Accept
+                  Chấp nhận
                 </option>
                 <option value="false" className="font-semibold text-red-500">
-                Opposite
+                Từ chối
                 </option>
               </select>
             ),
@@ -111,7 +111,7 @@ const ListStoreConfirm = () => {
         ]}
         data={isStore}
         title={
-          <p className="font-semibold text-red-400 text-3xl">List of Stores Wait Confirm</p>
+          <p className="font-semibold text-red-400 text-3xl">Danh sách đăng ký cửa hàng</p>
         }
       />
     </div>

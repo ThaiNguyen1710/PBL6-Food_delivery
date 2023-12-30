@@ -71,7 +71,7 @@ const StoreAddItem = () => {
         .then((res) => {
           if (res && res.data) {
             console.log("New item added:", res);
-            dispatch(alertSuccess("Added Product!"));
+            dispatch(alertSuccess("Thêm sản phẩm!"));
             setTimeout(() => {
               dispatch(alertNULL());
             }, 3000);
@@ -160,7 +160,7 @@ const StoreAddItem = () => {
       <div className="border border-gray-300 rounded-md p-4 w-full flex flex-col items-center  font-semibold justify-center gap-4">
         <InputValueField
           type="text"
-          placeholder={"Item name here"}
+          placeholder={"Tên sản phẩm"}
           stateValue={itemName}
           stateFunc={setItemName}
         />
@@ -201,14 +201,14 @@ const StoreAddItem = () => {
                   className="px-4 py-2 ml-2 bg-red-400 text-white rounded-md font-semibold cursor-pointer hover:bg-blue-300"
                   {...buttonClick}
                 >
-                  Add
+                  Thêm
                 </button>
                 <button
                   onClick={closeAddCategory}
                   className="px-4 py-2 ml-2 bg-red-400 text-white rounded-md font-semibold cursor-pointer hover:bg-blue-300 "
                   {...buttonClick}
                 >
-                  Back
+                  Hủy
                 </button>
               </div>
             </div>
@@ -217,7 +217,7 @@ const StoreAddItem = () => {
               className="px-3 py-2 rounded-md text-xl text-textColor font-semibold cursor-pointer hover:border backdrop-blur-md shadow-md border-red-300 bg-blue-200"
               onClick={openAddCategory}
             >
-              Add Category +
+              Thêm loại +
             </div>
           )}
         </div>
@@ -225,7 +225,7 @@ const StoreAddItem = () => {
       <div className="w-[80%] flex justify-center items-center gap-3   border-red-200 font-semibold">
         <InputValueField
           type="number"
-          placeholder={"Item price here"}
+          placeholder={"Giá sản phẩm"}
           stateValue={price}
           stateFunc={setPrice}
         />
@@ -236,7 +236,7 @@ const StoreAddItem = () => {
         </div>
         <InputValueField
           type="text"
-          placeholder={"Information item"}
+          placeholder={"Thông tin sản phẩm"}
           stateValue={information}
           stateFunc={setInformation}
         />
@@ -266,7 +266,7 @@ const StoreAddItem = () => {
               <FcOpenedFolder className="" />
             </p>
             <p className="items-center justify-center flex font-semibold text-textColor">
-              Click to upload image!
+              Click để tải ảnh!
             </p>
           </div>
           <input
@@ -290,7 +290,7 @@ const StoreAddItem = () => {
         {...buttonClick}
         className="w-[60%] h-10 bg-red-400 flex items-center justify-center gap -3  hover:bg-red-500  cursor-pointer shadow-md rounded-md backdrop-blur-md"
       >
-        <p className="font-semibold text-card text-xl ">Save</p>
+        <p className="font-semibold text-card text-xl ">Lưu</p>
       </motion.button>
     </div>
   );

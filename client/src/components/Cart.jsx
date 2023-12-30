@@ -147,7 +147,7 @@ const Cart = () => {
           <>
             <h1 className="text-4xl text-orange-400 font-semibold px-32">
               {" "}
-              Empty Cart
+              Không có sản phẩm nào
             </h1>
           </>
         )}
@@ -181,7 +181,7 @@ export const CartItemCard = ({ index, data }) => {
       decrementItemQuantity(productId)
         .then((data) => {
           if (!data) {
-            dispatch(alertSuccess("Updated the cart"));
+            dispatch(alertSuccess("Cập nhật giỏ hàng!"));
             getAllCartItems(cart?.user?._id).then((items) => {
               if (items) {
                 dispatch(setCartItems(items));
@@ -203,7 +203,7 @@ export const CartItemCard = ({ index, data }) => {
       clearItem(productId)
         .then((data) => {
           if (!data) {
-            dispatch(alertSuccess("Updated the cart"));
+            dispatch(alertSuccess("Cập nhật giỏ hàng!"));
             getAllCartItems(cart?.user?._id).then((items) => {
               if (items) {
                 dispatch(setCartItems(items));
@@ -227,7 +227,7 @@ export const CartItemCard = ({ index, data }) => {
       incrementItemQuantity(productId)
         .then((data) => {
           if (!data) {
-            dispatch(alertSuccess("Updated the cart"));
+            dispatch(alertSuccess("Cập nhật giỏ hàng!"));
             getAllCartItems(cart?.user?._id).then((items) => {
               if (items) {
                 dispatch(setCartItems(items));

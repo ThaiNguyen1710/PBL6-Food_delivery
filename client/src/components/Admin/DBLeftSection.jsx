@@ -17,7 +17,7 @@ const DBLeftSection = () => {
       <ul className="flex flex-col gap-1 px-2 py-2">
         <div className="flex w-full gap-1  items-center" >
         <img src={overView} className="w-8 h-8 object-contain " alt="" />
-        <p className="text-xl font-bold text-headingColor">Over View</p>
+        <p className="text-xl font-bold text-headingColor">Tổng quan</p>
         </div>
        
         <NavLink
@@ -28,7 +28,7 @@ const DBLeftSection = () => {
           }
           to={"/dashboard/home"}
         >
-          Home
+          Trang chủ
         </NavLink>
         <div className="flex w-full gap-3  items-center" >
         <img src={storeList} className="w-8 h-8 object-contain " alt="" />
@@ -42,7 +42,7 @@ const DBLeftSection = () => {
           }
           to={"/dashboard/store"}
         >
-          Store
+         Cửa hàng
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -52,7 +52,7 @@ const DBLeftSection = () => {
           }
           to={"/dashboard/store-confirm"}
         >
-          Store wait confirm
+         Cấp phép cửa hàng
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -62,12 +62,11 @@ const DBLeftSection = () => {
           }
           to={"/dashboard/orders"}
         >
-          
-          Orders
+          Đơn hàng
         </NavLink>
         <div className="flex w-full gap-3  items-center" >
         <img src={userList} className="w-8 h-8 object-contain " alt="" />
-        <p className="text-xl font-bold text-headingColor">User</p>
+        <p className="text-xl font-bold text-headingColor">Người dùng</p>
         </div>
         {/* <NavLink
           className={({ isActive }) =>
@@ -97,7 +96,7 @@ const DBLeftSection = () => {
           }
           to={"/dashboard/users"}
         >
-          Users
+          Danh sách
         </NavLink>
         <div className="flex w-full gap-3  items-center" >
         <img src={shipped} className="w-8 h-8 object-contain " alt="" />
@@ -111,7 +110,7 @@ const DBLeftSection = () => {
           }
           to={"/dashboard/shipper"}
         >
-          Shipper
+          Danh sách
         </NavLink>
       </ul>
 

@@ -9,10 +9,6 @@ import { delivery, shipperCome } from "../../assets";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 
 const OrderData = ({ index, data, admin }) => {
-
-
-
-  
   const allUser = useSelector((state) => state.allUsers);
   const user = useSelector((state) => state.user);
 
@@ -28,7 +24,6 @@ const OrderData = ({ index, data, admin }) => {
   const store = allUser
     ? allUser.filter((store) => store.address === data.shippingAddress2)
     : [];
-   
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -92,10 +87,10 @@ const OrderData = ({ index, data, admin }) => {
       className="w-full flex flex-col items-start justify-start px-2 py-1 border relative border-gray-300 bg-cardOverlay drop-shadow-md rounded-md gap-1"
     >
       <div className="w-full flex items-center justify-between">
-      <h1 className="text-lg font-semibold text-red-500 -mt-2">
-            {store?.[0]?.store}
-            {">>"} {data.shippingAddress2}
-          </h1>
+        <h1 className="text-lg font-semibold text-red-500 -mt-2">
+          {store?.[0]?.store}
+          {">>"} {data.shippingAddress2}
+        </h1>
         <div className="flex items-center gap-3">
           <p className="flex items-center gap-1 text-textColor">
             Thanh toán:{" "}
@@ -120,14 +115,18 @@ const OrderData = ({ index, data, admin }) => {
               (data.status === "Done" && "text-emerald-500 bg-emerald-100")
             }`}
           >
-            {data?.status}
+            {data?.status === "Pending"
+              ? "Đang Chờ"
+              : data?.status === "Shipping"
+              ? "Đang Giao"
+              : data?.status === "Done"
+              ? "Hoàn Thành"
+              : data?.status}
           </p>
         </div>
       </div>
       <div className="flex items-center justify-start flex-wrap w-full">
-        <div className="flex items-center justify-start w-full gap-3">
-         
-        </div>
+        <div className="flex items-center justify-start w-full gap-3"></div>
       </div>
       <motion.div className="w-full flex gap-2 flex-wrap">
         <div
@@ -203,15 +202,15 @@ const OrderData = ({ index, data, admin }) => {
             </>
           )}
           {data.status === "Shipping" && (
-             <div className="flex items-center justify-center ">
-             <motion.img
-               src={shipperCome}
-               className="w-24 h-30 object-contain"
-             />
-             <p className="text-base font-semibold text-headingColor">
-               Tài xế đang đến!
-             </p>
-           </div>
+            <div className="flex items-center justify-center ">
+              <motion.img
+                src={shipperCome}
+                className="w-24 h-30 object-contain"
+              />
+              <p className="text-base font-semibold text-headingColor">
+                Tài xế đang đến!
+              </p>
+            </div>
           )}
           {data.status === "Done" &&
             (data.isRate ? (
@@ -285,16 +284,16 @@ const OrderData = ({ index, data, admin }) => {
                       <FaStar className="text-orange-400 text-base font-normal" />
                     </div>
                     {comment !== "" && comment !== null ? (
-                  <div className="w-full px-2 py-2 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
-                    {comment}
-                  </div>
-                ) : (
-                  <>
-                    <div className="w-full px-2 py-2 bg-cardOverlay  text-gray-300 shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
-                      No Comment
-                    </div>
-                  </>
-                )}
+                      <div className="w-full px-2 py-2 bg-cardOverlay shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                        {comment}
+                      </div>
+                    ) : (
+                      <>
+                        <div className="w-full px-2 py-2 bg-cardOverlay  text-gray-300 shadow-md outline-none rounded-md border border-gray-200 focus:border-red-400 resize-none">
+                          No Comment
+                        </div>
+                      </>
+                    )}
                   </>
                 )}
               </div>

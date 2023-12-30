@@ -133,7 +133,7 @@ const StoreItem = () => {
       <DataTable
         columns={[
           {
-            title: <p className="font-semibold text-xl">Image</p>,
+            title: <p className="font-semibold text-xl">Ảnh</p>,
             field: "image",
             render: (rowData) => (
               <img
@@ -144,14 +144,14 @@ const StoreItem = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Name</p>,
+            title: <p className="font-semibold text-xl">Tên</p>,
             field: "name",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.name}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Category</p>,
+            title: <p className="font-semibold text-xl">Loại</p>,
             field: "category.name",
             render: (rowData) => (
               <p className="text-textColor font-medium ">
@@ -160,7 +160,7 @@ const StoreItem = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Description</p>,
+            title: <p className="font-semibold text-xl">Thông tin</p>,
             field: "description",
             render: (rowData) => (
               <p className="text-textColor font-medium ">
@@ -176,7 +176,7 @@ const StoreItem = () => {
           //   ),
           // },
           {
-            title: <p className="font-semibold text-xl">Price</p>,
+            title: <p className="font-semibold text-xl">Giá</p>,
             field: "price",
             render: (rowData) => (
               <p className="text-textColor text-2xl flex font-semibold items-center justify-start gap-2">
@@ -186,7 +186,7 @@ const StoreItem = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl">In Stock</p>,
+            title: <p className="font-semibold text-xl">Trạng thái</p>,
             field: "isFeatured",
             render: (rowData) => (
               <select
@@ -196,22 +196,22 @@ const StoreItem = () => {
                 style={{ color: rowData.isFeatured === true ? "blue" : "red" }}
               >
                 <option value="true" className="font-semibold text-blue-500">
-                 Available
+                 Còn hàng
                 </option>
                 <option value="false" className="font-semibold text-red-500">
-                  Sold Out
+                  Bán hết
                 </option>
               </select>
             ),
           },
-          {title: <p className="font-semibold text-xl">Sales</p>,
+          {title: <p className="font-semibold text-xl">Lượt bán</p>,
           field: "rowData.numRated",
           render: (rowData) => (
             <p className="text-textColor font-medium ">{rowData.numRated}+</p>
           ),
         },
           {
-            title: <p className="font-semibold text-xl">Rating</p>,
+            title: <p className="font-semibold text-xl">Đánh giá</p>,
             field: "ratings",
             render: (rowData) => (
               <div className="flex justify-center items-center gap-1 text-base font-normal">
@@ -226,7 +226,7 @@ const StoreItem = () => {
         data={filteredProducts}
         title={
           <p className="font-semibold text-red-400 text-3xl">
-            List of Products
+            Danh sách sản phẩm
           </p>
         }
         actions={[
@@ -239,9 +239,9 @@ const StoreItem = () => {
             icon: "delete",
             tooltip: "Delete Data",
             onClick: (event, rowData) => {
-              if (window.confirm("Are you sure?")) {
+              if (window.confirm("Bạn có chắc?")) {
                 deleteAProduct(rowData.id).then((res) => {
-                  dispatch(alertSuccess("Product Deleted "));
+                  dispatch(alertSuccess("Sản phẩn đã xóa!"));
                   setInterval(() => {
                     dispatch(alertNULL());
                   }, 3000);
@@ -342,7 +342,7 @@ const StoreItem = () => {
             {...buttonClick}
             onClick={handleSaveChanges}
           >
-            <p className="text-2xl font-semibold text-primary">Save</p>
+            <p className="text-2xl font-semibold text-primary">Lưu</p>
           </motion.div>
         </motion.div>
       )}

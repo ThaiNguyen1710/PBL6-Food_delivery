@@ -70,7 +70,7 @@ const DBStore = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Name</p>,
+            title: <p className="font-semibold text-xl">Tên</p>,
             field: "store",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.store}</p>
@@ -78,7 +78,7 @@ const DBStore = () => {
           },
 
           {
-            title: <p className="font-semibold text-xl">Owner</p>,
+            title: <p className="font-semibold text-xl">Chủ cửa hàng</p>,
             field: "name",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.name}</p>
@@ -86,28 +86,28 @@ const DBStore = () => {
           },
 
           {
-            title: <p className="font-semibold text-xl">Address</p>,
+            title: <p className="font-semibold text-xl">Địa chỉ</p>,
             field: "address",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.address}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Open At</p>,
+            title: <p className="font-semibold text-xl">Mở cửa</p>,
             field: "openAt",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.openAt}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Close At</p>,
+            title: <p className="font-semibold text-xl">Đóng cửa</p>,
             field: "closeAt",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.closeAt}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Block</p>,
+            title: <p className="font-semibold text-xl">Khóa</p>,
             field: "isStore",
             render: (rowData) => (
               <select
@@ -128,7 +128,7 @@ const DBStore = () => {
         ]}
         data={isStore}
         title={
-          <p className="font-semibold text-red-400 text-3xl">List of Stores</p>
+          <p className="font-semibold text-red-400 text-3xl">Danh sách cửa hàng</p>
         }
       />
     </div>
