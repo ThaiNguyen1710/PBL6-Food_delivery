@@ -25,6 +25,7 @@ const OrderData = ({ index, data, admin }) => {
     ? allUser.filter((store) => store.address === data.shippingAddress2)
     : [];
 
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, "0");
@@ -79,7 +80,7 @@ const OrderData = ({ index, data, admin }) => {
     }
   };
   if (!data || !data.user || !data.user.name) {
-    return null; // Hoặc thêm một phần tử HTML tương ứng để hiển thị thông báo lỗi
+    return null;
   }
   return (
     <motion.div
@@ -87,10 +88,23 @@ const OrderData = ({ index, data, admin }) => {
       className="w-full flex flex-col items-start justify-start px-2 py-1 border relative border-gray-300 bg-cardOverlay drop-shadow-md rounded-md gap-1"
     >
       <div className="w-full flex items-center justify-between">
-        <h1 className="text-lg font-semibold text-red-500 -mt-2">
-          {store?.[0]?.store}
-          {">>"} {data.shippingAddress2}
-        </h1>
+        <div className="flex w-[60%] items-center gap-2 -mt-2">
+          {" "}
+          <motion.img
+            src={baseURL + store?.[0]?.imgStore}
+            className="w-16 h-full object-contain"
+          />
+          <div className="w-full">
+          <h1 className="text-lg font-semibold text-red-500 ">
+            {store?.[0]?.store}
+          </h1>
+          <p className="text-base text-textColor"> {data.shippingAddress2}</p>
+
+
+          </div>
+         
+        </div>
+
         <div className="flex items-center gap-3">
           <p className="flex items-center gap-1 text-textColor">
             Thanh toán:{" "}

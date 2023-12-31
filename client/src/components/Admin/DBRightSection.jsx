@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import DBOrders from "./DBOrders";
 import DBHome from "./DBHome";
 
-import DBNewItem from "./DBNewItem";
+
 import DBUsers from "./DBUsers";
 import DBItems from "./DBItems";
 import DBShipper from "./DBShipper";
@@ -13,7 +13,7 @@ import ListStoreConfirm from "./ListStoreConfirm";
 
 const DBRightSection = () => {
   return (
-    <div className="py-6 px-12 flex flex-col flex-1 h-full">
+    <div className="py-3 px-8 flex flex-col flex-1 h-full">
       <DBHeader />
       <div className="flex flex-col flex-1 overflow-y-scroll scrollbar-none">
         <Routes>

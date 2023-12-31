@@ -7,9 +7,11 @@ import { BsToggles2 } from "react-icons/bs";
 import { MdSearch } from "react-icons/md";
 import { buttonClick } from "../../animations";
 import { motion } from "framer-motion";
+import { storeList } from "../../assets";
 
 const DBOrders = () => {
   const orders = useSelector((state) => state.orders);
+  const allUsers = useSelector((state) => state.allUsers);
   const dispatch = useDispatch();
 
   const [startDate, setStartDate] = useState("");
@@ -18,6 +20,11 @@ const DBOrders = () => {
 
   const [selectedStatus, setSelectedStatus] = useState(null);
 
+  const [selectedStoreOrders, setSelectedStoreOrders] = useState([]);
+
+  const isStore = allUsers
+    ? allUsers.filter((store) => store?.closeAt !== null)
+    : [];
 
   useEffect(() => {
     if (!orders) {
@@ -35,8 +42,25 @@ const DBOrders = () => {
   const currentOrders = orders
     ? orders.slice(indexOfFirstOrder, indexOfLastOrder)
     : [];
+  const handleStoreClick = (storeId) => {
+    if (isStore && isStore.length > 0) {
+      const ordersOfSelectedStore = orders
+        ? orders.filter((order) => {
+            const store = isStore.find((store) => store.id === storeId);
+            return store && order.shippingAddress2 === store.address;
+          })
+        : [];
+
+      setSelectedStoreOrders(ordersOfSelectedStore);
+    } else {
+      // Xử lý khi không có dữ liệu store
+    }
+  };
 
   const handleFilterByDateAndCustomer = () => {
+    if (!orders) {
+      return [];
+    }
     const filteredOrdersByDate = orders.filter((order) => {
       const orderDate = new Date(order.dateOrdered);
       return (
@@ -45,7 +69,13 @@ const DBOrders = () => {
       );
     });
 
-    const filterOrders = filteredOrdersByDate.filter((order) => {
+    const ordersToDisplay =
+      selectedStoreOrders.length > 0
+        ? selectedStoreOrders
+        : filteredOrdersByDate;
+
+    // Lọc theo các tiêu chí tìm kiếm khác
+    const filterOrders = ordersToDisplay.filter((order) => {
       const matchedStatus =
         selectedStatus === null || order.status === selectedStatus;
 
@@ -56,7 +86,6 @@ const DBOrders = () => {
       const matchedPrice = order.orderLists.some((item) => {
         if (item.product && item.product.name) {
           return item.product.name
-
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
         }
@@ -68,7 +97,6 @@ const DBOrders = () => {
 
     return filterOrders;
   };
-
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -77,9 +105,38 @@ const DBOrders = () => {
   };
 
   const filterOrders = orders ? handleFilterByDateAndCustomer() : [];
-
+  console.log(filterOrders);
   return (
     <div className="flex items-center justify-center flex-col pt-4 w-full gap-3">
+      <div className="w-full gap-6 items-start justify-start flex ">
+        <p className="text-lg font-medium text-headingColor ">Cửa Hàng: </p>{" "}
+        <motion.button
+          className={`${
+            selectedStoreOrders.length === 0 ? "bg-red-300" : "bg-cardOverlay "
+          } px-3 py-1 rounded-md flex gap-2 items-center justify-center shadow-md hover:bg-red-200 `}
+          {...buttonClick}
+          onClick={() => handleStoreClick(null)}
+        >
+          All
+        </motion.button>
+        {isStore.map((store) => (
+          <motion.button
+            key={store.id}
+            className={`${
+              selectedStoreOrders.some(
+                (order) => order.shippingAddress2 === store.address
+              )
+                ? "bg-red-300"
+                : "bg-cardOverlay"
+            } px-3 py-1 rounded-md flex gap-2 items-center justify-center shadow-md hover:bg-red-200 `}
+            {...buttonClick}
+            onClick={() => handleStoreClick(store.id)}
+          >
+            <motion.img src={storeList} className="w-6 h-6 object-contain" />
+            {store.store}
+          </motion.button>
+        ))}
+      </div>
       <div className="w-full justify-between items-center flex">
         <div className="flex items-center justify-center bg-cardOverlay gap-3 px-3 py-2 rounded-md backdrop-blur-md shadow-md">
           <p className="text-base font-semibold"> Từ:</p>
@@ -104,7 +161,6 @@ const DBOrders = () => {
             className={`${
               selectedStatus === null ? "bg-red-300" : "bg-gray-300"
             } px-3 py-1 rounded-md`}
-
             {...buttonClick}
             onClick={() => setSelectedStatus(null)}
           >
@@ -150,35 +206,22 @@ const DBOrders = () => {
           <BsToggles2 className="text-gray-400 text-2xl" />
         </div>
       </div>
+      <div className="w-full items-center justify-end flex">
+        <p className="text-base font-medium text-headingColor">
+          Tổng đơn:{" "}
+          {filterOrders ? filterOrders.length : orders ? orders.length : null}
+        </p>
+      </div>
 
       {filterOrders.length > 0 ? (
-        <>
-          {filterOrders
-            .slice(
-              (currentPage - 1) * ordersPerPage,
-              currentPage * ordersPerPage
-            )
-            .map((item, i) => (
-              <OrderData key={i} index={i} data={item} admin={true} />
-            ))}
-        </>
-      ) : (
-        <>
-          {currentOrders.length > 0 ? (
-            <>
-              {currentOrders.map((item, i) => (
-                <OrderData key={i} index={i} data={item} admin={true} />
-              ))}
-            </>
-          ) : (
-            <>
-              <h1 className="text-[72px] text-headingColor font-bold ">
-                No Data
-              </h1>
-            </>
-          )}
-        </>
-      )}
+  filterOrders
+    .slice((currentPage - 1) * ordersPerPage, currentPage * ordersPerPage)
+    .map((item, i) => (
+      <OrderData key={i} index={i} data={item} admin={true} />
+    ))
+) : (
+  <h1 className="text-[72px] text-headingColor font-bold">No Data</h1>
+)}
 
       <div className="flex items-center justify-center gap-4 pb-4">
         <motion.button
