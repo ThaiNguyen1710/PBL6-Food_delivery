@@ -9,10 +9,12 @@ import { BsFillEyeSlashFill } from "react-icons/bs";
 import { BiLogOutCircle } from "react-icons/bi";
 import {
   completeOtp,
+  completeOtpForgotPass,
   editUser,
   getAllUsers,
   loginUser,
   sendOtp,
+  sendOtpForgotPass,
   signUpUser,
 } from "../api";
 
@@ -66,7 +68,6 @@ const Login = () => {
     return () => clearInterval(intervalId);
   }, [countdown, showOTP, dispatch]);
 
-
   useEffect(() => {
     if (user) {
       navigate("/", { replace: true });
@@ -100,8 +101,7 @@ const Login = () => {
               dispatch(alertNULL());
             }, 3000);
 
-
-            setResendOtp(false)
+            setResendOtp(false);
             setCountdown(60);
           } else {
             dispatch(alertDanger("Email đã được đăng ký "));
@@ -153,9 +153,9 @@ const Login = () => {
         dispatch(alertSuccess("Đăng ký thành công! Hãy đăng nhập!  "));
 
         setShowOTP(false);
-        setOtpValue("")
+        setOtpValue("");
         setIsSignUp(false);
-        setUserEmail("")
+        setUserEmail("");
         setPassword("");
         setConfirm_password("");
         setTimeout(() => {
@@ -166,6 +166,97 @@ const Login = () => {
         // setTimeout(() => {
         //   dispatch(alertNULL());
         // }, 3000);
+      }
+    } catch (error) {
+      console.error("Lỗi xác thực OTP:", error);
+    }
+  };
+
+  //FORGOT PASSWORD
+
+  const handleSendOtpForgotPass = async () => {
+    if (userEmail !== "" && newPassword !== "" && confirm_newPassword !== "") {
+      try {
+        if (password === confirm_password) {
+          const userData = {
+            email: userEmail,
+            password: newPassword,
+            name: userEmail,
+          };
+          const response = await sendOtpForgotPass(userData);
+          console.log(response);
+          if (response && response.success) {
+            dispatch(alertSuccess("Gửi thành công OTP!"));
+            setShowOTP(true);
+            setTimeout(() => {
+              dispatch(alertNULL());
+            }, 3000);
+
+            setResendOtp(false);
+            setCountdown(60);
+          } else {
+            dispatch(alertDanger("Email sai hoặc chưa được đăng ký "));
+
+            setTimeout(() => {
+              dispatch(alertNULL());
+            }, 3000);
+          }
+        } else {
+          dispatch(alertWarning("Mật khẩu không khớp!"));
+          setTimeout(() => {
+            dispatch(alertNULL());
+          }, 3000);
+        }
+      } catch (error) {
+        console.error("Lỗi khi đăng ký:", error);
+      }
+    } else {
+      if (userEmail === "" && password === "" && confirm_password === "") {
+        dispatch(alertWarning("Vui lòng nhập email và mật khẩu!"));
+      } else if (userEmail === "") {
+        dispatch(alertWarning("Vui lòng nhập địa chỉ email!"));
+      } else if (password === "") {
+        dispatch(alertWarning("Vui lòng nhập mật khẩu!"));
+      } else if (confirm_password === "") {
+        dispatch(alertWarning("Vui lòng xác nhận mật khẩu!"));
+      }
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
+    }
+  };
+
+  const handleConfirmOTPForgotPass = async () => {
+    try {
+      const data = {
+        otp: otpValue,
+      };
+
+      console.log(data);
+      const otpConfirmation = await completeOtpForgotPass(data);
+      console.log(otpConfirmation);
+
+      if (otpConfirmation) {
+        setRegistrationSuccess(true);
+        getAllUsers().then((data) => {
+          dispatch(setAllUserDetail(data));
+        });
+        dispatch(alertSuccess("Thay đổi thành công! Hãy đăng nhập!  "));
+
+        setShowOTP(false);
+        setOtpValue("");
+        setIsForgot(false);
+        setUserEmail("");
+        setNewPassword("");
+        setConfirm_newPassword("");
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+      } else {
+        dispatch(alertDanger("OTP không phù hợp hoặc hết thời gian hiệu lực!"));
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
       }
     } catch (error) {
       console.error("Lỗi xác thực OTP:", error);
@@ -223,67 +314,7 @@ const Login = () => {
 
   //FORGOT PASS
 
-  const forgotPass = async () => {
-    if (userEmail !== "" && newPassword !== "" && confirm_newPassword !== "") {
-      try {
-        const userId = allUser
-          ? allUser.filter((id) => id.email === userEmail)
-          : [];
-        if (userId.length === 1) {
-          if (newPassword === confirm_newPassword) {
-            const newData = {
-              password: newPassword,
-            };
-
-            const updatedUserData = await editUser(userId?.[0]?.id, newData);
-
-            if (updatedUserData) {
-              getAllUsers().then((data) => {
-                dispatch(setAllUserDetail(data));
-              });
-              dispatch(alertSuccess("Cập nhật thành công! Hãy đăng nhập!  "));
-              setIsForgot(false);
-              setNewPassword("");
-              setTimeout(() => {
-                dispatch(alertNULL());
-              }, 3000);
-            } else {
-              throw new Error("Failed to update user information");
-            }
-          } else {
-            dispatch(alertWarning("Mật khẩu không khớp!"));
-            setTimeout(() => {
-              dispatch(alertNULL());
-            }, 3000);
-          }
-        } else {
-          dispatch(alertWarning("Email chưa đăng ký!"));
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
-        }
-      } catch (error) {
-        console.error("Error updating user information:", error);
-      }
-    } else {
-      if (
-        userEmail === "" &&
-        newPassword === "" &&
-        confirm_newPassword === ""
-      ) {
-        dispatch(alertWarning("Vui lòng nhập email và mật khẩu!"));
-      } else if (userEmail === "") {
-        dispatch(alertWarning("Vui lòng nhập địa chỉ email!"));
-      } else if (newPassword === "") {
-        dispatch(alertWarning("Vui lòng nhập mật khẩu mới!"));
-      } else if (confirm_newPassword === "") {
-        dispatch(alertWarning("Vui lòng xác nhận mật khẩu!"));
-      }
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    }
-  };
+ 
 
   const isForgotPass = async () => {
     setIsForgot(true);
@@ -349,13 +380,66 @@ const Login = () => {
                 icon2={<BsFillEyeSlashFill onClick={toggleShowPassword} />}
               />
 
-              <motion.button
-                {...buttonClick}
-                onClick={forgotPass}
-                className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
-              >
-                Đặt Mới Mật Khẩu
-              </motion.button>
+              {showOTP ? (
+                <>
+                  {" "}
+                  <div className="w-full flex  items-center justify-between gap-4 px-4 md:px-2">
+                    <LoginInput
+                      placeHolder={"Nhập mã OTP"}
+                      // icon={<FaLock className="text-xl text-textColor" />}
+                      inputState={otpValue}
+                      inputStateFunc={setOtpValue}
+                      type="text"
+                      isSignUp={isSignUp}
+                    />
+
+                    <motion.button
+                      {...buttonClick}
+                      onClick={handleConfirmOTPForgotPass}
+                      className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
+                    >
+                      Xác nhận OTP
+                    </motion.button>
+                  </div>
+                  <div className="w-full flex  items-center justify-start gap-2 px-4 md:px-2  ">
+                    <p>Xảy ra lỗi? Gửi lại OTP sau {countdown} s</p>
+
+                    {resendOtp ? (
+                      <motion.button
+                        onClick={handleSendOtpForgotPass}
+                        {...buttonClick}
+                        className="text-cartNumBg bg-transparent cursor-pointer underline"
+                      >
+                        Gửi lại
+                      </motion.button>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <div className="w-full flex flex-col items-center justify-center gap-4 px-4 md:px-12 py-1">
+                  {isForgot ? (
+                    <motion.button
+                      {...buttonClick}
+                      onClick={handleSendOtpForgotPass}
+                      className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
+                    >
+                      Gửi OTP
+                    </motion.button>
+                  ) : (
+                    <motion.button
+                      {...buttonClick}
+                      onClick={signInWithEmailPass}
+                      className="bg-red-400 rounded-md w-full px-4 py-2 text-center text-xl text-white font-medium hover:bg-red-500 transition-all duration-100"
+                    >
+                      Đăng Nhập
+                    </motion.button>
+                  )}
+                </div>
+              )}
+
+           
             </div>
           </div>
         </div>
@@ -470,10 +554,10 @@ const Login = () => {
                         {...buttonClick}
                         className="text-cartNumBg bg-transparent cursor-pointer underline"
                       >
-                        Gửi lại 
+                        Gửi lại
                       </motion.button>
                     ) : (
-                     <></>
+                      <></>
                     )}
                   </div>
                 </>

@@ -67,6 +67,28 @@ export const completeOtp = async (data) => {
   }
 };
 
+export const sendOtpForgotPass = async (data) => {
+  try {
+    const res = await axios.post(`${baseURL}/pbl6/user/put/startPass`, data);
+
+    return res.data;
+  } catch (err) {
+    console.error("Error in forgotPass:", err.response.data); 
+    return null;
+  }
+};
+
+export const completeOtpForgotPass = async (data) => {
+  try {
+    const res = await axios.put(`${baseURL}/pbl6/user/put/completePass`, data);
+      console.log("dataapi",data)
+    return res.data;
+
+  } catch (err) {
+    console.error("Error in completeOTP:", err.response.data);
+    return null;
+  }
+};
 
 
 export const editUser = async (userId, data) => {

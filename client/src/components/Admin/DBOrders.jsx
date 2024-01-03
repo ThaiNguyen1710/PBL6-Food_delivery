@@ -214,14 +214,14 @@ const DBOrders = () => {
       </div>
 
       {filterOrders.length > 0 ? (
-  filterOrders
-    .slice((currentPage - 1) * ordersPerPage, currentPage * ordersPerPage)
-    .map((item, i) => (
-      <OrderData key={i} index={i} data={item} admin={true} />
-    ))
-) : (
-  <h1 className="text-[72px] text-headingColor font-bold">No Data</h1>
-)}
+        filterOrders
+          .slice((currentPage - 1) * ordersPerPage, currentPage * ordersPerPage)
+          .map((item, i) => (
+            <OrderData key={i} index={i} data={item} admin={true} />
+          ))
+      ) : (
+        <h1 className="text-[72px] text-headingColor font-bold">No Data</h1>
+      )}
 
       <div className="flex items-center justify-center gap-4 pb-4">
         <motion.button

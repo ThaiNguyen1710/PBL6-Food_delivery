@@ -8,6 +8,16 @@ import { FaDongSign, FaStar, FaUserCheck } from "react-icons/fa6";
 import { setOrders } from "../../context/actions/orderAction";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import { motion } from "framer-motion";
+import html2pdf from "html2pdf.js";
+
+
+const exportToPDF = () => {
+  const element = document.getElementById("content-to-export");
+
+  if (element) {
+    html2pdf().from(element).save("exported-content.pdf");
+  }
+};
 
 const StoreHome = () => {
   const products = useSelector((state) => state.products);
@@ -147,7 +157,7 @@ const StoreHome = () => {
   });
 
   return (
-    <div className="flex items-start justify-center flex-col pt-12 w-full  gap-8 h-full">
+    <div className="flex items-start justify-center flex-col pt-12 w-full  gap-8 h-full " id="content-to-export">
       <div className="pt-6 flex items-center gap-1">
         <p className="text-xl font-semibold">
           {parseFloat(ratedStore).toFixed(1)}
@@ -206,6 +216,7 @@ const StoreHome = () => {
             </p>
           </div>
         </div>
+        <button onClick={exportToPDF}>Xuất PDF</button>
       </div>
 
       <div className="grid w-full grid-cols-1 md:grid-cols-3 gap-20 h-full">
@@ -289,8 +300,11 @@ const StoreHome = () => {
               </div>
             ))}
           </div>
+          
+      
         </div>
       </div>
+
     </div>
   );
 };
