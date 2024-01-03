@@ -10,12 +10,12 @@ import { BiLogOutCircle } from "react-icons/bi";
 import {
   completeOtp,
   completeOtpForgotPass,
-  editUser,
+
   getAllUsers,
   loginUser,
   sendOtp,
   sendOtpForgotPass,
-  signUpUser,
+
 } from "../api";
 
 import { NavLink, useNavigate } from "react-router-dom";
@@ -35,7 +35,7 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
-  const allUser = useSelector((state) => state.allUsers);
+
 
   const [userEmail, setUserEmail] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
@@ -177,7 +177,7 @@ const Login = () => {
   const handleSendOtpForgotPass = async () => {
     if (userEmail !== "" && newPassword !== "" && confirm_newPassword !== "") {
       try {
-        if (password === confirm_password) {
+        if (password === confirm_newPassword) {
           const userData = {
             email: userEmail,
             password: newPassword,
@@ -263,6 +263,10 @@ const Login = () => {
     }
   };
 
+  const isForgotPass = async () => {
+    setIsForgot(true);
+  };
+
   //SIGN IN
 
   const signInWithEmailPass = async () => {
@@ -312,13 +316,11 @@ const Login = () => {
     }
   };
 
-  //FORGOT PASS
+
 
  
 
-  const isForgotPass = async () => {
-    setIsForgot(true);
-  };
+
 
   return (
     <div className="w-screen h-screen relative overflow-auto  bg-lighttextGray gap-4">
