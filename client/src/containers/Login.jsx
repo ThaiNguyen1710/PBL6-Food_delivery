@@ -347,7 +347,10 @@ const Login = () => {
             </p>
             <motion.button
               {...buttonClick}
-              onClick={() => setIsForgot(false)}
+              onClick={() => {
+                setIsForgot(false);
+                setShowOTP(false);
+              }}
               className="flex justify-center items-center  w-10 h-10  rounded-md backdrop-blur-md  cursor-pointer shadow-md"
             >
               <BiLogOutCircle className="w-full h-full" />
