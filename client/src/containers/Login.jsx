@@ -177,7 +177,7 @@ const Login = () => {
   const handleSendOtpForgotPass = async () => {
     if (userEmail !== "" && newPassword !== "" && confirm_newPassword !== "") {
       try {
-        if (password === confirm_newPassword) {
+        if (newPassword === confirm_newPassword) {
           const userData = {
             email: userEmail,
             password: newPassword,
