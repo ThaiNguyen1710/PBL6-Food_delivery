@@ -10,6 +10,7 @@ import DBItems from "./DBItems";
 import DBShipper from "./DBShipper";
 import DBStore from "./DBStore";
 import ListStoreConfirm from "./ListStoreConfirm";
+import ContactUser from "./ContactUser";
 
 const DBRightSection = () => {
   return (
@@ -23,6 +24,7 @@ const DBRightSection = () => {
           {/* <Route path="/newItem" element={<DBNewItem />} /> */}
           <Route path="/users" element={<DBUsers />} />
           <Route path="/store" element={<DBStore />} />
+          <Route path="/contacts" element={<ContactUser />} />
           <Route path="/store-confirm" element={<ListStoreConfirm />} />
           <Route path="/shipper" element={<DBShipper />} />
          

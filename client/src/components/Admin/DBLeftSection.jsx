@@ -98,6 +98,17 @@ const DBLeftSection = () => {
         >
           Danh sách
         </NavLink>
+        <NavLink
+          className={({ isActive }) =>
+          isActive
+          ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+          : isNotActiveList
+          }
+          to={"/dashboard/contacts"}
+        >
+          Phản hồi
+        </NavLink>
+        
         <div className="flex w-full gap-3  items-center" >
         <img src={shipped} className="w-8 h-8 object-contain " alt="" />
         <p className="text-xl font-bold text-headingColor">Shipper</p>

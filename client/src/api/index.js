@@ -359,3 +359,22 @@ export const contactUser = async (contactData) => {
     throw error;
   }
 };
+
+
+export const getAllContacts = async () => {
+  try {
+    const res = await axios.get(`${baseURL}/pbl6/contact`);
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};
+
+export const deleteContact = async (contactId) => {
+  try {
+    const res = await axios.delete(`${baseURL}/pbl6/contact/${contactId}`);
+    return res.data;
+  } catch (err) {
+    return null;
+  }
+};

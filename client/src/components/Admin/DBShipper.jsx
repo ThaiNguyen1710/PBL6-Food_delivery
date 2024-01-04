@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { baseURL, editShipper, editUser, getAllShipper, getAllUsers } from "../../api";
-import { setAllUserDetail } from "../../context/actions/allUsersAction";
+import { baseURL, editShipper, getAllShipper } from "../../api";
 import DataTable from "./DataTable";
 import { avatar } from "../../assets";
 
