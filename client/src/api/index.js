@@ -347,3 +347,15 @@ export const getAllShipper = async () => {
     return null;
   }
 };
+
+//Contact 
+
+export const contactUser = async (contactData) => {
+  try {
+    const response = await axios.post(`${baseURL}/pbl6/contact`, contactData);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+};

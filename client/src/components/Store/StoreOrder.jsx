@@ -167,21 +167,7 @@ const StoreOrder = () => {
             ))}
         </>
       ) : (
-        <>
-          {currentOrders.length > 0 ? (
-            <>
-              {currentOrders.map((item, i) => (
-                <OrderData key={i} index={i} data={item} admin={true} />
-              ))}
-            </>
-          ) : (
-            <>
-              <h1 className="text-[72px] text-headingColor font-bold ">
-                No Data
-              </h1>
-            </>
-          )}
-        </>
+        <h1 className="text-[72px] text-headingColor font-bold">No Data</h1>
       )}
 
       {/* Nút chuyển trang */}

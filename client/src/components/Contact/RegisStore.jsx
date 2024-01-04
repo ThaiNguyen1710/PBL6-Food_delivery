@@ -5,11 +5,7 @@ import { buttonClick } from "../../animations";
 import { motion } from "framer-motion";
 import { editUser, getAllUsers } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  alertDanger,
-  alertNULL,
-  alertSuccess,
-} from "../../context/actions/alertActions";
+import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 import { IoShieldCheckmark } from "react-icons/io5";
 import { TbMinusVertical } from "react-icons/tb";
 import { gradientStyle } from "../../utils/styles";
@@ -26,7 +22,6 @@ const RegisStore = () => {
   const pdfLink =
     "https://drive.google.com/file/d/1PgNXABLT3PYBFn8emBUsmEIcJdfJkHP8/view?usp=sharing";
 
-  const alert = useSelector((state) => state.alert);
   const user = useSelector((state) => state.user);
   const allUsers = useSelector((state) => state.allUsers);
 
@@ -34,21 +29,16 @@ const RegisStore = () => {
 
   const saveNewData = async () => {
     try {
-    
       const userId = user.user.userId;
 
       const newData = {
         name: userName || user.user.name,
         phone: userPhone || user.user.phone,
-      
+
         email: userEmail || user.user.email,
 
-
-        store: nameStore|| user.user.store,
+        store: nameStore || user.user.store,
         address: address || user.user.address,
-
-       
-
       };
 
       const updatedUserData = await editUser(userId, newData);
@@ -66,8 +56,8 @@ const RegisStore = () => {
 
         setUserEmail("");
 
-        setNameStore("")
-        setAddress("")
+        setNameStore("");
+        setAddress("");
       } else {
         throw new Error("Failed to update user information");
       }
@@ -76,7 +66,7 @@ const RegisStore = () => {
     }
   };
 
-  const loggedInUserId = user.user.userId;
+  const loggedInUserId = user?user.user.userId:null;
   const loggedInUser = loggedInUserId
     ? allUsers.find((user) => user.id === loggedInUserId)
     : null;
@@ -161,7 +151,6 @@ const RegisStore = () => {
 
         <InputValueField
           type="text"
-         
           stateValue={address}
           stateFunc={setAddress}
         />

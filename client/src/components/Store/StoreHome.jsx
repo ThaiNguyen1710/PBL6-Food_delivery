@@ -39,13 +39,14 @@ const StoreHome = () => {
   const orderStore = orders
     ? orders.filter((order) => order.shippingAddress2 === user.user.store || order.shippingAddress2 === user.user.address)
     : [];
-  const totalRevenue = orderStore
+  const totalRevenue1 = orderStore
     ? orderStore.reduce(
-        (total, order) => total + (order.totalPrice * 1000 || 0),
+        (total, order) => total + (order.totalPrice * 1000 || 0) ,
         0
       )
     : 0;
 
+    const totalRevenue = totalRevenue1 - (orderStore.length *15000)
   // Best Seller
   const productSales = {};
 

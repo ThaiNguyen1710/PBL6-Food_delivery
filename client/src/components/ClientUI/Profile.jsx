@@ -37,7 +37,7 @@ const Profile = () => {
   const [imageDownloadURL, setImageDownloadURL] = useState(null);
   const [fullAddress, setFullAddress] = useState("");
 
-  const alert = useSelector((state) => state.alert);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const Profile = () => {
         dispatch(setAllUserDetail(data));
       });
     }
-  }, []);
+  });
   useEffect(() => {
     const generateFullAddress = () => {
       let address = `${userAddress.street}, `;

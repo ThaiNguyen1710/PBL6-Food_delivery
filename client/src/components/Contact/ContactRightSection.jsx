@@ -10,7 +10,7 @@ import ContactHeader from "./ContactHeader";
 
 const ContactRightSection = () => {
   return (
-    <div className="py-6 px-12 flex flex-col flex-1 h-full">
+    <div className="py-6 px-6 flex flex-col flex-1 h-full">
       <ContactHeader/>
       <div className="flex flex-col flex-1 overflow-y-scroll scrollbar-none">
         <Routes>

@@ -7,7 +7,7 @@ import { gradientStyle, isActiveStyles, isNotActiveStyles } from "../../utils/st
 
 const ContactLeftSection = () => {
   return (
-    <div className="h-full  py-2 flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-300 gap-3 overflow-auto">
+    <div className="h-full  py-2 flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-225 gap-3 overflow-auto">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={logo2} className="w-20 " alt="Please uploadImage!" />
         <p className=" font-semibold text-5xl " style={gradientStyle}>

@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { buttonClick } from "../../animations";
 
 import { motion } from "framer-motion";
-import { PostContact} from "../../api";
+import {  contactUser, getAllUsers } from "../../api";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  alertDanger,
+  alertInfo,
   alertNULL,
   alertSuccess,
 } from "../../context/actions/alertActions";
+import { setAllUserDetail } from "../../context/actions/allUsersAction";
 
 const AboutUs = () => {
   const [userName, setUserName] = useState("");
@@ -17,63 +18,52 @@ const AboutUs = () => {
   const [content, setContent] = useState("");
   const [userEmail, setUserEmail] = useState("");
 
-  const [img, setImg] = useState(null);
-
-  const [information, setInformation] = useState("");
-
-  const alert = useSelector((state) => state.alert);
   const user = useSelector((state) => state.user);
+  const allUsers = useSelector((state) => state.allUsers);
+
   const dispatch = useDispatch();
 
-  const saveNewData = () => {
-    if (!userName) {
-      dispatch(alertDanger("Please fill in all fields!"));
-      setTimeout(() => {
-        dispatch(alertNULL());
-      }, 3000);
-    } else {
-      const formData = new FormData();
-      formData.append("id", user.user.userId);
-      formData.append("address", user.user.address);
+  const saveNewData = async () => {
+    try {
+    
 
-      formData.append("name", userName);
+      const newData = {
+        user:loggedInUserId,
+        comment: content,
+      };
+      console.log(newData)
+      const updatedUserData = await contactUser( newData);
 
-      formData.append("phone", userPhone);
-      formData.append("email", userEmail);
-
-      formData.append("description", information);
-      formData.append("image", img);
-
-      PostContact(formData)
-        .then((res) => {
-          if (res && res.data) {
-            dispatch(alertSuccess("Added Product!"));
-            setTimeout(() => {
-              dispatch(alertNULL());
-            }, 3000);
-          } else {
-            console.log(
-              "Received null or incomplete response when adding a new item."
-            );
-            dispatch(
-              alertDanger(
-                "Failed to add new item. Received incomplete response."
-              )
-            );
-            setTimeout(() => {
-              dispatch(alertNULL());
-            }, 3000);
-          }
-        })
-        .catch((error) => {
-          console.error("Error adding item:", error);
-          dispatch(alertDanger(`Error adding item: ${error.message || error}`));
-          setTimeout(() => {
-            dispatch(alertNULL());
-          }, 3000);
-        });
+      if (updatedUserData) {
+        dispatch(alertInfo("Gửi yêu cầu thành công"));
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 5000);
+        setUserName("");
+        setUserPhone("");
+        setUserEmail("");
+        setContent(" ")
+      } else {
+        throw new Error("Failed to update user information");
+      }
+    } catch (error) {
+      console.error("Error updating user information:", error);
     }
   };
+
+
+  const loggedInUserId =user? user.user.userId:null;
+  const loggedInUser = loggedInUserId
+    ? allUsers.find((user) => user.id === loggedInUserId)
+    : null;
+
+    useEffect(() => {
+      if (!allUsers) {
+        getAllUsers().then((data) => {
+          dispatch(setAllUserDetail(data));
+        });
+      }
+    });
 
   return (
     <div className="flex items-center justify-center flex-col pt-3 px-24 w-full gap-2 ">
@@ -86,26 +76,38 @@ const AboutUs = () => {
           </p>
         </div>
       </div>
-      <div className="border border-gray-300 rounded-md p-4 w-[80%] flex flex-col items-start  font-semibold justify-center gap-2">
-        <p className="text-lg text-start text-red-400 font-bold ">HỌ VÀ TÊN </p>
+      <div className="border border-gray-300 rounded-md p-4 w-[80%] flex flex-col items-start  font-semibold justify-center gap-1">
+        <p className="text-lg text-start text-red-400 font-bold ">
+          THÔNG TIN LIÊN LẠC{" "}
+        </p>
+        <p className="text-sm text-start text-gray-700 font-normal ">
+          Hãy chắc chắn thông tin chính xác, chúng tôi sẽ liên hệ qua các
+          thông tin này!
+        </p>
+        <p className="text-sm text-start text-headingColor font-bold ">
+          Họ và tên *
+        </p>
 
         <InputValueField
           type="text"
+          placeholder={loggedInUser ? loggedInUser.name : ""}
           stateValue={userName}
           stateFunc={setUserName}
         />
-        <p className="text-lg text-start text-red-400 font-bold ">
-          SỐ ĐIỆN THOẠI
+        <p className="text-sm text-start text-headingColor font-bold ">
+          Số điện thoại *
         </p>
 
         <InputValueField
           type="number"
+          placeholder={loggedInUser ? loggedInUser.phone : ""}
           stateValue={userPhone}
           stateFunc={setUserPhone}
         />
-        <p className="text-lg text-start text-red-400 font-bold ">EMAIL</p>
+        <p className="text-sm text-start text-headingColor font-bold ">Email *</p>
         <InputValueField
           type="text"
+          placeholder={loggedInUser ? loggedInUser.email : ""}
           stateValue={userEmail}
           stateFunc={setUserEmail}
         />
@@ -115,7 +117,11 @@ const AboutUs = () => {
           stateValue={content}
           stateFunc={setContent}
         />
+          <p className="text-sm text-start text-gray-700 font-normal ">
+          Chúng tôi sẽ phản hồi lại trong thời gian ngắn nhất.
+        </p>
       </div>
+    
 
       <motion.button
         {...buttonClick}
