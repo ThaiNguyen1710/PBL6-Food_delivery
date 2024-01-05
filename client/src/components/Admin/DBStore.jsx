@@ -113,14 +113,14 @@ const DBStore = () => {
               <select
                 value={rowData.isStore}
                 onChange={() => blockStore(rowData)}
-                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
+                className="border rounded-md bg-cardOverlay w-32 h-10 font-semibold"
                 style={{ color: rowData.isStore === true ? "blue" : "red" }}
               >
                 <option value="true" className="font-semibold text-blue-500">
-                  Activity
+                  Hoạt động
                 </option>
                 <option value="false" className="font-semibold text-red-500">
-                  Block
+                  Khóa
                 </option>
               </select>
             ),

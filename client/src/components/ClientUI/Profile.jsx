@@ -96,7 +96,7 @@ const Profile = () => {
       const newData = {
         name: userName || user.user.name,
         phone: userPhone || user.user.phone,
-        address: fullAddress || user.user.address,
+        address: fullAddress ,
         email: userEmail || user.user.email,
       };
 

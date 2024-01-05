@@ -10,7 +10,7 @@ import StoreOrder from "./StoreOrder";
 
 const ShopRightSection = () => {
   return (
-    <div className="py-6 px-12 flex flex-col flex-1 h-full">
+    <div className=" px-6 py-3 flex flex-col flex-1 h-full">
       <StoreHeader />
       <div className="flex flex-col flex-1 overflow-y-scroll scrollbar-none">
         <Routes>

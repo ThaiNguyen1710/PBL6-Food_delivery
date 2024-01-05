@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllOrders, getAllProducts, getAllUsers } from "../../api";
+import { getAllOrders, getAllProducts, getAllShipper, getAllUsers } from "../../api";
 import { setAllProducts } from "../../context/actions/productAction";
 import { CChart } from "@coreui/react-chartjs";
-import { budget, confirmOrders, store, totalUser } from "../../assets";
+import { budget, confirmOrders, delivery, store, totalUser } from "../../assets";
 import { FaDongSign } from "react-icons/fa6";
 import { setOrders } from "../../context/actions/orderAction";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import { FaFilter } from "react-icons/fa";
+import { setAllShipper } from "../../context/actions/allShipperAction";
 
 const DBHome = () => {
   const products = useSelector((state) => state.products);
   const orders = useSelector((state) => state.orders);
   const users = useSelector((state) => state.allUsers);
+  const shipper = useSelector((state) => state.shipper);
   const dispatch = useDispatch();
 
   const category = products
@@ -142,11 +144,16 @@ const DBHome = () => {
         dispatch(setAllUserDetail(data));
       });
     }
+    if (!shipper) {
+      getAllShipper().then((data) => {
+        dispatch(setAllShipper(data));
+      });
+    }
   });
 
   return (
     <div className="flex items-start justify-center flex-col pt-44 w-full   gap-8 h-full">
-      <div className="items-start justify-start  gap-16 flex pt-12">
+      <div className="items-start justify-start  gap-6 flex pt-16">
         <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
           <img
             alt=""
@@ -206,6 +213,21 @@ const DBHome = () => {
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {isStore?.length}
+            </p>
+          </div>
+        </div>
+        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
+          <img
+            alt=""
+            src={delivery}
+            className="w-20 h-20 object-contain items-center justify-center "
+          />
+          <div className="relative ">
+            <p className="text-xl text-headingColor font-semibold">
+              Shipper
+            </p>
+            <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
+              {shipper?.length}
             </p>
           </div>
         </div>

@@ -235,17 +235,15 @@ const StoreInformation = () => {
             </motion.button>
           </label>
         </div>
-        <div className="w-[50%] text-center flex ">
-          <p className="text-3xl font-semibold text-orange-500 ">
-            Thông tin cửa hàng
-          </p>
-        </div>
+  
       </div>
 
-      <div className="border border-gray-300 rounded-md p-4 w-[70%] flex flex-col items-start  font-semibold justify-center gap-4 right-4 ">
-        <p className="text-xl text-start text-red-400 font-semibold ">
-          {" "}
-          Chủ Cửa Hàng{" "}
+      <div className="border border-gray-300 rounded-md p-4 w-[70%] flex flex-col items-start  font-semibold justify-center gap-2 right-4 ">
+      <p className="text-lg text-start text-red-400 font-bold ">
+          THÔNG TIN CỬA HÀNG
+        </p>
+      <p className="text-sm text-start text-headingColor font-bold ">
+          Chủ cửa hàng
         </p>
 
         <InputValueField
@@ -254,8 +252,8 @@ const StoreInformation = () => {
           stateValue={userName}
           stateFunc={setUserName}
         />
-        <p className="text-xl text-start text-red-400 font-semibold ">
-          Tên Cửa Hàng
+         <p className="text-sm text-start text-headingColor font-bold ">
+          Tên cửa hàng
         </p>
 
         <InputValueField
@@ -264,8 +262,8 @@ const StoreInformation = () => {
           stateValue={storeName}
           stateFunc={setStoreName}
         />
-        <p className="text-xl text-start text-red-400 font-semibold ">
-          Địa Chỉ
+        <p className="text-sm text-start text-headingColor font-bold ">
+          Địa chỉ
         </p>
         {/* <InputValueField
           type="text"
@@ -275,7 +273,7 @@ const StoreInformation = () => {
           readOnly={true}
         /> */}
 
-        <div className="w-full px-4 py-3  shadow-md rounded-md cursor-pointer">
+        <div className="w-full px-4 py-3  shadow-md rounded-md cursor-pointer text-textColor">
           {loggedInUser ? loggedInUser.address : ""}
         </div>
         <div className="flex gap-4">

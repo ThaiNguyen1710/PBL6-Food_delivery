@@ -58,7 +58,7 @@ const DBUsers = () => {
       <DataTable
         columns={[
           {
-            title: <p className="font-semibold text-xl">Image</p>,
+            title: <p className="font-semibold text-xl">Ảnh</p>,
             field: "photoURL",
             render: (rowData) => (
               <img
@@ -69,7 +69,7 @@ const DBUsers = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Name</p>,
+            title: <p className="font-semibold text-xl">Tên</p>,
             field: "name",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.name}</p>
@@ -83,27 +83,27 @@ const DBUsers = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Phone</p>,
+            title: <p className="font-semibold text-xl">Sđt</p>,
             field: "phone",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.phone}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Address</p>,
+            title: <p className="font-semibold text-xl">Địa chỉ</p>,
             field: "address",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.address}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Role</p>,
+            title: <p className="font-semibold text-xl">Quyền</p>,
             field: "role",
             render: (rowData) => (
               <select
                 value={rowData.isStore ? "Store" : rowData.isAdmin ? "Admin" : "User"}
                 onChange={(e) => typeUser(rowData, e.target.value)}
-                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
+                className="border rounded-md bg-cardOverlay w-32 h-10 font-semibold"
                 style={{
                   color:
                     rowData.isStore
@@ -114,10 +114,10 @@ const DBUsers = () => {
                 }}
               >
                 <option value="User" className="font-semibold text-black">
-                  User
+                  Người dùng
                 </option>
                 <option value="Store" className="font-semibold text-blue-500">
-                  Store
+                  Cửa hàng
                 </option>
                 <option value="Admin" className="font-semibold text-red-500">
                   Admin
@@ -127,7 +127,7 @@ const DBUsers = () => {
           },
          
           {
-            title: <p className="font-semibold text-xl">Verified</p>,
+            title: <p className="font-semibold text-xl">Xác thực</p>,
             field: "emailVerified",
             render: (rowData) => (
               <p
@@ -142,7 +142,7 @@ const DBUsers = () => {
        
         ]}
         data={user}
-        title={<p className="font-semibold text-red-400 text-3xl">List of Users</p>}
+        title={<p className="font-semibold text-red-400 text-3xl">Danh sách người dùng</p>}
         // actions={[
         //   {
         //     icon: "edit",

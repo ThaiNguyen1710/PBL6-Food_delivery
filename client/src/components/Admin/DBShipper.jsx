@@ -48,7 +48,7 @@ const DBShipper = () => {
       <DataTable
         columns={[
           {
-            title: <p className="font-semibold text-xl">Image</p>,
+            title: <p className="font-semibold text-xl">Ảnh</p>,
             field: "photoURL",
             render: (rowData) => (
               <img
@@ -59,7 +59,7 @@ const DBShipper = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Name</p>,
+            title: <p className="font-semibold text-xl">Tên</p>,
             field: "name",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.name}</p>
@@ -73,34 +73,34 @@ const DBShipper = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Phone</p>,
+            title: <p className="font-semibold text-xl">Sđt</p>,
             field: "phone",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.phone}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Address</p>,
+            title: <p className="font-semibold text-xl">Địa chỉ</p>,
             field: "address",
             render: (rowData) => (
               <p className="text-textColor font-medium ">{rowData.address}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Block</p>,
+            title: <p className="font-semibold text-xl">Khóa</p>,
             field: "isFeatured",
             render: (rowData) => (
               <select
                 value={rowData.isFeatured}
                 onChange={() => blockShipper(rowData)}
-                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
+                className="border rounded-md bg-cardOverlay w-32 h-10 font-semibold"
                 style={{ color: rowData.isFeatured === true ? "blue" : "red" }}
               >
                 <option value="true" className="font-semibold text-blue-500">
-                  Activity
+                  Hoạt động
                 </option>
                 <option value="false" className="font-semibold text-red-500">
-                  Block
+                  Khóa
                 </option>
               </select>
             ),
@@ -108,7 +108,7 @@ const DBShipper = () => {
         ]}
         data={shipper}
         title={
-          <p className="font-semibold text-red-400 text-3xl">List of Users</p>
+          <p className="font-semibold text-red-400 text-3xl">Danh sách shipper</p>
         }
         // actions={[
         //   {
