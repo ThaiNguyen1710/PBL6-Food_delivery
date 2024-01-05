@@ -236,14 +236,13 @@ const Profile = () => {
             </motion.button>
           </label>
         </div>
-        <div className="w-[50%] text-center flex ">
-          <p className="text-3xl font-semibold text-orange-500 ">
-            Thông tin cá nhân
-          </p>
-        </div>
+        
       </div>
-      <div className="border border-gray-300 rounded-md p-4 w-[75%] flex flex-col items-start  font-semibold justify-center gap-4">
-        <p className="text-xl text-start text-red-400 font-semibold ">Tên </p>
+      <div className="border border-gray-300 rounded-md p-4 w-[75%] flex flex-col items-start  font-semibold justify-center gap-2">
+      <p className="text-lg text-start text-red-400 font-bold ">
+          THÔNG TIN CÁ NHÂN
+        </p>
+        <p className="text-sm text-start text-headingColor font-bold ">Tên </p>
 
         <InputValueField
           type="text"
@@ -251,7 +250,7 @@ const Profile = () => {
           stateValue={userName}
           stateFunc={setUserName}
         />
-        <p className="text-xl text-start text-red-400 font-semibold ">
+      <p className="text-sm text-start text-headingColor font-bold ">
           Số điện Thoại
         </p>
 
@@ -261,17 +260,17 @@ const Profile = () => {
           stateValue={userPhone}
           stateFunc={setUserPhone}
         />
-        <p className="text-xl text-start text-red-400 font-semibold ">Email</p>
+        <p className="text-sm text-start text-headingColor font-bold ">Email</p>
         <InputValueField
           type="text"
           placeholder={loggedInUser ? loggedInUser.email : ""}
           stateValue={userEmail}
           stateFunc={setUserEmail}
         />
-        <p className="text-xl text-start text-red-400 font-semibold ">
+       <p className="text-sm text-start text-headingColor font-bold ">
           Địa Chỉ
         </p>
-        <div className="w-full px-4 py-3  shadow-md rounded-md cursor-pointer">
+        <div className="w-full px-4 py-3  shadow-md rounded-md cursor-pointer text-textColor">
           {loggedInUser ? loggedInUser.address : ""}
         </div>
         <div className="flex gap-4">

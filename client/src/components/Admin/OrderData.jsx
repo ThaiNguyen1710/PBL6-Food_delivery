@@ -2,11 +2,23 @@ import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { buttonClick, staggerFadeInOut } from "../../animations";
 import { FaDongSign, FaStar } from "react-icons/fa6";
-import { baseURL, getAllUsers, ratingProduct, updatedOrder } from "../../api";
+import {
+  baseURL,
+  getAllOrders,
+  getAllUsers,
+  ratingProduct,
+  updatedOrder,
+} from "../../api";
 import { useDispatch, useSelector } from "react-redux";
-import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
+import {
+  alertInfo,
+  alertNULL,
+  alertSuccess,
+} from "../../context/actions/alertActions";
 import { delivery, shipperCome } from "../../assets";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
+import { setOrders } from "../../context/actions/orderAction";
+import axios from "axios";
 
 const OrderData = ({ index, data, admin }) => {
   const allUser = useSelector((state) => state.allUsers);
@@ -19,12 +31,16 @@ const OrderData = ({ index, data, admin }) => {
         dispatch(setAllUserDetail(data));
       });
     }
+    if (!data) {
+      getAllOrders().then((data) => {
+        dispatch(setOrders(data));
+      });
+    }
   });
 
   const store = allUser
     ? allUser.filter((store) => store.address === data.shippingAddress2)
     : [];
-
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -82,6 +98,48 @@ const OrderData = ({ index, data, admin }) => {
   if (!data || !data.user || !data.user.name) {
     return null;
   }
+
+  const checkOutByPayPal = async () => {
+    try {
+      const orderId = data?.id;
+      console.log(orderId);
+      if (orderId) {
+        getAllOrders().then((data) => {
+          dispatch(setOrders(data));
+        });
+
+        setTimeout(async () => {
+          try {
+            const paymentResponse = await axios.post(
+              `${baseURL}/pbl6/paypal/${orderId}`
+            );
+            console.log(paymentResponse);
+            if (
+              paymentResponse.data.links &&
+              paymentResponse.data.links.length > 0
+            ) {
+              const redirectLink = paymentResponse.data.links.find(
+                (link) => link.method === "REDIRECT"
+              );
+              if (redirectLink) {
+                window.open(redirectLink.href, "_blank");
+              }
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        }, 3000);
+
+        dispatch(alertInfo("Đang chuyển hướng!"));
+        setTimeout(() => {
+          dispatch(alertNULL());
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error during checkout:", error);
+    }
+  };
+
   return (
     <motion.div
       {...staggerFadeInOut(index)}
@@ -95,25 +153,39 @@ const OrderData = ({ index, data, admin }) => {
             className="w-16 h-full object-contain"
           />
           <div className="w-full">
-          <h1 className="text-lg font-semibold text-red-500 ">
-            {store?.[0]?.store}
-          </h1>
-          <p className="text-base text-textColor"> {data.shippingAddress2}</p>
-
-
+            <h1 className="text-lg font-semibold text-red-500 ">
+              {store?.[0]?.store}
+            </h1>
+            <p className="text-base text-textColor"> {data.shippingAddress2}</p>
           </div>
-         
         </div>
 
         <div className="flex items-center gap-3">
           <p className="flex items-center gap-1 text-textColor">
             Thanh toán:{" "}
-            {data?.isPay ? (
-              <span className=" font-bold text-teal-400">PayPal</span>
-            ) : (
+            {data?.isPay === true && data?.payed === true ? (
+              <span className="font-bold text-teal-400">PayPal</span>
+            ) : data?.isPay === true && data?.payed === false ? (
+              <span className="font-bold text-teal-400">
+                PayPal{" "}
+                <span className="font-bold text-red-500">
+                  (Chưa thanh toán)
+                </span>
+                <motion.button
+                  {...buttonClick}
+                  className="bg-gradient-to-bl from-orange-400 to-orange-500 py-2 px-2 rounded-xl text-black text-base font-semibold flex items-center justify-start"
+                  onClick={checkOutByPayPal}
+                >
+                  Thanh toán lại
+                </motion.button>
+              </span>
+            ) : data?.isPay === false ? (
               <span className="font-bold text-emerald-500">Tiền Mặt</span>
+            ) : (
+              <span className="font-bold">Một trạng thái khác</span>
             )}
           </p>
+
           <p className="flex items-center gap-1 text-textColor">
             Total:
             <span className="text-headingColor font-bold">

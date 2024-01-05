@@ -27,9 +27,7 @@ const UserOrder = () => {
     ? orders.filter((order) => order.user.id === user.user.userId)
     : [];
 
-  const indexOfLastOrder = currentPage * ordersPerPage;
-  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = userOrders.slice(indexOfFirstOrder, indexOfLastOrder);
+
 
   const dispatch = useDispatch();
 
@@ -148,12 +146,12 @@ const UserOrder = () => {
                 currentPage * ordersPerPage
               )
               .map((item, i) => (
-                <OrderData key={i} index={i} data={item} admin={true} />
+                <OrderData key={i} index={i} data={item} />
               ))}
           </>
         ) : (
           <>
-
+            <p className="text-xl text-textColor font-medium">No Orders</p>
           </>
         )}
       </div>
@@ -167,7 +165,7 @@ const UserOrder = () => {
           Prev
         </motion.button>
         {Array.from(
-          { length: Math.ceil(filterOrders.length / ordersPerPage) },
+          { length: Math.ceil(filterOrders.length/ ordersPerPage) },
           (_, i) => (
             <button
               key={i + 1}

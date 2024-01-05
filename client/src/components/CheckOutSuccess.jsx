@@ -114,8 +114,9 @@ const CheckOutSuccess = () => {
         console.log(allCartItems);
         if (allCartItems) {
           dispatch(setOrders(allCartItems));
+          dispatch(alertSuccess("Thanh toán hoàn tất! "));
           setTimeout(() => {
-            dispatch(alertSuccess("Thanh toan "));
+           
             // window.location.reload()
             navigate("/user-orders", { replace: true });
           }, 3000);

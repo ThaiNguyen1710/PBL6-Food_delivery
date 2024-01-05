@@ -37,11 +37,7 @@ const DBOrders = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 3;
 
-  const indexOfLastOrder = currentPage * ordersPerPage;
-  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
-  const currentOrders = orders
-    ? orders.slice(indexOfFirstOrder, indexOfLastOrder)
-    : [];
+
   const handleStoreClick = (storeId) => {
     if (isStore && isStore.length > 0) {
       const ordersOfSelectedStore = orders
@@ -53,7 +49,6 @@ const DBOrders = () => {
 
       setSelectedStoreOrders(ordersOfSelectedStore);
     } else {
-      // Xử lý khi không có dữ liệu store
     }
   };
 
@@ -74,7 +69,6 @@ const DBOrders = () => {
         ? selectedStoreOrders
         : filteredOrdersByDate;
 
-    // Lọc theo các tiêu chí tìm kiếm khác
     const filterOrders = ordersToDisplay.filter((order) => {
       const matchedStatus =
         selectedStatus === null || order.status === selectedStatus;
@@ -106,6 +100,49 @@ const DBOrders = () => {
 
   const filterOrders = orders ? handleFilterByDateAndCustomer() : [];
   console.log(filterOrders);
+
+  const generateCSV = () => {
+    const csvRows = [];
+    const header = ["Id", "Time", "User Name", "User Phone", "Price", "Status"];
+    csvRows.push(header);
+  
+    filterOrders.forEach((data) => {
+      const row = [
+        data.id,
+        data.dateOrdered,
+        data.user.name,
+        data.phone,
+        (data.totalPrice *1000 -15000),
+        data.status,
+      ];
+      csvRows.push(row);
+    });
+  
+    return csvRows;
+  };
+  
+  const downloadCSV = (data, filename) => {
+    const csvContent = data.map((row) => row.join(",")).join("\n");
+    const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+    if (navigator.msSaveBlob) {
+      navigator.msSaveBlob(blob, filename);
+    } else {
+      const link = document.createElement("a");
+      if (link.download !== undefined) {
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+    }
+  };
+  
+  const exportToCSV = () => {
+    const csvData = generateCSV();
+    downloadCSV(csvData, "thong_ke.csv");
+  };
   return (
     <div className="flex items-center justify-center flex-col pt-4 w-full gap-3">
       <div className="w-full gap-6 items-start justify-start flex ">
@@ -206,11 +243,18 @@ const DBOrders = () => {
           <BsToggles2 className="text-gray-400 text-2xl" />
         </div>
       </div>
-      <div className="w-full items-center justify-end flex">
+      <div className="w-full items-center justify-between flex ">
         <p className="text-base font-medium text-headingColor">
           Tổng đơn:{" "}
           {filterOrders ? filterOrders.length : orders ? orders.length : null}
         </p>
+        <motion.button
+            className=" flex  items-center  gap-1 bg-gradient-to-bl from-gray-300 to-gray-500 px-2 py-1 rounded-xl text-black text-base font-semibold "
+            onClick={exportToCSV}
+          >
+            {" "}
+            Xuất CSV
+          </motion.button>
       </div>
 
       {filterOrders.length > 0 ? (

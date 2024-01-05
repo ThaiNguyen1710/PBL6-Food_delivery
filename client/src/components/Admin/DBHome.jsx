@@ -1,14 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllOrders, getAllProducts, getAllShipper, getAllUsers } from "../../api";
+import {
+  getAllOrders,
+  getAllProducts,
+  getAllShipper,
+  getAllUsers,
+} from "../../api";
 import { setAllProducts } from "../../context/actions/productAction";
 import { CChart } from "@coreui/react-chartjs";
-import { budget, confirmOrders, delivery, store, totalUser } from "../../assets";
+import {
+  budget,
+  confirmOrders,
+  delivery,
+  store,
+  totalUser,
+} from "../../assets";
 import { FaDongSign } from "react-icons/fa6";
 import { setOrders } from "../../context/actions/orderAction";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import { FaFilter } from "react-icons/fa";
 import { setAllShipper } from "../../context/actions/allShipperAction";
+import { motion } from "framer-motion";
 
 const DBHome = () => {
   const products = useSelector((state) => state.products);
@@ -16,6 +28,31 @@ const DBHome = () => {
   const users = useSelector((state) => state.allUsers);
   const shipper = useSelector((state) => state.shipper);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!products) {
+      getAllProducts().then((data) => {
+        dispatch(setAllProducts(data));
+      });
+    }
+    if (!orders) {
+      getAllOrders().then((data) => {
+        dispatch(setOrders(data));
+      });
+    }
+    if (!users) {
+      getAllUsers().then((data) => {
+        dispatch(setAllUserDetail(data));
+      });
+    }
+    if (!shipper) {
+      getAllShipper().then((data) => {
+        dispatch(setAllShipper(data));
+      });
+    }
+  });
+
+  //Value
 
   const category = products
     ? [
@@ -36,9 +73,9 @@ const DBHome = () => {
     }, 0);
   };
 
-  const preparingCount = countStatus("Pending");
-  const cancelledCount = countStatus("Shipping");
-  const deliveredCount = countStatus("Done");
+  const pendingCount = countStatus("Pending");
+  const shippingCount = countStatus("Shipping");
+  const doneCount = countStatus("Done");
   const categoryCounts = {};
   if (products) {
     products.forEach((product) => {
@@ -53,9 +90,13 @@ const DBHome = () => {
   }
   const isStore = users ? users.filter((store) => store?.isStore === true) : [];
 
-  const totalRevenue = orders
+  const totalRevenue1 = orders
     ? orders.reduce((total, order) => total + (order.totalPrice * 1000 || 0), 0)
     : 0;
+
+
+    const totalRevenue = totalRevenue1 - (orders?orders.length:0 * 15000);
+  //Line Bar
 
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
@@ -78,7 +119,6 @@ const DBHome = () => {
         }
       });
 
-      // Lọc và sắp xếp theo yêu cầu của bộ lọc
       let filteredData = Object.entries(groupedData).map(
         ([timestamp, totalPrice]) => ({
           timestamp,
@@ -113,7 +153,7 @@ const DBHome = () => {
       {
         label: "Doanh Thu",
         backgroundColor: "rgba(179,181,198,0.2)",
-        borderColor:"#FF6384",
+        borderColor: "#FF6384",
         pointBackgroundColor: "rgba(179,181,198,1)",
         pointBorderColor: "#fff",
         pointHoverBackgroundColor: "#fff",
@@ -128,57 +168,121 @@ const DBHome = () => {
     : [];
   const numberMoney = orders ? orders.length - numberPaypal : 0;
 
-  useEffect(() => {
-    if (!products) {
-      getAllProducts().then((data) => {
-        dispatch(setAllProducts(data));
+  //Bar Chart
+  const extractOrderDataByMonth = () => {
+    if (orders) {
+      let monthlyOrderCounts = Array.from({ length: 12 }).fill(0);
+
+      orders.forEach((order) => {
+        const date = new Date(order.dateOrdered);
+        const month = date.getMonth();
+
+        monthlyOrderCounts[month] += 1;
       });
+
+      return monthlyOrderCounts;
+    } else {
+      console.log("Không có dữ liệu đơn hàng.");
+      return null;
     }
-    if (!orders) {
-      getAllOrders().then((data) => {
-        dispatch(setOrders(data));
-      });
-    }
-    if (!users) {
-      getAllUsers().then((data) => {
-        dispatch(setAllUserDetail(data));
-      });
-    }
-    if (!shipper) {
-      getAllShipper().then((data) => {
-        dispatch(setAllShipper(data));
-      });
-    }
-  });
+  };
+
+  const orderDataByMonth = extractOrderDataByMonth();
+
+  const lineChartDataOrdersByMonth = {
+    labels: [
+      "Tháng 1",
+      "Tháng 2",
+      "Tháng 3",
+      "Tháng 4",
+      "Tháng 5",
+      "Tháng 6",
+      "Tháng 7",
+      "Tháng 8",
+      "Tháng 9",
+      "Tháng 10",
+      "Tháng 11",
+      "Tháng 12",
+    ],
+    datasets: [
+      {
+        label: "Tổng Đơn Hàng Theo Tháng",
+        backgroundColor: "#4BC0C0",
+        borderColor: "#FF6384",
+        data: orderDataByMonth,
+      },
+    ],
+  };
+
+  const lineCategory = {
+    labels: category.filter((item) => typeof item === "string"),
+    datasets: [
+      {
+        label: "Số Danh Mục Sản Phẩm",
+        backgroundColor: "#45e31e",
+        borderColor: "#45e31e",
+        pointBackgroundColor: "rgba(179,181,198,1)",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
+        pointHoverBorderColor: "rgba(179,181,198,1)",
+        tooltipLabelColor: "rgba(179,181,198,1)",
+        data: categoryCounts,
+      },
+    ],
+  };
+
+  //Export CSV
+
+  const generateCSV = () => {
+    let csvContent = "data:text/csv;charset=utf-8,";
+
+    const header = ["Time", "Revenue"];
+    csvContent += header.join(",") + "\n";
+
+    orderData.forEach((data) => {
+      const row = [encodeURIComponent(data.timestamp), data.totalPrice];
+      csvContent += row.join(",") + "\n";
+    });
+
+    return csvContent;
+  };
+
+  const exportToCSV = () => {
+    const csvContent = generateCSV();
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "thong_ke.csv");
+
+    document.body.appendChild(link);
+    link.click();
+  };
 
   return (
-    <div className="flex items-start justify-center flex-col pt-44 w-full   gap-8 h-full">
-      <div className="items-start justify-start  gap-6 flex pt-16">
-        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
+    <div className="flex items-start justify-center flex-col  w-full  gap-8   h-full ">
+      <div className="items-start justify-start  gap-6 flex ">
+        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-2 py-2">
           <img
             alt=""
             src={confirmOrders}
-            className="w-20 h-20 object-contain items-center justify-center "
+            className="w-12 h-12 object-contain items-center justify-center "
           />
           <div className="relative ">
-            <p className="text-xl text-headingColor font-semibold">
-             Tổng Đơn
-            </p>
+            <p className="text-xl text-headingColor font-semibold">Tổng Đơn</p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {orders?.length}
             </p>
           </div>
         </div>
-        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative   py-4">
+        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-2 py-2">
           <img
             alt=""
             src={budget}
-            className="w-20 h-20 object-contain items-center justify-center "
+            className="w-12 h-12 object-contain items-center justify-center "
           />
           <div className="relative ">
-            <p className="text-xl text-headingColor font-semibold">
-               Doanh Thu
-            </p>
+            <p className="text-xl text-headingColor font-semibold">Doanh Thu</p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {totalRevenue.toLocaleString("vi-VN")}
               <FaDongSign className="text-red-400" />
@@ -186,158 +290,196 @@ const DBHome = () => {
           </div>
         </div>
 
-        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
+        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-2 py-2">
           <img
             alt=""
             src={totalUser}
-            className="w-20 h-20 object-contain items-center justify-center "
+            className="w-12 h-12 object-contain items-center justify-center "
           />
           <div className="relative ">
             <p className="text-xl text-headingColor font-semibold">
-             Người Dùng
+              Người Dùng
             </p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {users?.length}
             </p>
           </div>
         </div>
-        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
+        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-2 py-2">
           <img
             alt=""
             src={store}
-            className="w-20 h-20 object-contain items-center justify-center "
+            className="w-12 h-12 object-contain items-center justify-center "
           />
           <div className="relative ">
-            <p className="text-xl text-headingColor font-semibold">
-              Cửa Hàng
-            </p>
+            <p className="text-xl text-headingColor font-semibold">Cửa Hàng</p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {isStore?.length}
             </p>
           </div>
         </div>
-        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-3 py-4">
+        <div className="bg-cardOverlay hover:drop-shadow-lg backdrop-blur-md rounded-xl flex items-center justify-center  w-full md:w-225 relative  px-2 py-2">
           <img
             alt=""
             src={delivery}
-            className="w-20 h-20 object-contain items-center justify-center "
+            className="w-12 h-12 object-contain items-center justify-center "
           />
           <div className="relative ">
-            <p className="text-xl text-headingColor font-semibold">
-              Shipper
-            </p>
+            <p className="text-xl text-headingColor font-semibold">Shipper</p>
             <p className=" text-lg font-semibold text-red-500 flex items-center justify-center gap-1">
               {shipper?.length}
             </p>
           </div>
         </div>
       </div>
-      <div className="w-full md:w-full items-center justify-center">
-        <div className="flex items-center w-80 justify-center bg-cardOverlay  gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md">
- 
-          <FaFilter className="w-6 h-6 object-contain "/>
-          <select
-            id="filterYear"
-            onChange={(e) => setSelectedYear(e.target.value)}
-            value={selectedYear || ""}
-            className="border-none outline-none py-1 font-medium bg-transparent text-base text-textColor border shadow-md focus:border-red-400 "
-          >
-
-           
-            <option value="">Chọn Năm</option>
-            {Array.from({ length: 4 }, (_, index) => {
-              const year = 2021 + index;
-              return (
-                <option key={year} value={year}>
-                  {year}
-                </option>
-              );
-            })}
-          </select>
-          <select
-            id="filterMonth"
-            onChange={(e) => setSelectedMonth(e.target.value)}
-            value={selectedMonth || ""}
-            className="border-none outline-none py-1 font-medium bg-transparent text-base text-textColor border shadow-md focus:border-red-400 "
-          >
-            <option value="">Chọn Tháng</option>
-            {Array.from({ length: 12 }, (_, index) => {
-              const month = index + 1;
-              return (
-                <option key={month} value={month}>
-                  {month}
-                </option>
-              );
-            })}
-          </select>
-        </div>
-
-        <CChart
-          type="line"
-          data={lineChartData}
-          options={{
-            aspectRatio: 1.5,
-            tooltips: {
-              enabled: true,
-            },
-          }}
-          style={{ maxHeight: "225px" }}
-        />
-      </div>
-
-      <div className="grid w-full grid-cols-1 md:grid-cols-2 gap-20 px-12 h-full">
-        <div className="flex items-center justify-center ">
-          <div className="w-508 md:w-656">
+      <div className=" w-full h-[80%]  " id="content-to-export">
+        <div className="w-full  gap-2 flex h-[60%]  pb-2">
+          <div className="w-275 md:w-275 items-center justify-center  border-gray-300 bg-cardOverlay rounded-md border">
             <CChart
-              type="bar"
+              type="pie"
               data={{
-                labels: category,
+                labels: [
+                  "Đang chờ",
+                  "Đang giao",
+                  "Hoàn Thành",
+                  "PayPal",
+                  "Tiền mặt",
+                ],
                 datasets: [
                   {
-                    label: "Số loại sản phẩm",
+                    data: [
+                      pendingCount,
+                      shippingCount,
+                      doneCount,
+                      numberPaypal,
+                      numberMoney,
+                    ],
                     backgroundColor: [
-                      "#36A2EB",
+                      "#FFCE56",
                       "#FF6384",
                       "#4BC0C0",
-                      "#FFCE56",
-                      // "#E7E9ED",
-                      "#36A2EB",
+                      "#1255e6",
+                      "#45e31e",
                     ],
-                    data: categoryCounts,
                   },
                 ],
               }}
-              labels="category"
+            />
+          </div>
+          <div className=" w-full  ">
+            <div className="flex w-full justify-between">
+
+            <div className="flex items-center w-80 justify-center bg-cardOverlay  gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md">
+              <FaFilter className="w-6 h-6 object-contain " />
+              <select
+                id="filterYear"
+                onChange={(e) => setSelectedYear(e.target.value)}
+                value={selectedYear || ""}
+                className="border-none outline-none py-1 font-medium bg-transparent text-base text-textColor border shadow-md focus:border-red-400 "
+              >
+                <option value="">Chọn Năm</option>
+                {Array.from({ length: 4 }, (_, index) => {
+                  const year = 2021 + index;
+                  return (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  );
+                })}
+              </select>
+              <select
+                id="filterMonth"
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                value={selectedMonth || ""}
+                className="border-none outline-none py-1 font-medium bg-transparent text-base text-textColor border shadow-md focus:border-red-400 "
+              >
+                <option value="">Chọn Tháng</option>
+                {Array.from({ length: 12 }, (_, index) => {
+                  const month = index + 1;
+                  return (
+                    <option key={month} value={month}>
+                      {month}
+                    </option>
+                  );
+                })}
+              </select>
+             
+            </div>
+            <motion.button
+            className=" flex  items-center bg-gradient-to-bl from-gray-300 to-gray-500 px-2 py-1 rounded-xl text-black text-base font-semibold "
+            onClick={exportToCSV}
+          >
+            Xuất CSV
+          </motion.button>
+            </div>
+            
+
+            <CChart
+              type="line"
+              data={lineChartData}
+              options={{
+                aspectRatio: 1.5,
+                tooltips: {
+                  enabled: true,
+                },
+              }}
+              style={{ maxHeight: "190px" }}
             />
           </div>
         </div>
-
-        <div className="w-340 md:w-375 items-center justify-center ">
-          <CChart
-            type="polarArea"
-            data={{
-              labels: ["Đang chờ", "Đang giao", "Hoàn Thành", "PayPal", "Tiền Mặt"],
-              datasets: [
-                {
-                  data: [
-                    preparingCount,
-                
-                    cancelledCount,
-                    deliveredCount,
-                    numberPaypal,
-                    numberMoney,
-                  ],
-                  backgroundColor: [
-                    "#FF6384",
-                    "#4BC0C0",
-                    "#FFCE56",
-                    "#1255e6",
-                    "#45e31e",
-                  ],
+        <div className="w-full  gap-2 flex h-[40%] ">
+          <div className="w-full md:w-[70%] border-gray-300 bg-cardOverlay rounded-md border">
+            <CChart
+              type="bar"
+              data={lineCategory}
+              options={{
+                aspectRatio: 1.5,
+                tooltips: {
+                  enabled: true,
                 },
-              ],
-            }}
-          />
+                plugins: {
+                  datalabels: {
+                    display: true,
+                    anchor: "end",
+                    align: "top",
+                    formatter: (value) => value,
+                  },
+                },
+              }}
+              style={{ maxHeight: "190px" }}
+            />
+          </div>
+          <div
+            className="w-full md:w-full items-center justify-center  border-gray-300 bg-cardOverlay rounded-md border"
+            style={{ height: "100%" }}
+          >
+            <CChart
+              type="bar"
+              data={lineChartDataOrdersByMonth}
+              options={{
+                aspectRatio: 1.5,
+                tooltips: {
+                  enabled: true,
+                },
+                plugins: {
+                  datalabels: {
+                    anchor: "end",
+                    align: "top",
+                    formatter: (value) => value,
+                    color: "#000", // Màu sắc của số liệu trên cột
+                    labels: {
+                      title: {
+                        font: {
+                          weight: "bold",
+                        },
+                      },
+                    },
+                  },
+                },
+              }}
+              style={{ maxHeight: "190px" }}
+            />
+          </div>
         </div>
       </div>
     </div>

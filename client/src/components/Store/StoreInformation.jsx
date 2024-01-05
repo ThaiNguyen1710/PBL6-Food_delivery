@@ -43,7 +43,7 @@ const StoreInformation = () => {
     });
   };
 
-  const alert = useSelector((state) => state.alert);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -52,7 +52,7 @@ const StoreInformation = () => {
         dispatch(setAllUserDetail(data));
       });
     }
-  }, []);
+  });
   useEffect(() => {
     const generateFullAddress = () => {
       let address = `${userAddress.street}, `;

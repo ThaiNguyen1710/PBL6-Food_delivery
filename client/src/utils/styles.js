@@ -1,13 +1,13 @@
 import { getAllCategory } from "../api";
 
 export const isActiveStyles =
-  "text-2xl text-red-700 font-semibold hover:text-red-700 px-4 py-2 duration-100 transition-all ease-in-out";
+  "text-lg text-red-700 font-medium hover:text-red-700 px-4 py-2 duration-100 transition-all ease-in-out";
 
 export const isNotActiveStyles =
-  "text-xl font-semibold text-textColor hover:text-red-700 px-4 py-2 duration-100 transition-all ease-in-out";
+  "text-base font-normal text-textColor hover:text-red-700 px-4 py-2 duration-100 transition-all ease-in-out";
 
   export const isActiveList =
-  "text-lg text-red-700 font-semibold hover:text-red-700 px-4 py-1 duration-100 transition-all ease-in-out";
+  "text-lg text-red-700 font-normal hover:text-red-700 px-4 py-1 duration-100 transition-all ease-in-out";
 
 export const isNotActiveList =
   "text-base font-normal text-textColor hover:text-red-700 px-4 py-1 duration-100 transition-all ease-in-out";
