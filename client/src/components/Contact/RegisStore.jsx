@@ -151,6 +151,7 @@ const RegisStore = () => {
 
         <InputValueField
           type="text"
+          placeholder={loggedInUser ? loggedInUser.address : ""}
           stateValue={address}
           stateFunc={setAddress}
         />
