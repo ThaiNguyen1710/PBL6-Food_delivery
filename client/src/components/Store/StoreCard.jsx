@@ -101,7 +101,7 @@ const StoreCard = ({ data }) => {
               <div className="flex w-full">
                
                 <p className="text-red-500 font-semibold">
-                  Đặt hàng vào ngày mai lúc: {data.openAt}
+                  Đặt hàng vào lúc: {data.openAt}
                 </p>
               </div>
             </>
