@@ -1,5 +1,7 @@
 # Food Delivery App - React
 
+Visit to page deploy at https://6food.vercel.app/
+
 ## Introduction
 
 This is a Food Delivery application built with React, aiming to provide a convenient and fast online food ordering experience.
@@ -54,7 +56,31 @@ This will create a build folder with optimized and minified production-ready fil
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-
 # Result Paste Section
 
-![Food Delivery App](./client/public/image.png )
+## Home Page
+
+![Food Delivery App](./client/public/image.png)
+![Food Delivery App](./client/public/image2.png)
+
+## Login Page
+
+![Alt text](./client/public/image-9.png)
+![Alt text](./client/public/image-1.png)
+
+## User
+
+![Alt text](./client/public/image-8.png)
+![Alt text](./client/public/image-6.png)
+![Alt text](./client/public/image-7.png)
+
+## Store Owner
+
+![Alt text](./client/public/image-2.png)
+
+![Alt text](./client/public/image-3.png)
+
+# Admin Manager
+
+![Alt text](./client/public/image-4.png)
+![Alt text](./client/public/image-5.png)
