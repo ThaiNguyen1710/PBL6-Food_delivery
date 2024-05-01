@@ -89,13 +89,19 @@ const DBHome = () => {
     });
   }
   const isStore = users ? users.filter((store) => store?.isStore === true) : [];
+  const orderTotalAmounts = orders ? orders.map(order => {
+    const orderTotal = order.orderLists.reduce((acc, curr) => acc + (curr.quantity * curr.product.price), 0) + 15000;
+    return orderTotal;
+}) : [];
 
-  const totalRevenue1 = orders
-    ? orders.reduce((total, order) => total + (order.totalPrice * 1000 || 0), 0)
-    : 0;
 
 
-    const totalRevenue = totalRevenue1 - (orders?orders.length:0 * 15000);
+
+const totalRevenue1 = orderTotalAmounts.reduce((total, amount) => total + amount, 0);
+
+// Trừ đi khoản phí cố định cho mỗi đơn hàng
+const totalRevenue = totalRevenue1 - (orderTotalAmounts.length * 15000);
+
   //Line Bar
 
   const [selectedMonth, setSelectedMonth] = useState(null);
@@ -110,31 +116,40 @@ const DBHome = () => {
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
         const timestamp = `${day}-${month}-${year}`;
-        const totalPrice = order.totalPrice * 1000 || 0;
-
+        const totalPrice = orderTotalAmounts[orders.indexOf(order)] || 0;
+    
         if (!groupedData[timestamp]) {
-          groupedData[timestamp] = totalPrice;
+            groupedData[timestamp] = totalPrice;
         } else {
-          groupedData[timestamp] += totalPrice;
+            groupedData[timestamp] += totalPrice;
         }
-      });
+    });
+    
 
-      let filteredData = Object.entries(groupedData).map(
-        ([timestamp, totalPrice]) => ({
-          timestamp,
-          totalPrice,
-        })
+    let filteredData = Object.entries(groupedData).map(
+      ([timestamp, totalPrice]) => ({
+        timestamp,
+        totalPrice,
+      })
+    );
+    
+    if (selectedYear && selectedMonth) {
+      filteredData = filteredData.filter(
+        (data) =>
+          data.timestamp.split("-")[2] === selectedYear.toString() &&
+          data.timestamp.split("-")[1] === selectedMonth.toString()
       );
-      if (selectedYear) {
-        filteredData = filteredData.filter(
-          (data) => data.timestamp.split("-")[2] === selectedYear.toString()
-        );
-      }
-      if (selectedMonth) {
-        filteredData = filteredData.filter(
-          (data) => data.timestamp.split("-")[1] === selectedMonth.toString()
-        );
-      }
+    } else if (selectedYear) {
+      filteredData = filteredData.filter(
+        (data) => data.timestamp.split("-")[2] === selectedYear.toString()
+      );
+    } else if (selectedMonth) {
+      filteredData = filteredData.filter(
+        (data) => data.timestamp.split("-")[1] === selectedMonth.toString()
+      );
+      
+    }
+    
 
       filteredData = filteredData.reverse();
 
@@ -144,6 +159,7 @@ const DBHome = () => {
       return null;
     }
   };
+
 
   const orderData = extractOrderData();
 
@@ -378,8 +394,8 @@ const DBHome = () => {
                 className="border-none outline-none py-1 font-medium bg-transparent text-base text-textColor border shadow-md focus:border-red-400 "
               >
                 <option value="">Chọn Năm</option>
-                {Array.from({ length: 4 }, (_, index) => {
-                  const year = 2021 + index;
+                {Array.from({ length: 2 }, (_, index) => {
+                  const year = 2024 + index;
                   return (
                     <option key={year} value={year}>
                       {year}

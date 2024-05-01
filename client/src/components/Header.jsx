@@ -27,7 +27,7 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const signOut = () => {
-    localStorage.removeItem("token");
+    localStorage.clear();
     dispatch(setUserDetail(null));
     navigate("/login", { replace: true });
   };

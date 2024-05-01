@@ -129,62 +129,65 @@ const CheckOutSuccess = () => {
     }
   };
 
-  const checkOutByPayPal = async () => {
-    try {
-      const orderData = {
-        user: user.user.userId,
-        shippingAddress1: order?.[0]?.user?.address,
-        shippingAddress2: order?.[0]?.product?.user?.address,
-        totalPrice: totalOrder,
-        phone: order?.[0]?.user?.phone,
-      };
 
-      const createdOrder = await handleCheckOut(orderData);
-      console.log(createdOrder);
-      if (createdOrder) {
-        dispatch(alertInfo("Đơn hàng đang được xử lý!"));
-        await clearAllCart(user?.user?.userId);
-        const items = await getAllCartItems();
-        dispatch(setCartItems(items));
-        setTotalQuantity(0);
-        setTimeout(() => {
-          dispatch(alertNULL());
-        }, 3000);
 
-        const allCartItems = await getAllOrders();
-        if (allCartItems) {
-          dispatch(setOrders(allCartItems));
-          setTimeout(async () => {
-            dispatch(alertSuccess("Thanh toan"));
-            try {
-              const paymentResponse = await axios.post(
-                `${baseURL}/pbl6/paypal/${createdOrder.id}`
+const checkOutByPayPal = async () => {
+  try {
+    const orderData = {
+      user: user.user.userId,
+      shippingAddress1: order?.[0]?.user?.address,
+      shippingAddress2: order?.[0]?.product?.user?.address,
+      totalPrice: totalOrder,
+      phone: order?.[0]?.user?.phone,
+    };
+
+    const createdOrder = await handleCheckOut(orderData);
+    console.log(createdOrder);
+    if (createdOrder) {
+      dispatch(alertInfo("Đơn hàng đang được xử lý!"));
+      await clearAllCart(user?.user?.userId);
+      const items = await getAllCartItems();
+      dispatch(setCartItems(items));
+      setTotalQuantity(0);
+      setTimeout(() => {
+        dispatch(alertNULL());
+      }, 3000);
+
+      const allCartItems = await getAllOrders();
+      if (allCartItems) {
+        dispatch(setOrders(allCartItems));
+        setTimeout(async () => {
+          dispatch(alertSuccess("Thanh toan"));
+          try {
+            const paymentResponse = await axios.post(
+              `${baseURL}/pbl6/paypal/${createdOrder.id}`
+            );
+            console.log(paymentResponse);
+            if (
+              paymentResponse.data.links &&
+              paymentResponse.data.links.length > 0
+            ) {
+              const redirectLink = paymentResponse.data.links.find(
+                (link) => link.method === "REDIRECT"
               );
-              console.log(paymentResponse);
-              if (
-                paymentResponse.data.links &&
-                paymentResponse.data.links.length > 0
-              ) {
-                const redirectLink = paymentResponse.data.links.find(
-                  (link) => link.method === "REDIRECT"
-                );
-                if (redirectLink) {
-                  window.open(redirectLink.href, "_blank");
-                }
+              if (redirectLink) {
+                window.open(redirectLink.href, "_blank");
               }
-            } catch (err) {
-              console.error(err);
             }
-          }, 3000);
-        }
-        navigate("/user-orders", { replace: true });
-      } else {
-        throw new Error("Failed to update user information");
+          } catch (err) {
+            console.error(err);
+          }
+        }, 3000);
       }
-    } catch (error) {
-      console.error("Error during checkout:", error);
+      navigate("/user-orders", { replace: true });
+    } else {
+      throw new Error("Failed to update user information");
     }
-  };
+  } catch (error) {
+    console.error("Error during checkout:", error);
+  }
+};
+
   return (
     <main className="w-screen min-h-screen flex items-center justify-start flex-col bg-primary ">
       <Header />

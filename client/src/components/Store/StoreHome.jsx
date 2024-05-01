@@ -33,14 +33,19 @@ const StoreHome = () => {
           order.shippingAddress2 === user.user.address
       )
     : [];
-  const totalRevenue1 = orderStore
-    ? orderStore.reduce(
-        (total, order) => total + (order.totalPrice * 1000 || 0),
-        0
-      )
-    : 0;
 
-  const totalRevenue = totalRevenue1 - orderStore.length * 15000;
+
+    const totalPriceOrders = orderStore ? orderStore.map(order => {
+      const orderTotal = order.orderLists.reduce((acc, curr) => acc + (curr.quantity * curr.product.price), 0) + 15000;
+      return orderTotal;
+  }) : [];
+
+
+
+  const totalRevenue1 = totalPriceOrders.reduce((total, amount) => total + amount, 0);
+
+
+  const totalRevenue = totalRevenue1 - (totalPriceOrders.length * 15000);
   // Best Seller
   const productSales = {};
 
@@ -163,7 +168,7 @@ const StoreHome = () => {
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
         const timestamp = `${day}-${month}-${year}`;
-        const totalPrice = order.totalPrice * 1000 || 0;
+        const totalPrice = totalPriceOrders[orders.indexOf(order)] || 0;
 
         if (!groupedData[timestamp]) {
           groupedData[timestamp] = totalPrice;

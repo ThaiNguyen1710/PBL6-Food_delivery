@@ -41,6 +41,9 @@ const OrderData = ({ index, data, admin }) => {
   const store = allUser
     ? allUser.filter((store) => store.address === data.shippingAddress2)
     : [];
+    const totalPrice = data ? data.orderLists.reduce((acc, curr) => acc + (curr.quantity * curr.product.price) , 0)+15000 : 0;
+
+   
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -140,6 +143,8 @@ const OrderData = ({ index, data, admin }) => {
     }
   };
 
+  console.log()
+
   return (
     <motion.div
       {...staggerFadeInOut(index)}
@@ -189,7 +194,7 @@ const OrderData = ({ index, data, admin }) => {
           <p className="flex items-center gap-1 text-textColor">
             Total:
             <span className="text-headingColor font-bold">
-              {parseFloat(data?.totalPrice * 1000).toLocaleString("vi-VN")}
+              {parseFloat(totalPrice).toLocaleString("vi-VN")}
             </span>
             <FaDongSign className="text-lg text-red-500" />
           </p>
