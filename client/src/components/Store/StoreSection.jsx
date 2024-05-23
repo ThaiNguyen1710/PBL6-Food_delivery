@@ -52,7 +52,7 @@ const StoreSection = (data) => {
       })
     : [];
 
-  console.log(filteredProducts);
+
 
   return (
     <motion.div className="w-full flex items-start justify-start flex-col ">

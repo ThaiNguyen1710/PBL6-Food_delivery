@@ -12,7 +12,7 @@ const Slider = () => {
 
   useEffect(() => {
     if (products) {
-      const numberOfRandomProducts = 10;
+      const numberOfRandomProducts = 2;
 
       const randomIndexes = [];
       while (randomIndexes.length < numberOfRandomProducts) {

@@ -43,8 +43,9 @@ const CheckOutSuccess = () => {
   const navigate = useNavigate();
 
   const order = cart
-    ? cart.filter((item) => item.user.id === user.user.userId)
-    : [];
+  ? cart.filter((item) => item && item.user && item.user.id === user.user.userId)
+  : [];
+
  
   useEffect(() => {
     let total = 0;
@@ -52,7 +53,7 @@ const CheckOutSuccess = () => {
     let totalOrder = 0;
 
     const filteredCart = cart
-      ? cart.filter((item) => item.user.id === user.user.userId)
+      ? cart.filter((item) => item && item.user && item.user.id === user.user.userId)
       : [];
     setUserCart(filteredCart);
 
@@ -94,7 +95,7 @@ const CheckOutSuccess = () => {
       };
 
       const createdOrder = await handleCheckOutByMoney(orderData);
-
+      console.log(orderData);
       console.log(createdOrder);
 
       if (createdOrder) {
@@ -141,7 +142,7 @@ const checkOutByPayPal = async () => {
       phone: order?.[0]?.user?.phone,
     };
 
-    const createdOrder = await handleCheckOut(orderData);
+    const createdOrder = await handleCheckOutByMoney(orderData);
     console.log(createdOrder);
     if (createdOrder) {
       dispatch(alertInfo("Đơn hàng đang được xử lý!"));

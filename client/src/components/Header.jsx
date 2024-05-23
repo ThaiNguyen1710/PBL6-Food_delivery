@@ -27,7 +27,7 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const signOut = () => {
-    localStorage.clear();
+    localStorage.removeItem("token");
     dispatch(setUserDetail(null));
     navigate("/login", { replace: true });
   };
@@ -35,20 +35,18 @@ const Header = () => {
   const [userCart, setUserCart] = useState([]);
   const [userLogin, setUserLogin] = useState([]);
 
-
-
   useEffect(() => {
-    if (cart && user && user.user && user.user.userId) {
-      const filteredCart = cart.filter(
-        (item) => item.user.id === user.user.userId
-      );
+    if (cart && user && user.user && user.user.userId && allUser) {
+      const filteredCart = cart?cart.filter(
+        (item) => item.user && item.user.id === user.user.userId
+      ):[];
       setUserCart(filteredCart);
     }
-    if ( user && user.user && user.user.userId) {
-      const filteredUser = allUser?allUser.filter((userLogin)=>userLogin.id === user.user.userId):[]
+    if ( user && user.user && user.user.userId&& allUser) {
+      const filteredUser = allUser?allUser.filter((userLogin)=>userLogin &&userLogin.id === user.user.userId):[]
       setUserLogin(filteredUser);
     }
-  }, [cart, user]);
+  }, [cart, user,allUser]);
 
   return (
     <header className="fixed backdrop-blur-md z-50 inset-x-0 top-0 flex justify-between items-center px-12 md:px-20 sm:px-1 py-2 ">

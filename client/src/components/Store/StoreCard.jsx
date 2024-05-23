@@ -39,12 +39,12 @@ const StoreCard = ({ data }) => {
   const navigate = useNavigate();
 
   const navigateToStore = () => {
-    if (data.openAt <= currentTime && currentTime <= data.closeAt) {
+    if (data.openAt <= currentTime || currentTime <= data.closeAt) {
       navigate(`/store/${data.id}`);
     }
   };
 
-  const isClosed = !(data.openAt <= currentTime && currentTime <= data.closeAt);
+  const isClosed = !(data.openAt <= currentTime || currentTime <= data.closeAt);
 
   return (
     <div

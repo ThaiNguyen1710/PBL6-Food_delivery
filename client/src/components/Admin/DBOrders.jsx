@@ -99,7 +99,7 @@ const DBOrders = () => {
   };
 
   const filterOrders = orders ? handleFilterByDateAndCustomer() : [];
-  console.log(filterOrders);
+
 
   const generateCSV = () => {
     const csvRows = [];

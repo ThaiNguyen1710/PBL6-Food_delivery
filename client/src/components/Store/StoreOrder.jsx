@@ -38,7 +38,7 @@ const StoreOrder = () => {
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   const currentOrders = orderStore.slice(indexOfFirstOrder, indexOfLastOrder);
 
- 
+ console.log(orderStore)
 
   const handleFilterByDateAndCustomer = () => {
     const filteredOrdersByDate = orderStore.filter((order) => {

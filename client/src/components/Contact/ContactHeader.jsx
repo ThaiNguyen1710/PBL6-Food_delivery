@@ -36,7 +36,7 @@ const ContactHeader = () => {
     useEffect(() => {
       if (cart && user && user.user && user.user.userId) {
         const filteredCart = cart.filter(
-          (item) => item.user.id === user.user.userId
+          (item) => item && item.user && item.user.id === user.user.userId
         );
         setUserCart(filteredCart);
       }

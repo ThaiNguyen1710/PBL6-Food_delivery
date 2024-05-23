@@ -41,11 +41,11 @@ const Cart = () => {
   useEffect(() => {
     let total = 0;
     let totalQuantity = 0;
-
     const filteredCart = cart
-      ? cart.filter((item) => item.user.id === user.user.userId)
-      : [];
-    setUserCart(filteredCart);
+    ? cart.filter((item) => item && item.user && item.user.id === user.user.userId)
+    : [];
+  setUserCart(filteredCart);
+  
 
     if (filteredCart && filteredCart.length > 0) {
       filteredCart.forEach((data) => {
@@ -70,7 +70,7 @@ const Cart = () => {
     storeCarts.push(storeCart);
   });
 
-  console.log(storeCarts);
+  console.log(userCart);
 
   const clearAllItems = () => {
     clearAllCart(user?.user?.userId).then((data) => {
@@ -171,7 +171,7 @@ export const CartItemCard = ({ index, data }) => {
     setItemTotal(itemTotal);
 
     const filterItem = cart
-      ? cart.filter((item) => item.product.user === allUser.id)
+      ? cart.filter((item) => item.product.user.id === allUser.id)
       : [];
     setItemCart(filterItem);
   }, [cart]);

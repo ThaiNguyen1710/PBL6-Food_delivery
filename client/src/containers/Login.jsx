@@ -10,12 +10,10 @@ import { BiLogOutCircle } from "react-icons/bi";
 import {
   completeOtp,
   completeOtpForgotPass,
-
   getAllUsers,
   loginUser,
   sendOtp,
   sendOtpForgotPass,
-
 } from "../api";
 
 import { NavLink, useNavigate } from "react-router-dom";
@@ -35,7 +33,6 @@ const Login = () => {
   const dispatch = useDispatch();
 
   const user = useSelector((state) => state.user);
-
 
   const [userEmail, setUserEmail] = useState("");
   const [isSignUp, setIsSignUp] = useState(false);
@@ -93,7 +90,7 @@ const Login = () => {
             name: userEmail,
           };
           const response = await sendOtp(userData);
-          console.log(response);
+          console.log(userData);
           if (response && response.success) {
             dispatch(alertSuccess("Gửi thành công OTP!"));
             setShowOTP(true);
@@ -316,12 +313,6 @@ const Login = () => {
     }
   };
 
-
-
- 
-
-
-
   return (
     <div className="w-screen h-screen relative overflow-auto  bg-lighttextGray gap-4">
       {isForgot ? (
@@ -443,8 +434,6 @@ const Login = () => {
                   )}
                 </div>
               )}
-
-           
             </div>
           </div>
         </div>
