@@ -122,7 +122,7 @@ const StoreDetail = ({ closeStore }) => {
                     <FaUserCheck className="w-8 h-8 text-slate-100" />
                    {numRated} +
                   </motion.button>
-                  <p className="text-lg font-normal ">{" "}đánh giá trên 6Food</p>
+                  <p className="text-lg font-normal ">{" "}đánh giá trên EatEase</p>
                 </div>
               </div>
               <div className="gap-12 pb-8">
@@ -161,7 +161,7 @@ const StoreDetail = ({ closeStore }) => {
                       Dịch vụ bởi
                     </p>
                     <p className="font-semibold text-3xl" style={gradientStyle}>
-                      6Food
+                      EatEase
                     </p>
                   </div>
                 </div>

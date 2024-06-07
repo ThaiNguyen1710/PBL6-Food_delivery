@@ -54,7 +54,7 @@ const Footer = () => {
           </p>
           <p className="text-textColor text-xl  flex gap-4 font-semibold pb-6">
             <HiOutlineMail className="text-gray-500 text-2xl" />{" "}
-            6food2412@gmail.com
+            eatease304@gmail.com
           </p>
           </div>
          

@@ -92,7 +92,7 @@ const RegisStore = () => {
                 Dịch vụ bởi
               </p>
               <p className="font-semibold text-3xl" style={gradientStyle}>
-                6Food
+                EatEase
               </p>
             </div>
           </div>
@@ -134,7 +134,7 @@ const RegisStore = () => {
           THÔNG TIN QUÁN CẦN ĐĂNG KÝ
         </p>
         <p className="text-sm text-start text-gray-700 font-normal ">
-          * Hãy chắc chắn quán chưa được đăng ký tại 6Food
+          * Hãy chắc chắn quán chưa được đăng ký tại EatEase
         </p>
         <p className="text-sm text-start text-headingColor font-bold ">
           Tên quán
@@ -166,7 +166,7 @@ const RegisStore = () => {
             rel="noopener noreferrer "
             className="text-sm text-start text-blue-500 font-normal"
           >
-            điều khoản của 6Food
+            điều khoản của EatEase
           </a>
         </div>
       </div>

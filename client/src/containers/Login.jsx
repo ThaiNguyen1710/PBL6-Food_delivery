@@ -323,7 +323,7 @@ const Login = () => {
             <NavLink to={"/"} className="flex items-center gap-3">
               <img src={logo2} className="w-16" alt="" />
               <p className="flex font-bold text-3xl" style={gradientStyle}>
-                6Food
+                EatEase
               </p>
             </NavLink>
           </div>
@@ -444,7 +444,7 @@ const Login = () => {
             <NavLink to={"/"} className="flex items-center gap-3">
               <img src={logo2} className="w-16" alt="" />
               <p className="flex font-bold text-3xl" style={gradientStyle}>
-                6Food
+                EatEase
               </p>
             </NavLink>
           </div>
@@ -493,7 +493,7 @@ const Login = () => {
 
               {!isSignUp ? (
                 <p className="font-medium">
-                  Chưa có tài khoản tại 6Food? {""}
+                  Chưa có tài khoản tại EatEase? {""}
                   <motion.button
                     {...buttonClick}
                     className="text-cartNumBg bg-transparent cursor-pointer underline"
@@ -504,7 +504,7 @@ const Login = () => {
                 </p>
               ) : (
                 <p className="font-medium">
-                  Đã có tài khoản tại 6Food? {"     "}
+                  Đã có tài khoản tại EatEase? {"     "}
                   <motion.button
                     {...buttonClick}
                     className="text-cartNumBg bg-transparent cursor-pointer underline"

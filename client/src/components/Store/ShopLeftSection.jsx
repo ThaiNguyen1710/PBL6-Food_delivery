@@ -24,7 +24,7 @@ const ShopLeftSection = () => {
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={logo2} className="w-16 " alt="" />
         <p className=" font-semibold text-4xl " style={gradientStyle}>
-          6Food
+          EatEase
         </p>
       </NavLink>
       <div className="rounded-md  shadow-md overflow-hidden w-full h-340 cursor-pointer ">

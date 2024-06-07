@@ -26,7 +26,7 @@ const Home = () => {
           <span className="text-orange-500">Đà Nẵng</span>
         </p>
         <p className="text-textColor text-lg">
-          Sử dụng App 6Food để có nhiều giảm giá và trải nghiệm tốt hơn
+          Sử dụng App EatEase để có nhiều giảm giá và trải nghiệm tốt hơn
         </p>
         <motion.button
           {...buttonClick}

@@ -11,7 +11,7 @@ const ContactLeftSection = () => {
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={logo2} className="w-20 " alt="Please uploadImage!" />
         <p className=" font-semibold text-5xl " style={gradientStyle}>
-          6Food
+          EatEase
         </p>
       </NavLink>
      
