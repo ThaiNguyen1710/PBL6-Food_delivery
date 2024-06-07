@@ -15,7 +15,7 @@ import {
   alertNULL,
   alertSuccess,
 } from "../../context/actions/alertActions";
-import { delivery, shipperCome } from "../../assets";
+import { avatar, delivery, shipperCome } from "../../assets";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import { setOrders } from "../../context/actions/orderAction";
 import axios from "axios";
@@ -293,15 +293,32 @@ const OrderData = ({ index, data, admin }) => {
             </>
           )}
           {data.status === "Shipping" && (
-            <div className="flex items-center justify-center ">
+            <>
+             <div className="flex items-center justify-center gap-2 ">
               <motion.img
-                src={shipperCome}
-                className="w-24 h-30 object-contain"
+                src={avatar}
+                className="w-12 h-12 object-contain"
               />
+              <div className="items-center justify-center">
               <p className="text-base font-semibold text-headingColor">
-                Tài xế đang đến!
+                {data.shipper.name}
               </p>
+              <p className="text-sm font-semibold text-gray-400">
+                {data.shipper.phone} - {data.shipper.description}
+              </p>
+              </div>
+             
             </div>
+             <div className="flex items-center justify-center ">
+             <motion.img
+               src={shipperCome}
+               className="w-24 h-30 object-contain"
+             />
+             <p className="text-base font-semibold text-headingColor">
+               Tài xế đang đến!
+             </p>
+           </div></>
+           
           )}
           {data.status === "Done" &&
             (data.isRate ? (

@@ -44,7 +44,7 @@ const StoreCard = ({ data }) => {
     }
   };
 
-  const isClosed = !(data.openAt <= currentTime || currentTime <= data.closeAt);
+  const isClosed = !(data.openAt <= currentTime && currentTime <= data.closeAt);
 
   return (
     <div

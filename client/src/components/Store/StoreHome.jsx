@@ -34,18 +34,23 @@ const StoreHome = () => {
       )
     : [];
 
+  const totalPriceOrders = orderStore
+    ? orderStore.map((order) => {
+        const orderTotal =
+          order.orderLists.reduce(
+            (acc, curr) => acc + curr.quantity * curr.product.price,
+            0
+          ) + 15000;
+        return orderTotal;
+      })
+    : [];
 
-    const totalPriceOrders = orderStore ? orderStore.map(order => {
-      const orderTotal = order.orderLists.reduce((acc, curr) => acc + (curr.quantity * curr.product.price), 0) + 15000;
-      return orderTotal;
-  }) : [];
+  const totalRevenue1 = totalPriceOrders.reduce(
+    (total, amount) => total + amount,
+    0
+  );
 
-
-
-  const totalRevenue1 = totalPriceOrders.reduce((total, amount) => total + amount, 0);
-
-
-  const totalRevenue = totalRevenue1 - (totalPriceOrders.length * 15000);
+  const totalRevenue = totalRevenue1 - totalPriceOrders.length * 15000;
   // Best Seller
   const productSales = {};
 
@@ -177,26 +182,30 @@ const StoreHome = () => {
         }
       });
 
-      // Lọc và sắp xếp theo yêu cầu của bộ lọc
       let filteredData = Object.entries(groupedData).map(
         ([timestamp, totalPrice]) => ({
           timestamp,
           totalPrice,
         })
       );
-      if (selectedYear) {
+      if (selectedYear && selectedMonth) {
+        filteredData = filteredData.filter(
+          (data) =>
+            data.timestamp.split("-")[2] === selectedYear.toString() &&
+            data.timestamp.split("-")[1] === selectedMonth.toString()
+        );
+      } else if (selectedYear) {
         filteredData = filteredData.filter(
           (data) => data.timestamp.split("-")[2] === selectedYear.toString()
         );
-      }
-      if (selectedMonth) {
+      } else if (selectedMonth) {
         filteredData = filteredData.filter(
           (data) => data.timestamp.split("-")[1] === selectedMonth.toString()
         );
       }
 
       filteredData = filteredData.reverse();
-
+      console.log(filteredData);
       return filteredData;
     } else {
       console.log("Không có dữ liệu đơn hàng.");
