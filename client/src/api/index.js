@@ -2,8 +2,8 @@ import axios from "axios";
 
 // export const baseURL = "https://pbl-6-nine.vercel.app";
 // export const baseURL1 = "https://pbl6-lssz.onrender.com";
-export const baseURL = "http://localhost:8080";
-// export const baseURL = "https://food-delivery-back-node-js.vercel.app";
+// export const baseURL = "http://localhost:8080";
+export const baseURL = "https://food-delivery-back-node-js.vercel.app";
 //user
 
 export const validateUserJWTToken = async (token) => {
