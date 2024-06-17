@@ -6,7 +6,7 @@ import SliderCard from "./SliderCard";
 import { getAllCategory } from "../../api";
 
 const FilterSection = () => {
-  const [category, setCategory] = useState("Đồ Ăn Nhanh");
+  const [category, setCategory] = useState("Gà");
   const product = useSelector((state) => state.products);
 
   const [statusList, setStatusList] = useState([]);

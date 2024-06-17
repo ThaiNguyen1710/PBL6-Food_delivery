@@ -9,6 +9,7 @@ import { MdSearch } from "react-icons/md";
 import { BsToggles2 } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { buttonClick } from "../../animations";
+import HomeSlider from "./HomeSlider";
 
 const UserOrder = () => {
   const user = useSelector((state) => state.user);
@@ -189,10 +190,10 @@ const UserOrder = () => {
           Next
         </motion.button>
       </div>
-
-      <div className="w-full min-h-screen justify-end  flex   items-end">
+      <section className="w-full min-h-screen justify-end items-end pt-64 px-4">
+      <HomeSlider />
         <Footer />
-      </div>
+      </section>
     </main>
   );
 };

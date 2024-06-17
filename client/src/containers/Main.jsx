@@ -57,7 +57,7 @@ const Main = () => {
           <FilterSection />
         
 
-        {/* <HomeSlider /> */}
+        <HomeSlider />
       </div>
       {isCart && <Cart />}
       <div id="homeSlider">
