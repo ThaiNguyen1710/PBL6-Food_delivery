@@ -58,52 +58,52 @@ const DBUsers = () => {
       <DataTable
         columns={[
           {
-            title: <p className="font-semibold text-xl">Ảnh</p>,
+            title: <p className="font-semibold font-sans text-xl">Ảnh</p>,
             field: "photoURL",
             render: (rowData) => (
               <img
                 src={baseURL+rowData.image ?baseURL+rowData.image : avatar}
-                className="w-32 h-16 object-contain rounded-md"
+                className="w-32 h-16 object-cover rounded-md"
                 alt=""
               />
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Tên</p>,
+            title: <p className="font-semibold font-sans text-xl">Tên</p>,
             field: "name",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.name}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.name}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Email</p>,
+            title: <p className="font-semibold font-sans text-xl">Email</p>,
             field: "email",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.email}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.email}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Sđt</p>,
+            title: <p className="font-semibold font-sans text-xl">Sđt</p>,
             field: "phone",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.phone}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.phone}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Địa chỉ</p>,
+            title: <p className="font-semibold font-sans text-xl">Địa chỉ</p>,
             field: "address",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.address}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.address}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Quyền</p>,
+            title: <p className="font-semibold font-sans text-xl">Quyền</p>,
             field: "role",
             render: (rowData) => (
               <select
                 value={rowData.isStore ? "Store" : rowData.isAdmin ? "Admin" : "User"}
                 onChange={(e) => typeUser(rowData, e.target.value)}
-                className="border rounded-md bg-cardOverlay w-32 h-10 font-semibold"
+                className="border rounded-md bg-cardOverlay w-32 h-10 font-semibold font-sans"
                 style={{
                   color:
                     rowData.isStore
@@ -113,13 +113,13 @@ const DBUsers = () => {
                       : "black",
                 }}
               >
-                <option value="User" className="font-semibold text-black">
+                <option value="User" className="font-semibold font-sans text-black">
                   Người dùng
                 </option>
-                <option value="Store" className="font-semibold text-blue-500">
+                <option value="Store" className="font-semibold font-sans text-blue-500">
                   Cửa hàng
                 </option>
-                <option value="Admin" className="font-semibold text-red-500">
+                <option value="Admin" className="font-semibold font-sans text-red-500">
                   Admin
                 </option>
               </select>
@@ -127,7 +127,7 @@ const DBUsers = () => {
           },
          
           {
-            title: <p className="font-semibold text-xl">Xác thực</p>,
+            title: <p className="font-semibold font-sans text-xl">Xác thực</p>,
             field: "emailVerified",
             render: (rowData) => (
               <p
@@ -142,7 +142,7 @@ const DBUsers = () => {
        
         ]}
         data={user}
-        title={<p className="font-semibold text-red-400 text-3xl">Danh sách người dùng</p>}
+        title={<p className="font-semibold font-sans text-amber-500 text-3xl">Danh sách người dùng</p>}
         // actions={[
         //   {
         //     icon: "edit",

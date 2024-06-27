@@ -34,7 +34,7 @@ const StoreHome = () => {
       )
     : [];
 
-  const totalPriceOrders = orderStore
+    const totalPriceOrders = orderStore
     ? orderStore.map((order) => {
         const orderTotal =
           order.orderLists.reduce(
@@ -44,6 +44,7 @@ const StoreHome = () => {
         return orderTotal;
       })
     : [];
+    console.log("totatl", totalPriceOrders)
 
   const totalRevenue1 = totalPriceOrders.reduce(
     (total, amount) => total + amount,
@@ -163,58 +164,63 @@ const StoreHome = () => {
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedYear, setSelectedYear] = useState(null);
 
-  const extractOrderData = () => {
-    if (orderStore) {
-      let groupedData = {};
+const extractOrderData = () => {
+  if (orderStore) {
+    let groupedData = {};
 
-      orderStore.forEach((order) => {
-        const date = new Date(order.dateOrdered);
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        const timestamp = `${day}-${month}-${year}`;
-        const totalPrice = totalPriceOrders[orders.indexOf(order)] || 0;
+    console.log("Order Store:", orderStore);
+    console.log("Total Price Orders:", totalPriceOrders);
 
-        if (!groupedData[timestamp]) {
-          groupedData[timestamp] = totalPrice;
-        } else {
-          groupedData[timestamp] += totalPrice;
-        }
-      });
+    orderStore.forEach((order, index) => {
+      const date = new Date(order.dateOrdered);
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
+      const timestamp = `${day}-${month}-${year}`;
+      const totalPrice = totalPriceOrders[index] || 0;
 
-      let filteredData = Object.entries(groupedData).map(
-        ([timestamp, totalPrice]) => ({
-          timestamp,
-          totalPrice,
-        })
-      );
-      if (selectedYear && selectedMonth) {
-        filteredData = filteredData.filter(
-          (data) =>
-            data.timestamp.split("-")[2] === selectedYear.toString() &&
-            data.timestamp.split("-")[1] === selectedMonth.toString()
-        );
-      } else if (selectedYear) {
-        filteredData = filteredData.filter(
-          (data) => data.timestamp.split("-")[2] === selectedYear.toString()
-        );
-      } else if (selectedMonth) {
-        filteredData = filteredData.filter(
-          (data) => data.timestamp.split("-")[1] === selectedMonth.toString()
-        );
+      console.log(`Date: ${timestamp}, Total Price: ${totalPrice}`);
+
+      if (!groupedData[timestamp]) {
+        groupedData[timestamp] = totalPrice;
+      } else {
+        groupedData[timestamp] += totalPrice;
       }
+    });
 
-      filteredData = filteredData.reverse();
-      console.log(filteredData);
-      return filteredData;
-    } else {
-      console.log("Không có dữ liệu đơn hàng.");
-      return null;
+    let filteredData = Object.entries(groupedData).map(
+      ([timestamp, totalPrice]) => ({
+        timestamp,
+        totalPrice,
+      })
+    );
+    if (selectedYear && selectedMonth) {
+      filteredData = filteredData.filter(
+        (data) =>
+          data.timestamp.split("-")[2] === selectedYear.toString() &&
+          data.timestamp.split("-")[1] === selectedMonth.toString()
+      );
+    } else if (selectedYear) {
+      filteredData = filteredData.filter(
+        (data) => data.timestamp.split("-")[2] === selectedYear.toString()
+      );
+    } else if (selectedMonth) {
+      filteredData = filteredData.filter(
+        (data) => data.timestamp.split("-")[1] === selectedMonth.toString()
+      );
     }
-  };
+
+    filteredData = filteredData.reverse();
+    console.log(filteredData);
+    return filteredData;
+  } else {
+    console.log("Không có dữ liệu đơn hàng.");
+    return null;
+  }
+};
 
   const orderData = extractOrderData();
-
+console.log(orderData)
   const lineChartData = {
     labels: orderData ? orderData.map((data) => data.timestamp) : [],
     datasets: [
@@ -375,8 +381,8 @@ const StoreHome = () => {
                 className="border-none outline-none py-1 font-medium bg-transparent text-base text-textColor border shadow-md focus:border-red-400 "
               >
                 <option value="">Chọn Năm</option>
-                {Array.from({ length: 4 }, (_, index) => {
-                  const year = 2021 + index;
+                {Array.from({ length: 1 }, (_, index) => {
+                  const year = 2024 + index;
                   return (
                     <option key={year} value={year}>
                       {year}

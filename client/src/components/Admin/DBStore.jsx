@@ -55,7 +55,7 @@ const DBStore = () => {
       <DataTable
         columns={[
           {
-            title: <p className="font-semibold text-xl">Avatar</p>,
+            title: <p className="font-semibold font-sans text-xl">Avatar</p>,
             field: "photoURL",
             render: (rowData) => (
               <img
@@ -64,62 +64,62 @@ const DBStore = () => {
                     ? baseURL + rowData.imgStore
                     : avatar
                 }
-                className="w-32 h-16 object-contain rounded-md"
+                className="w-32 h-16 object-cover rounded-md"
                 alt=""
               />
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Tên</p>,
+            title: <p className="font-semibold font-sans text-xl">Tên</p>,
             field: "store",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.store}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.store}</p>
             ),
           },
 
           {
-            title: <p className="font-semibold text-xl">Chủ cửa hàng</p>,
+            title: <p className="font-semibold font-sans text-xl">Chủ cửa hàng</p>,
             field: "name",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.name}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.name}</p>
             ),
           },
 
           {
-            title: <p className="font-semibold text-xl">Địa chỉ</p>,
+            title: <p className="font-semibold font-sans text-xl">Địa chỉ</p>,
             field: "address",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.address}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.address}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Mở cửa</p>,
+            title: <p className="font-semibold font-sans text-xl">Mở cửa</p>,
             field: "openAt",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.openAt}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.openAt}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Đóng cửa</p>,
+            title: <p className="font-semibold font-sans text-xl">Đóng cửa</p>,
             field: "closeAt",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.closeAt}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.closeAt}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Khóa</p>,
+            title: <p className="font-semibold font-sans text-xl">Khóa</p>,
             field: "isStore",
             render: (rowData) => (
               <select
                 value={rowData.isStore}
                 onChange={() => blockStore(rowData)}
-                className="border rounded-md bg-cardOverlay w-32 h-10 font-semibold"
+                className="border rounded-md bg-cardOverlay w-32 h-10 font-semibold font-sans"
                 style={{ color: rowData.isStore === true ? "blue" : "red" }}
               >
-                <option value="true" className="font-semibold text-blue-500">
+                <option value="true" className="font-semibold font-sans text-blue-500">
                   Hoạt động
                 </option>
-                <option value="false" className="font-semibold text-red-500">
+                <option value="false" className="font-semibold font-sans text-red-500">
                   Khóa
                 </option>
               </select>
@@ -128,7 +128,7 @@ const DBStore = () => {
         ]}
         data={isStore}
         title={
-          <p className="font-semibold text-red-400 text-3xl">Danh sách cửa hàng</p>
+          <p className="font-semibold font-sans text-amber-500 text-3xl">Danh sách cửa hàng</p>
         }
       />
     </div>

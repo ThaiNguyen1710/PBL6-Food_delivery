@@ -120,6 +120,7 @@ const CheckOutSuccess = () => {
            
             // window.location.reload()
             navigate("/user-orders", { replace: true });
+            dispatch(alertNULL());
           }, 3000);
         }
       } else {
@@ -158,7 +159,8 @@ const checkOutByPayPal = async () => {
       if (allCartItems) {
         dispatch(setOrders(allCartItems));
         setTimeout(async () => {
-          dispatch(alertSuccess("Thanh toan"));
+          dispatch(alertSuccess("Thanh toán thành công!"));
+          
           try {
             const paymentResponse = await axios.post(
               `${baseURL}/pbl6/paypal/${createdOrder.id}`
@@ -178,6 +180,9 @@ const checkOutByPayPal = async () => {
           } catch (err) {
             console.error(err);
           }
+        }, 3000);
+        setTimeout(() => {
+          dispatch(alertNULL());
         }, 3000);
       }
       navigate("/user-orders", { replace: true });

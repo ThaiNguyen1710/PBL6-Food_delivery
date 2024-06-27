@@ -1,7 +1,19 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { faceLogo, igLogo,logo2, overView, shipped, storeList, userList } from "../../assets";
-import { gradientStyle, isActiveList, isNotActiveList,  } from "../../utils/styles";
+import {
+  faceLogo,
+  igLogo,
+  logo2,
+  overView,
+  shipped,
+  storeList,
+  userList,
+} from "../../assets";
+import {
+  gradientStyle,
+  isActiveList,
+  isNotActiveList,
+} from "../../utils/styles";
 import { motion } from "framer-motion";
 
 const DBLeftSection = () => {
@@ -9,17 +21,19 @@ const DBLeftSection = () => {
     <div className="h-full py-2   flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-225 gap-3 overflow-auto">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={logo2} className="w-16 " alt="" />
-        <p className=" font-semibold text-4xl "style={gradientStyle}>EatEase</p>
+        <p className=" font-semibold text-2xl " style={gradientStyle}>
+          EatEase
+        </p>
       </NavLink>
 
       <hr />
 
       <ul className="flex flex-col gap-1 px-2 py-2">
-        <div className="flex w-full gap-1  items-center" >
-        <img src={overView} className="w-8 h-8 object-contain " alt="" />
-        <p className="text-xl font-bold text-headingColor">Tổng quan</p>
+        <div className="flex w-full gap-1  items-center">
+          <img src={overView} className="w-8 h-8 object-contain " alt="" />
+          <p className="text-xl font-bold text-headingColor">Tổng quan</p>
         </div>
-       
+
         <NavLink
           className={({ isActive }) =>
             isActive
@@ -30,29 +44,29 @@ const DBLeftSection = () => {
         >
           Trang chủ
         </NavLink>
-        <div className="flex w-full gap-3  items-center" >
-        <img src={storeList} className="w-8 h-8 object-contain " alt="" />
-        <p className="text-xl font-bold text-headingColor">Store</p>
+        <div className="flex w-full gap-3  items-center">
+          <img src={storeList} className="w-8 h-8 object-contain " alt="" />
+          <p className="text-xl font-bold text-headingColor">Store</p>
         </div>
         <NavLink
           className={({ isActive }) =>
             isActive
-            ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
-            : isNotActiveList
+              ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+              : isNotActiveList
           }
           to={"/dashboard/store"}
         >
-         Cửa hàng
+          Cửa hàng
         </NavLink>
         <NavLink
           className={({ isActive }) =>
             isActive
-            ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
-            : isNotActiveList
+              ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+              : isNotActiveList
           }
           to={"/dashboard/store-confirm"}
         >
-         Cấp phép cửa hàng
+          Cấp phép cửa hàng
         </NavLink>
         <NavLink
           className={({ isActive }) =>
@@ -64,9 +78,9 @@ const DBLeftSection = () => {
         >
           Đơn hàng
         </NavLink>
-        <div className="flex w-full gap-3  items-center" >
-        <img src={userList} className="w-8 h-8 object-contain " alt="" />
-        <p className="text-xl font-bold text-headingColor">Người dùng</p>
+        <div className="flex w-full gap-3  items-center">
+          <img src={userList} className="w-8 h-8 object-contain " alt="" />
+          <p className="text-xl font-bold text-headingColor">Người dùng</p>
         </div>
         {/* <NavLink
           className={({ isActive }) =>
@@ -90,9 +104,9 @@ const DBLeftSection = () => {
         </NavLink> */}
         <NavLink
           className={({ isActive }) =>
-          isActive
-          ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
-          : isNotActiveList
+            isActive
+              ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+              : isNotActiveList
           }
           to={"/dashboard/users"}
         >
@@ -100,24 +114,24 @@ const DBLeftSection = () => {
         </NavLink>
         <NavLink
           className={({ isActive }) =>
-          isActive
-          ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
-          : isNotActiveList
+            isActive
+              ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+              : isNotActiveList
           }
           to={"/dashboard/contacts"}
         >
           Phản hồi
         </NavLink>
-        
-        <div className="flex w-full gap-3  items-center" >
-        <img src={shipped} className="w-8 h-8 object-contain " alt="" />
-        <p className="text-xl font-bold text-headingColor">Shipper</p>
+
+        <div className="flex w-full gap-3  items-center">
+          <img src={shipped} className="w-8 h-8 object-contain " alt="" />
+          <p className="text-xl font-bold text-headingColor">Shipper</p>
         </div>
         <NavLink
           className={({ isActive }) =>
-          isActive
-          ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
-          : isNotActiveList
+            isActive
+              ? `${isActiveList} px-1 py-2 border-red-500 border-l-4`
+              : isNotActiveList
           }
           to={"/dashboard/shipper"}
         >
@@ -126,7 +140,10 @@ const DBLeftSection = () => {
       </ul>
 
       <div className="w-full h-full justify-center items-center flex  mt-auto">
-        <div className="w-full h-225 -mb-32 rounded-md bg-red-300 flex flex-col items-center justify-center gap-1 px-2  ">
+        <div
+          className="w-full h-225 -mb-32 rounded-md   flex flex-col items-center justify-center gap-1 px-2  "
+          style={{ backgroundColor: "rgba(246, 148, 0, 0.55)" }}
+        >
           <div className="w-12 h-12 rounded-full bg-white  flex justify-center items-center ">
             <p className="text-2xl font-bold text-textColor">?</p>
           </div>

@@ -5,6 +5,7 @@ import { FaDongSign, FaStar } from "react-icons/fa6";
 import {
   baseURL,
   getAllOrders,
+  getAllShipper,
   getAllUsers,
   ratingProduct,
   updatedOrder,
@@ -19,32 +20,48 @@ import { avatar, delivery, shipperCome } from "../../assets";
 import { setAllUserDetail } from "../../context/actions/allUsersAction";
 import { setOrders } from "../../context/actions/orderAction";
 import axios from "axios";
+import { setAllShipper } from "../../context/actions/allShipperAction";
 
 const OrderData = ({ index, data, admin }) => {
   const allUser = useSelector((state) => state.allUsers);
+  const shipper = useSelector((state) => state.shipper);
   const user = useSelector((state) => state.user);
-
+  console.log(data);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!allUser) {
-      getAllUsers().then((data) => {
-        dispatch(setAllUserDetail(data));
-      });
-    }
-    if (!data) {
-      getAllOrders().then((data) => {
-        dispatch(setOrders(data));
-      });
-    }
-  });
+    const fetchUsersAndOrders = async () => {
+      if (!allUser) {
+        const users = await getAllUsers();
+        dispatch(setAllUserDetail(users));
+      }
+      if (!shipper) {
+        const shippers = await getAllShipper();
+        dispatch(setAllShipper(shippers));
+      }
+      if (!data) {
+        const orders = await getAllOrders();
+        dispatch(setOrders(orders));
+      }
+    };
+
+    fetchUsersAndOrders();
+  }, [allUser, data, dispatch, shipper]);
 
   const store = allUser
     ? allUser.filter((store) => store.address === data.shippingAddress2)
     : [];
-    const totalPrice = data ? data.orderLists.reduce((acc, curr) => acc + (curr.quantity * curr.product.price) , 0)+15000 : 0;
+  const totalPrice = data
+    ? data.orderLists.reduce(
+        (acc, curr) => acc + curr.quantity * curr.product.price,
+        0
+      ) + 15000
+    : 0;
 
-   
+    const shippers = shipper && data.shipper 
+    ? shipper.filter((shipper) => shipper.id === data.shipper.id)
+    : [];
 
+  console.log(shippers);
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, "0");
@@ -142,8 +159,6 @@ const OrderData = ({ index, data, admin }) => {
       console.error("Error during checkout:", error);
     }
   };
-
-  console.log()
 
   return (
     <motion.div
@@ -294,31 +309,27 @@ const OrderData = ({ index, data, admin }) => {
           )}
           {data.status === "Shipping" && (
             <>
-             <div className="flex items-center justify-center gap-2 ">
-              <motion.img
-                src={avatar}
-                className="w-12 h-12 object-contain"
-              />
-              <div className="items-center justify-center">
-              <p className="text-base font-semibold text-headingColor">
-                {data.shipper.name}
-              </p>
-              <p className="text-sm font-semibold text-gray-400">
-                {data.shipper.phone} - {data.shipper.description}
-              </p>
+              <div className="flex items-center justify-center gap-2 ">
+                <motion.img  src={baseURL + shippers[0].image} className="w-12 h-12 object-cover rounded-full" />
+                <div className="items-center justify-center">
+                  <p className="text-base font-semibold text-headingColor">
+                    {data.shipper.name}
+                  </p>
+                  <p className="text-sm font-semibold text-gray-400">
+                    {data.shipper.phone} - {data.shipper.description}
+                  </p>
+                </div>
               </div>
-             
-            </div>
-             <div className="flex items-center justify-center ">
-             <motion.img
-               src={shipperCome}
-               className="w-24 h-30 object-contain"
-             />
-             <p className="text-base font-semibold text-headingColor">
-               Tài xế đang đến!
-             </p>
-           </div></>
-           
+              <div className="flex items-center justify-center ">
+                <motion.img
+                  src={shipperCome}
+                  className="w-24 h-30 object-contain"
+                />
+                <p className="text-base font-semibold text-headingColor">
+                  Tài xế đang đến!
+                </p>
+              </div>
+            </>
           )}
           {data.status === "Done" &&
             (data.isRate ? (

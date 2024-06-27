@@ -23,7 +23,7 @@ const ShopLeftSection = () => {
     <div className="h-full py-2 flex flex-col bg-cardOverlay shadow-md backdrop-blur-md  min-w-210 w-225 gap-3 overflow-auto">
       <NavLink to={"/"} className="flex items-center justify-center gap-4">
         <img src={logo2} className="w-16 " alt="" />
-        <p className=" font-semibold text-4xl " style={gradientStyle}>
+        <p className=" font-semibold text-2xl " style={gradientStyle}>
           EatEase
         </p>
       </NavLink>
@@ -92,7 +92,10 @@ const ShopLeftSection = () => {
       </ul>
 
       <div className="w-full h-full justify-center items-center flex  mt-auto">
-        <div className="w-full h-225 -mb-32 rounded-md bg-red-300 flex flex-col items-center justify-center gap-1 px-2  ">
+        <div
+          className="w-full h-225 -mb-32 rounded-md flex flex-col items-center justify-center gap-1 px-2  "
+          style={{ backgroundColor: "rgba(246, 148, 0, 0.55)" }}
+        >
           <div className="w-12 h-12 rounded-full bg-white  flex justify-center items-center ">
             <p className="text-2xl font-bold text-textColor">?</p>
           </div>

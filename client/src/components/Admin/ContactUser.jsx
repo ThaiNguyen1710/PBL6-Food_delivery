@@ -38,30 +38,30 @@ const ContactUser = () => {
       <DataTable
         columns={[
           {
-            title: <p className="font-semibold text-xl ">Người dùng</p>,
+            title: <p className="font-semibold font-sans text-xl ">Người dùng</p>,
             field: "name",
             render: (rowData) => (
               <div>
-                <p className="text-textColor font-medium">
+                <p className="text-textColor font-sans font-medium">
                   <strong>Name:</strong> {rowData.user.name}
                 </p>
-                <p className="text-textColor font-medium">
+                <p className="text-textColor font-sans font-medium">
                   <strong>Email:</strong> {rowData.user.email}
                 </p>
-                <p className="text-textColor font-medium">
+                <p className="text-textColor font-sans font-medium">
                   <strong>Phone:</strong> {rowData.user.phone}
                 </p>
               </div>
             ),
           },
           {
-            title: <p className="font-semibold text-xl ">Nội dung</p>,
+            title: <p className="font-semibold font-sans text-xl ">Nội dung</p>,
             field: "address",
             render: (rowData) => (
               <motion.div className="w-full h-32 flex flex-col items-start justify-start px-2 py-1 border relative border-gray-300 bg-cardOverlay drop-shadow-md rounded-md gap-1">
                 {" "}
                 <p
-                  className="text-textColor font-medium"
+                  className="text-textColor font-sans font-medium"
                   style={{ width: "600px" }}
                 >
                   {rowData.comment}
@@ -70,12 +70,12 @@ const ContactUser = () => {
             ),
           },
           {
-            title: <p className="font-semibold text-xl items-center justify-center ">Xác nhận phản hồi</p>,
+            title: <p className="font-semibold font-sans text-xl items-center justify-center ">Xác nhận phản hồi</p>,
             
             render: (rowData) => (
               <motion.button
                 onClick={() => handleConfirmation(rowData)}
-                className="border rounded-md shadow-md cursor-pointer hover:bg-emerald-400 w-24 h-10 font-semibold text-textColor bg-emerald-300"
+                className="border rounded-md shadow-md cursor-pointer hover:bg-emerald-400 w-24 h-10 font-semibold  text-textColor font-sans bg-emerald-300"
                
               >
                 Hoàn thành
@@ -85,7 +85,7 @@ const ContactUser = () => {
         ]}
         data={contacts}
         title={
-            <p className="font-semibold text-red-400 text-3xl">
+            <p className="font-semibold font-sans text-amber-500 text-3xl">
               Danh sách liên hệ
             </p>
           }

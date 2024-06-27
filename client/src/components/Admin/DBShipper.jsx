@@ -1,14 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { baseURL, editShipper, getAllShipper } from "../../api";
 import DataTable from "./DataTable";
 import { avatar } from "../../assets";
-
 import { alertNULL, alertSuccess } from "../../context/actions/alertActions";
 import { setAllShipper } from "../../context/actions/allShipperAction";
+import RevenueShipper from "./RevenueShipper"; // Import component RevenueShipper
+
 const DBShipper = () => {
   const shipper = useSelector((state) => state.shipper);
   const dispatch = useDispatch();
+  const [selectedShipper, setSelectedShipper] = useState(null); // State to manage selected shipper
 
   useEffect(() => {
     if (!shipper) {
@@ -48,46 +50,47 @@ const DBShipper = () => {
       <DataTable
         columns={[
           {
-            title: <p className="font-semibold text-xl">Ảnh</p>,
+            title: <p className="font-semibold text-xl font-sans">Ảnh</p>,
             field: "photoURL",
             render: (rowData) => (
               <img
                 src={baseURL + rowData.image ? baseURL + rowData.image : avatar}
-                className="w-32 h-16 object-contain rounded-md"
+                className="w-32 h-24 object-cover rounded-md"
                 alt=""
               />
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Tên</p>,
+            title: <p className="font-semibold text-xl font-sans">Tên</p>,
             field: "name",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.name}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.name}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Email</p>,
+            title: <p className="font-semibold text-xl font-sans">Email</p>,
             field: "email",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.email}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.email}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Sđt</p>,
+            title: <p className="font-semibold text-xl font-sans">Sđt</p>,
             field: "phone",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.phone}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.phone}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Địa chỉ</p>,
+            title: <p className="font-semibold text-xl font-sans">Địa chỉ</p>,
             field: "address",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.address}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.address}</p>
             ),
           },
+         
           {
-            title: <p className="font-semibold text-xl">Khóa</p>,
+            title: <p className="font-semibold text-xl font-sans">Khóa</p>,
             field: "isFeatured",
             render: (rowData) => (
               <select
@@ -105,38 +108,30 @@ const DBShipper = () => {
               </select>
             ),
           },
+          {
+            title: <p className="font-semibold text-xl font-sans">Doanh thu</p>,
+            field: "revenueButton",
+            render: (rowData) => (
+              <button
+                onClick={() => setSelectedShipper(rowData)}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 font-sans"
+              >
+                Chi tiết
+              </button>
+            ),
+          },
         ]}
         data={shipper}
         title={
-          <p className="font-semibold text-red-400 text-3xl">Danh sách shipper</p>
+          <p className="font-semibold text-orange-500 text-3xl font-sans">Danh sách shipper</p>
         }
-        // actions={[
-        //   {
-        //     icon: "edit",
-        //     tooltip: "Edit Data",
-        //     onClick: (event, rowData) => {
-        //       alert("You want to edit" + rowData.productId);
-        //     },
-        //   },
-        //   {
-        //     icon: "delete",
-        //     tooltip: "Delete Data",
-        //     onClick: (event, rowData) => {
-        //       if (window.confirm("Are you sure?")) {
-        //         deleteAProduct(rowData.productId).then((res) => {
-        //           dispatch(alertSuccess("Product Deleted "));
-        //           setInterval(() => {
-        //             dispatch(alertNULL());
-        //           }, 3000);
-        //           getAllProducts().then((data) => {
-        //             dispatch(setAllProducts(data));
-        //           });
-        //         });
-        //       }
-        //     },
-        //   },
-        // ]}
       />
+      {selectedShipper && (
+        <RevenueShipper
+          shipperData={selectedShipper}
+          onClose={() => setSelectedShipper(null)}
+        />
+      )}
     </div>
   );
 };

@@ -68,7 +68,7 @@ const StoreCard = ({ data }) => {
             <img
               alt=""
               src={baseURL + data.imgStore}
-              className="w-full h-150 object-contain cursor-pointer opacity-50"
+              className="w-full h-150 object-cover cursor-pointer opacity-50"
             />
           </div>
         </>
@@ -77,7 +77,7 @@ const StoreCard = ({ data }) => {
           <img
             alt=""
             src={baseURL + data.imgStore}
-            className="w-full h-150 object-contain cursor-pointer"
+            className="w-full h-150 object-cover cursor-pointer"
           />
         </>
       )}

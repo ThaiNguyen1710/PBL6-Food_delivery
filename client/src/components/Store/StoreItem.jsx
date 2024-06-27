@@ -133,89 +133,89 @@ const StoreItem = () => {
       <DataTable
         columns={[
           {
-            title: <p className="font-semibold text-xl">Ảnh</p>,
+            title: <p className="font-semibold font-sans text-xl">Ảnh</p>,
             field: "image",
             render: (rowData) => (
               <img
                 src={baseURL + rowData.image}
-                className="w-32 h-16 object-contain rounded-md"
+                className="w-32 h-16 object-cover rounded-md"
                 alt=""
               />
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Tên</p>,
+            title: <p className="font-semibold font-sans text-xl">Tên</p>,
             field: "name",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">{rowData.name}</p>
+              <p className="text-textColor font-sans font-medium ">{rowData.name}</p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Loại</p>,
+            title: <p className="font-semibold font-sans text-xl">Loại</p>,
             field: "category.name",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">
+              <p className="text-textColor font-sans font-medium ">
                 {rowData.category.name}
               </p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Thông tin</p>,
+            title: <p className="font-semibold font-sans text-xl">Thông tin</p>,
             field: "description",
             render: (rowData) => (
-              <p className="text-textColor font-medium ">
+              <p className="text-textColor font-sans font-medium ">
                 {rowData.description}
               </p>
             ),
           },
           // {
-          //   title: <p className="font-semibold text-xl">Store Owner</p>,
+          //   title: <p className="font-semibold font-sans text-xl">Store Owner</p>,
           //   field: "user.name",
           //   render: (rowData) => (
-          //     <p className="text-textColor font-medium ">{rowData.user.name}</p>
+          //     <p className="text-textColor font-sans font-medium ">{rowData.user.name}</p>
           //   ),
           // },
           {
-            title: <p className="font-semibold text-xl">Giá</p>,
+            title: <p className="font-semibold font-sans text-xl">Giá</p>,
             field: "price",
             render: (rowData) => (
-              <p className="text-textColor text-2xl flex font-semibold items-center justify-start gap-2">
+              <p className="text-textColor text-2xl flex font-semibold font-sans items-center justify-start gap-2">
                 {parseFloat(rowData.price).toLocaleString("vi-VN")}
                 <FaDongSign className="text-red-400" />
               </p>
             ),
           },
           {
-            title: <p className="font-semibold text-xl">Trạng thái</p>,
+            title: <p className="font-semibold font-sans text-xl">Trạng thái</p>,
             field: "isFeatured",
             render: (rowData) => (
               <select
                 value={rowData.isFeatured  }
                 onChange={() => blockProduct(rowData)}
-                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold"
+                className="border rounded-md bg-cardOverlay w-24 h-10 font-semibold font-sans"
                 style={{ color: rowData.isFeatured === true ? "blue" : "red" }}
               >
-                <option value="true" className="font-semibold text-blue-500">
+                <option value="true" className="font-semibold font-sans text-blue-500">
                  Còn hàng
                 </option>
-                <option value="false" className="font-semibold text-red-500">
+                <option value="false" className="font-semibold font-sans text-red-500">
                   Bán hết
                 </option>
               </select>
             ),
           },
-          {title: <p className="font-semibold text-xl">Lượt bán</p>,
+          {title: <p className="font-semibold font-sans text-xl">Lượt bán</p>,
           field: "rowData.numRated",
           render: (rowData) => (
-            <p className="text-textColor font-medium ">{rowData.numRated}+</p>
+            <p className="text-textColor font-sans font-medium ">{rowData.numRated}+</p>
           ),
         },
           {
-            title: <p className="font-semibold text-xl">Đánh giá</p>,
+            title: <p className="font-semibold font-sans text-xl">Đánh giá</p>,
             field: "ratings",
             render: (rowData) => (
               <div className="flex justify-center items-center gap-1 text-base font-normal">
-                <p className="text-textColor font-medium ">
+                <p className="text-textColor font-sans font-medium ">
                   {parseFloat(rowData.ratings).toFixed(1)}
                 </p>
                 <FaStar className="text-orange-400 text-base font-normal" />
@@ -225,7 +225,7 @@ const StoreItem = () => {
         ]}
         data={filteredProducts}
         title={
-          <p className="font-semibold text-red-400 text-3xl">
+          <p className="font-semibold font-sans text-amber-500 text-3xl">
             Danh sách sản phẩm
           </p>
         }

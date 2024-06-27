@@ -90,7 +90,7 @@ const StoreDetail = ({ closeStore }) => {
             <img
               alt=""
               src={baseURL + selectedStore?.[0]?.imgStore}
-              className="w-[80%] h-420 object-contain"
+              className="w-[80%] h-420 object-cover rounded-md"
             ></img>
           </div>
           <div className=" flex flex-col items-center justify-start gap-16 ">
@@ -107,7 +107,7 @@ const StoreDetail = ({ closeStore }) => {
                 <p className="text-5xl font-semibold">
                   {selectedStore?.[0]?.store}
                 </p>
-                <p className="text-xl text-gray-500 font-normal">
+                <p className="text-xl text-gray-500 font-normal font-sans">
                   {selectedStore?.[0]?.address}
                 </p>
                 <div className="pt-6 flex items-center gap-1">

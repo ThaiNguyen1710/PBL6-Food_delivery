@@ -7,7 +7,7 @@ import { BsToggles2 } from "react-icons/bs";
 import { MdSearch } from "react-icons/md";
 import { motion } from "framer-motion";
 import { buttonClick } from "../../animations";
-
+import { menu } from "../../assets";
 
 const StoreOrder = () => {
   const orders = useSelector((state) => state.orders);
@@ -25,20 +25,23 @@ const StoreOrder = () => {
   const [endDate, setEndDate] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const ordersPerPage = 3; 
-
+  const ordersPerPage = 3;
 
   const [selectedStatus, setSelectedStatus] = useState("Pending");
 
   const orderStore = orders
-    ? orders.filter((order) => order.shippingAddress2 === user.user.store||order.shippingAddress2 === user.user.address)
+    ? orders.filter(
+        (order) =>
+          order.shippingAddress2 === user.user.store ||
+          order.shippingAddress2 === user.user.address
+      )
     : [];
 
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   const currentOrders = orderStore.slice(indexOfFirstOrder, indexOfLastOrder);
 
- console.log(orderStore)
+  console.log(orderStore);
 
   const handleFilterByDateAndCustomer = () => {
     const filteredOrdersByDate = orderStore.filter((order) => {
@@ -50,9 +53,8 @@ const StoreOrder = () => {
     });
 
     const filteredOrdersByCustomer = filteredOrdersByDate.filter((order) => {
-
       const matchedStatus =
-      selectedStatus === null || order.status === selectedStatus;
+        selectedStatus === null || order.status === selectedStatus;
       const matchedShippingAddress = order.user.name
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -108,7 +110,6 @@ const StoreOrder = () => {
             className={`${
               selectedStatus === null ? "bg-red-300" : "bg-gray-300"
             } px-3 py-1 rounded-md`}
-
             {...buttonClick}
             onClick={() => setSelectedStatus(null)}
           >
@@ -156,7 +157,7 @@ const StoreOrder = () => {
       </div>
 
       {filterOrders.length > 0 ? (
-        <>
+        <div div className="flex flex-col w-full h-auto">
           {filterOrders
             .slice(
               (currentPage - 1) * ordersPerPage,
@@ -165,42 +166,55 @@ const StoreOrder = () => {
             .map((item, i) => (
               <OrderData key={i} index={i} data={item} admin={true} />
             ))}
-        </>
+          <div className="flex items-center justify-center gap-4 pt-4 ">
+            <motion.button
+              onClick={() => handlePagination(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="text-xl font-semibold cursor-pointer hover:text-red-400 "
+              {...buttonClick}
+            >
+              Prev
+            </motion.button>
+            {Array.from(
+              { length: Math.ceil(filterOrders.length / ordersPerPage) },
+              (_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => handlePagination(i + 1)}
+                  className={`${
+                    currentPage === i + 1
+                      ? "bg-cardOverlay  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
+                      : "bg-gray-300 text-black  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
+                  } px-3 py-1 rounded-md`}
+                >
+                  {i + 1}
+                </button>
+              )
+            )}
+            <motion.button
+              onClick={() => handlePagination(currentPage + 1)}
+              disabled={currentPage * ordersPerPage >= filterOrders.length}
+              className="text-xl font-semibold cursor-pointer hover:text-red-400 "
+              {...buttonClick}
+            >
+              Next
+            </motion.button>
+          </div>
+        </div>
       ) : (
-        <h1 className="text-[72px] text-headingColor font-bold">No Data</h1>
+        <div className=" flex-col flex items-center w-full h-screen gap-4">
+          <img
+            alt=""
+            src={menu}
+            className="w-[50%] h-[50%] object-contain items-center justify-center "
+          />
+          <p className="text-4xl text-textColor font-medium">
+            Không có đơn hàng
+          </p>
+        </div>
       )}
 
       {/* Nút chuyển trang */}
-      <div className="flex items-center justify-center gap-4 pb-4 ">
-        <motion.button
-          onClick={() => handlePagination(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="text-xl font-semibold cursor-pointer hover:text-red-400 "
-          {...buttonClick}
-        >
-          Prev
-        </motion.button>
-        {Array.from(
-          { length: Math.ceil(filterOrders.length / ordersPerPage) },
-          (_, i) => (
-            <button key={i + 1} onClick={() => handlePagination(i + 1)}     
-            className={`${
-              currentPage === i + 1 ? "bg-cardOverlay  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md" : "bg-gray-300 text-black  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
-            } px-3 py-1 rounded-md`}>
-              {i + 1}
-              
-            </button>
-          )
-        )}
-        <motion.button
-          onClick={() => handlePagination(currentPage + 1)}
-          disabled={currentPage * ordersPerPage >= filterOrders.length}
-          className="text-xl font-semibold cursor-pointer hover:text-red-400 "
-          {...buttonClick}
-        >
-          Next
-        </motion.button>
-      </div>
     </div>
   );
 };

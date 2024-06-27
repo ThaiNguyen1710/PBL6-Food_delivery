@@ -10,6 +10,7 @@ import { BsToggles2 } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { buttonClick } from "../../animations";
 import HomeSlider from "./HomeSlider";
+import { menu } from "../../assets";
 
 const UserOrder = () => {
   const user = useSelector((state) => state.user);
@@ -28,18 +29,24 @@ const UserOrder = () => {
     ? orders.filter((order) => order.user.id === user.user.userId)
     : [];
 
-
-
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!orders) {
+    // Fetch orders initially
+    getAllOrders().then((data) => {
+      dispatch(setOrders(data));
+    });
+  }, [dispatch]);
+
+  useEffect(() => {
+    // Set up a subscription to re-fetch orders when `orders` state changes
+    const fetchOrders = () => {
       getAllOrders().then((data) => {
         dispatch(setOrders(data));
       });
-    }
-  });
-
+    };
+    fetchOrders();
+  }, [orders, dispatch]); // Depend on `orders` to trigger re-fetch on change
 
   const handleFilterByDateAndCustomer = () => {
     const filteredOrdersByDate = userOrders.filter((order) => {
@@ -49,11 +56,9 @@ const UserOrder = () => {
         (!endDate || orderDate <= new Date(endDate))
       );
     });
-    
 
     const filteredOrdersByCustomer = filteredOrdersByDate.filter((order) => {
-      const matchedPayed =
-      isRate === null || order.isRate === isRate;
+      const matchedPayed = isRate === null || order.isRate === isRate;
       const matchedShippingAddress = order.shippingAddress2
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
@@ -61,7 +66,6 @@ const UserOrder = () => {
       const matchedPrice = order.orderLists.some((item) => {
         if (item.product && item.product.name) {
           return item.product.name
-
             .toLowerCase()
             .includes(searchTerm.toLowerCase());
         }
@@ -77,6 +81,7 @@ const UserOrder = () => {
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
+
   const handlePagination = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -125,7 +130,6 @@ const UserOrder = () => {
             >
               Đã đánh giá
             </motion.button>
-           
           </div>
           <div className="flex items-center justify-center bg-cardOverlay gap-3 px-4 py-2 rounded-md backdrop-blur-md shadow-md ">
             <MdSearch className="text-gray-400 text-2xl" />
@@ -140,59 +144,64 @@ const UserOrder = () => {
           </div>
         </div>
         {filterOrders.length > 0 ? (
-          <>
-            {filterOrders
-              .slice(
-                (currentPage - 1) * ordersPerPage,
-                currentPage * ordersPerPage
-              )
-              .map((item, i) => (
-                <OrderData key={i} index={i} data={item} />
-              ))}
-          </>
-        ) : (
-          <>
-            <p className="text-xl text-textColor font-medium">No Orders</p>
-          </>
-        )}
-      </div>
-      <div className="flex items-center justify-center gap-4 ">
-        <motion.button
-          onClick={() => handlePagination(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="text-xl font-semibold cursor-pointer hover:text-red-400 "
-          {...buttonClick}
-        >
-          Prev
-        </motion.button>
-        {Array.from(
-          { length: Math.ceil(filterOrders.length/ ordersPerPage) },
-          (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => handlePagination(i + 1)}
-              className={`${
-                currentPage === i + 1
-                  ? "bg-cardOverlay  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
-                  : "bg-gray-300 text-black  px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
-              } px-3 py-1 rounded-md`}
-            >
-              {i + 1}
-            </button>
+        <div className="flex flex-col w-full h-auto">
+        {filterOrders
+          .slice(
+            (currentPage - 1) * ordersPerPage,
+            currentPage * ordersPerPage
           )
-        )}
-        <motion.button
-          onClick={() => handlePagination(currentPage + 1)}
-          disabled={currentPage * ordersPerPage >= filterOrders.length}
-          className="text-xl font-semibold cursor-pointer hover:text-red-400 "
-          {...buttonClick}
-        >
-          Next
-        </motion.button>
+          .map((item, i) => (
+            <OrderData key={i} index={i} data={item} />
+          ))}
+        <div className="flex items-center justify-center gap-4 mt-4">
+          <motion.button
+            onClick={() => handlePagination(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="text-xl font-semibold cursor-pointer hover:text-red-400"
+            {...buttonClick}
+          >
+            Prev
+          </motion.button>
+          {Array.from(
+            { length: Math.ceil(filterOrders.length / ordersPerPage) },
+            (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => handlePagination(i + 1)}
+                className={`${
+                  currentPage === i + 1
+                    ? "bg-cardOverlay px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
+                    : "bg-gray-300 text-black px-2 py-1 hover:bg-red-300 font-medium rounded-md backdrop-blur-md shadow-md"
+                } px-3 py-1 rounded-md`}
+              >
+                {i + 1}
+              </button>
+            )
+          )}
+          <motion.button
+            onClick={() => handlePagination(currentPage + 1)}
+            disabled={currentPage * ordersPerPage >= filterOrders.length}
+            className="text-xl font-semibold cursor-pointer hover:text-red-400"
+            {...buttonClick}
+          >
+            Next 
+          </motion.button>
+        </div>
       </div>
-      <section className="w-full min-h-screen justify-end items-end pt-64 px-4">
-      <HomeSlider />
-        <Footer />
+        ) : (
+          <div className=" flex-col flex items-center justify-center w-full h-auto gap-4">
+             <img
+              alt=""
+              src={menu}
+              className="w-[20%] h-[20%] object-contain items-center justify-center "
+            />
+          <p className="text-4xl text-textColor font-medium">Không có đơn hàng</p>
+        </div>
+        )}
+      </div>
+
+      <section className="w-full h-auto justify-end items-end pt-4 px-4">
+        <HomeSlider />
       </section>
     </main>
   );
